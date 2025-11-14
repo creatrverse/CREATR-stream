@@ -618,8 +618,12 @@ async def get_current_user(session: Session = Depends(get_session)):
     if not token_data:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
-    # Check if token needs refresh
-    if token_data.expires_at < datetime.now(timezone.utc):
+    # Check if token needs refresh (make expires_at timezone-aware if needed)
+    expires_at = token_data.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
         try:
             # Refresh token
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
