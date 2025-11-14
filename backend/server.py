@@ -822,16 +822,23 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
         
         session.commit()
         
-        # Create session token for frontend
-        session_token = oauth_service.create_session_token(user_id, timedelta(days=7))
-        
-        # Redirect to frontend with session token
+        # Redirect to frontend with success flag
         frontend_url = os.getenv('FRONTEND_URL', 'https://obs-twitch-dash.preview.emergentagent.com')
-        redirect_url = f"{frontend_url}/?session_token={session_token}&auth=success"
+        redirect_url = f"{frontend_url}/?auth=success"
         
         logger.info(f"Redirecting to: {redirect_url}")
         
-        return RedirectResponse(url=redirect_url)
+        response = RedirectResponse(url=redirect_url)
+        # Set a simple cookie to indicate authentication
+        response.set_cookie(
+            key="twitch_auth",
+            value=user_id,
+            max_age=7*24*60*60,  # 7 days
+            httponly=True,
+            samesite="lax"
+        )
+        
+        return response
         
     except Exception as e:
         logger.error(f"OAuth callback error: {e}")
