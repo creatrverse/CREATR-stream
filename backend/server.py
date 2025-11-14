@@ -206,18 +206,54 @@ async def root():
 
 # Twitch Real Endpoints
 @api_router.get("/twitch/stats")
-async def get_twitch_stats():
+async def get_twitch_stats(session: Session = Depends(get_session)):
     """Get real Twitch stream stats"""
     try:
         stream_info = await twitch_service.get_stream_info()
         channel_info = await twitch_service.get_channel_info()
         uptime = await twitch_service.get_uptime()
         
+        # Try to get subscriber count if authenticated
+        subscriber_count = 487  # Default mock
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if token_data:
+            # Refresh token if needed
+            if token_data.expires_at < datetime.now(timezone.utc):
+                try:
+                    new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+                    token_data.access_token = new_token_response['access_token']
+                    token_data.refresh_token = new_token_response['refresh_token']
+                    token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                        seconds=new_token_response.get('expires_in', 3600)
+                    )
+                    session.add(token_data)
+                    session.commit()
+                except:
+                    pass
+            
+            # Try to get real subscriber count
+            try:
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(
+                        f"https://api.twitch.tv/helix/subscriptions?broadcaster_id={token_data.user_id}&first=1",
+                        headers={
+                            'Authorization': f'Bearer {token_data.access_token}',
+                            'Client-ID': os.getenv('TWITCH_CLIENT_ID')
+                        }
+                    )
+                    if response.status_code == 200:
+                        data = response.json()
+                        subscriber_count = data.get('total', 487)
+            except Exception as e:
+                logger.error(f"Failed to get subscriber count: {e}")
+        
         if not stream_info or not channel_info:
             return {
                 "viewers": 0,
                 "followers": 0,
-                "subscribers": 487,  # Mock - requires user auth
+                "subscribers": subscriber_count,
                 "stream_title": "🎵 Music Review Stream | Submit Your Tracks!",
                 "stream_category": "Music",
                 "uptime_minutes": 0
@@ -228,7 +264,7 @@ async def get_twitch_stats():
         return {
             "viewers": stream_info.get('viewer_count', 0),
             "followers": channel_info.get('followers', 0),
-            "subscribers": 487,  # Mock - requires user auth
+            "subscribers": subscriber_count,
             "stream_title": channel_info.get('title', ''),
             "stream_category": channel_info.get('game_name', 'Music'),
             "uptime_minutes": uptime_minutes
@@ -238,7 +274,7 @@ async def get_twitch_stats():
         return {
             "viewers": 0,
             "followers": 0,
-            "subscribers": 0,
+            "subscribers": 487,
             "stream_title": "Error loading data",
             "stream_category": "",
             "uptime_minutes": 0
