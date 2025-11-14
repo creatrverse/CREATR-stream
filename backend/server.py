@@ -64,6 +64,10 @@ manager = ConnectionManager()
 async def lifespan(app: FastAPI):
     """Handle startup and shutdown"""
     # Startup
+    # Initialize OAuth database
+    create_db_and_tables()
+    logger.info("OAuth database initialized")
+    
     try:
         logger.info("Starting Twitch integration...")
         await twitch_service.initialize()
