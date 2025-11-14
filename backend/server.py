@@ -230,7 +230,8 @@ async def get_twitch_stats(session: Session = Depends(get_session)):
                     )
                     session.add(token_data)
                     session.commit()
-                except:
+                except Exception as e:
+                    logger.error(f"Failed to refresh token: {e}")
                     pass
             
             # Try to get real subscriber count
