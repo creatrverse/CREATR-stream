@@ -300,8 +300,12 @@ async def update_stream_title(update: StreamTitleUpdate, session: Session = Depe
     if not token_data:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
-    # Refresh token if needed
-    if token_data.expires_at < datetime.now(timezone.utc):
+    # Refresh token if needed (make expires_at timezone-aware if needed)
+    expires_at = token_data.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
         try:
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
