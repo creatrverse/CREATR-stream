@@ -15,6 +15,7 @@ from contextlib import asynccontextmanager
 
 from twitch_service import twitch_service
 from obs_service import obs_service
+from irc_chat_service import irc_chat
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
