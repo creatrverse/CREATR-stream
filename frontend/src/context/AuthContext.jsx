@@ -12,21 +12,19 @@ export const AuthProvider = ({ children }) => {
 
   // Check authentication status on mount
   useEffect(() => {
-    checkAuthStatus();
-    
-    // Check for OAuth callback
+    // Check for OAuth callback success
     const params = new URLSearchParams(window.location.search);
-    const sessionToken = params.get('session_token');
     const authSuccess = params.get('auth');
     
-    if (sessionToken && authSuccess === 'success') {
-      // Store session token
-      localStorage.setItem('twitch_session', sessionToken);
-      
+    if (authSuccess === 'success') {
       // Clean URL
       window.history.replaceState({}, document.title, window.location.pathname);
       
-      // Reload auth status
+      // Small delay to let backend save the token
+      setTimeout(() => {
+        checkAuthStatus();
+      }, 500);
+    } else {
       checkAuthStatus();
     }
   }, []);
