@@ -761,6 +761,76 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
+# Root level OAuth callback (Twitch redirects here without /api prefix)
+@app.get("/auth/callback")
+async def root_oauth_callback(code: str, session: Session = Depends(get_session)):
+    """Handle OAuth callback from Twitch at root level"""
+    try:
+        # Exchange code for tokens
+        token_response = await oauth_service.exchange_code_for_token(code)
+        
+        if 'error' in token_response:
+            logger.error(f"Token exchange error: {token_response}")
+            raise HTTPException(status_code=400, detail=token_response.get('error_description'))
+        
+        # Get user info
+        user_info = await oauth_service.get_user_info(token_response['access_token'])
+        if not user_info:
+            raise HTTPException(status_code=400, detail="Failed to get user information")
+        
+        user_id = user_info['id']
+        username = user_info['login']
+        
+        logger.info(f"OAuth successful for user: {username} ({user_id})")
+        
+        # Calculate expiration
+        expires_at = datetime.now(timezone.utc) + timedelta(seconds=token_response.get('expires_in', 3600))
+        
+        # Check if token exists for this user
+        from sqlmodel import select
+        existing_token = session.exec(select(TokenData).where(TokenData.user_id == user_id)).first()
+        
+        if existing_token:
+            # Update existing token
+            existing_token.access_token = token_response['access_token']
+            existing_token.refresh_token = token_response['refresh_token']
+            existing_token.expires_at = expires_at
+            existing_token.scopes = token_response.get('scope', oauth_service.scopes)
+            existing_token.updated_at = datetime.now(timezone.utc)
+            session.add(existing_token)
+        else:
+            # Create new token
+            new_token = TokenData(
+                user_id=user_id,
+                username=username,
+                access_token=token_response['access_token'],
+                refresh_token=token_response['refresh_token'],
+                expires_at=expires_at,
+                scopes=token_response.get('scope', oauth_service.scopes)
+            )
+            session.add(new_token)
+        
+        session.commit()
+        
+        # Create session token for frontend
+        session_token = oauth_service.create_session_token(user_id, timedelta(days=7))
+        
+        # Redirect to frontend with session token
+        frontend_url = os.getenv('FRONTEND_URL', 'https://obs-twitch-dash.preview.emergentagent.com')
+        redirect_url = f"{frontend_url}/?session_token={session_token}&auth=success"
+        
+        logger.info(f"Redirecting to: {redirect_url}")
+        
+        return RedirectResponse(url=redirect_url)
+        
+    except Exception as e:
+        logger.error(f"OAuth callback error: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        # Redirect to frontend with error
+        frontend_url = os.getenv('FRONTEND_URL', 'https://obs-twitch-dash.preview.emergentagent.com')
+        return RedirectResponse(url=f"{frontend_url}/?auth=error&message={str(e)}")
+
 # Include router
 app.include_router(api_router)
 
