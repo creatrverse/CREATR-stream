@@ -569,12 +569,17 @@ async def oauth_callback(code: str, session: Session = Depends(get_session)):
         from sqlmodel import select
         existing_token = session.exec(select(TokenData).where(TokenData.user_id == user_id)).first()
         
+        # Convert scopes to string if it's a list
+        scopes = token_response.get('scope', oauth_service.scopes)
+        if isinstance(scopes, list):
+            scopes = ' '.join(scopes)
+        
         if existing_token:
             # Update existing token
             existing_token.access_token = token_response['access_token']
             existing_token.refresh_token = token_response['refresh_token']
             existing_token.expires_at = expires_at
-            existing_token.scopes = token_response.get('scope', oauth_service.scopes)
+            existing_token.scopes = scopes
             existing_token.updated_at = datetime.now(timezone.utc)
             session.add(existing_token)
         else:
@@ -585,7 +590,7 @@ async def oauth_callback(code: str, session: Session = Depends(get_session)):
                 access_token=token_response['access_token'],
                 refresh_token=token_response['refresh_token'],
                 expires_at=expires_at,
-                scopes=token_response.get('scope', oauth_service.scopes)
+                scopes=scopes
             )
             session.add(new_token)
         
@@ -790,12 +795,17 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
         from sqlmodel import select
         existing_token = session.exec(select(TokenData).where(TokenData.user_id == user_id)).first()
         
+        # Convert scopes to string if it's a list
+        scopes = token_response.get('scope', oauth_service.scopes)
+        if isinstance(scopes, list):
+            scopes = ' '.join(scopes)
+        
         if existing_token:
             # Update existing token
             existing_token.access_token = token_response['access_token']
             existing_token.refresh_token = token_response['refresh_token']
             existing_token.expires_at = expires_at
-            existing_token.scopes = token_response.get('scope', oauth_service.scopes)
+            existing_token.scopes = scopes
             existing_token.updated_at = datetime.now(timezone.utc)
             session.add(existing_token)
         else:
@@ -806,7 +816,7 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
                 access_token=token_response['access_token'],
                 refresh_token=token_response['refresh_token'],
                 expires_at=expires_at,
-                scopes=token_response.get('scope', oauth_service.scopes)
+                scopes=scopes
             )
             session.add(new_token)
         
