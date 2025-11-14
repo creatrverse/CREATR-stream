@@ -236,61 +236,115 @@ async def get_alerts():
     # Mock alerts for now
     return []
 
-# Mock OBS Endpoints
+# Real OBS Endpoints
 @api_router.get("/obs/stats")
 async def get_obs_stats():
+    """Get real OBS statistics"""
+    if not obs_service.connected:
+        # Fallback to mock if OBS not connected
+        return OBSStats(
+            streaming=False,
+            recording=False,
+            cpu_usage=0,
+            gpu_usage=0,
+            fps=0,
+            bitrate=0,
+            dropped_frames=0,
+            current_scene="OBS Not Connected"
+        )
+    
+    stats = await obs_service.get_stats()
     return OBSStats(
-        streaming=obs_state["streaming"],
-        recording=obs_state["recording"],
-        cpu_usage=random.uniform(15, 45),
-        gpu_usage=random.uniform(20, 60),
-        fps=random.randint(58, 60) if obs_state["streaming"] else 0,
-        bitrate=random.randint(5800, 6200) if obs_state["streaming"] else 0,
-        dropped_frames=random.randint(0, 5) if obs_state["streaming"] else 0,
-        current_scene=obs_state["current_scene"]
+        streaming=stats['streaming'],
+        recording=stats['recording'],
+        cpu_usage=stats['cpu_usage'],
+        gpu_usage=stats['memory_usage'],  # Using memory as GPU proxy
+        fps=stats['fps'],
+        bitrate=stats['output_bitrate'],
+        dropped_frames=stats['dropped_frames'],
+        current_scene=stats['current_scene']
     )
 
 @api_router.post("/obs/stream")
 async def control_stream(control: StreamControl):
+    """Control OBS streaming"""
+    if not obs_service.connected:
+        return {"success": False, "error": "OBS not connected"}
+    
     if control.action == "start":
-        obs_state["streaming"] = True
+        success = await obs_service.start_streaming()
     elif control.action == "stop":
-        obs_state["streaming"] = False
-    return {"success": True, "streaming": obs_state["streaming"]}
+        success = await obs_service.stop_streaming()
+    else:
+        return {"success": False, "error": "Invalid action"}
+    
+    stats = await obs_service.get_stats()
+    return {"success": success, "streaming": stats['streaming']}
 
 @api_router.post("/obs/recording")
 async def control_recording(control: StreamControl):
+    """Control OBS recording"""
+    if not obs_service.connected:
+        return {"success": False, "error": "OBS not connected"}
+    
     if control.action == "start":
-        obs_state["recording"] = True
+        success = await obs_service.start_recording()
     elif control.action == "stop":
-        obs_state["recording"] = False
-    return {"success": True, "recording": obs_state["recording"]}
+        success = await obs_service.stop_recording()
+    else:
+        return {"success": False, "error": "Invalid action"}
+    
+    stats = await obs_service.get_stats()
+    return {"success": success, "recording": stats['recording']}
 
 @api_router.get("/obs/scenes")
 async def get_scenes():
-    return {"scenes": obs_state["scenes"], "current": obs_state["current_scene"]}
+    """Get list of OBS scenes"""
+    if not obs_service.connected:
+        return {"scenes": ["OBS Not Connected"], "current": "OBS Not Connected"}
+    
+    scenes = await obs_service.get_scenes()
+    stats = await obs_service.get_stats()
+    return {"scenes": scenes, "current": stats['current_scene']}
 
 @api_router.post("/obs/scene")
 async def switch_scene(switch: SceneSwitch):
-    if switch.scene_name in obs_state["scenes"]:
-        obs_state["current_scene"] = switch.scene_name
-        return {"success": True, "current_scene": obs_state["current_scene"]}
-    return {"success": False, "error": "Scene not found"}
+    """Switch OBS scene"""
+    if not obs_service.connected:
+        return {"success": False, "error": "OBS not connected"}
+    
+    success = await obs_service.switch_scene(switch.scene_name)
+    stats = await obs_service.get_stats()
+    return {"success": success, "current_scene": stats['current_scene']}
 
 @api_router.get("/obs/sources")
 async def get_sources():
-    return {"sources": obs_state["sources"]}
+    """Get OBS sources"""
+    if not obs_service.connected:
+        return {"sources": {}}
+    
+    sources = await obs_service.get_sources()
+    return {"sources": sources}
 
 @api_router.post("/obs/source")
 async def toggle_source(toggle: SourceToggle):
-    if toggle.source_name in obs_state["sources"]:
-        obs_state["sources"][toggle.source_name] = toggle.visible
-        return {"success": True, "source": toggle.source_name, "visible": toggle.visible}
-    return {"success": False, "error": "Source not found"}
+    """Toggle OBS source visibility"""
+    if not obs_service.connected:
+        return {"success": False, "error": "OBS not connected"}
+    
+    success = await obs_service.toggle_source(toggle.source_name, toggle.visible)
+    return {"success": success, "source": toggle.source_name, "visible": toggle.visible}
 
 @api_router.post("/obs/clip")
 async def save_clip():
-    return {"success": True, "message": "Clip saved!", "filename": f"clip_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"}
+    """Save OBS replay buffer"""
+    if not obs_service.connected:
+        return {"success": False, "error": "OBS not connected"}
+    
+    success = await obs_service.save_replay_buffer()
+    if success:
+        return {"success": True, "message": "Replay buffer saved!", "filename": f"replay_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"}
+    return {"success": False, "error": "Failed to save replay buffer"}
 
 # Music Queue Endpoints
 @api_router.post("/music/submit")
