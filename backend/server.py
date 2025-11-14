@@ -11,7 +11,9 @@ import uuid
 from datetime import datetime, timezone
 import random
 import asyncio
+from contextlib import asynccontextmanager
 
+from twitch_service import twitch_service
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -21,17 +23,76 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
-app = FastAPI()
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# WebSocket connection manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+    
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+        logger.info(f"WebSocket connected. Total: {len(self.active_connections)}")
+    
+    def disconnect(self, websocket: WebSocket):
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+            logger.info(f"WebSocket disconnected. Total: {len(self.active_connections)}")
+    
+    async def broadcast(self, data: dict):
+        """Broadcast message to all connected clients"""
+        for connection in self.active_connections:
+            try:
+                await connection.send_json(data)
+            except Exception as e:
+                logger.error(f"Error broadcasting: {e}")
+
+manager = ConnectionManager()
+
+# Lifespan management
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle startup and shutdown"""
+    # Startup
+    try:
+        logger.info("Starting Twitch integration...")
+        await twitch_service.initialize()
+        
+        # Set callback for chat messages
+        async def on_message(msg):
+            await manager.broadcast({'type': 'chat_message', 'data': msg})
+        
+        twitch_service.set_message_callback(on_message)
+        
+        # Start chat in background
+        asyncio.create_task(twitch_service.start_chat())
+        
+        logger.info("Twitch integration started successfully")
+    except Exception as e:
+        logger.error(f"Failed to start Twitch integration: {e}")
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down Twitch integration...")
+    await twitch_service.stop()
+    logger.info("Shutdown complete")
+
+# Create the main app
+app = FastAPI(lifespan=lifespan)
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-
-# Define Models
+# Models
 class StatusCheck(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     client_name: str
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -39,7 +100,7 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
-# OBS Models
+# OBS Models (keeping mock for now)
 class OBSStats(BaseModel):
     streaming: bool
     recording: bool
@@ -58,24 +119,7 @@ class SourceToggle(BaseModel):
     visible: bool
 
 class StreamControl(BaseModel):
-    action: str  # start, stop
-
-# Twitch Models
-class TwitchMessage(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    username: str
-    message: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    badges: List[str] = []
-    color: str = "#9147FF"
-
-class TwitchStats(BaseModel):
-    viewers: int
-    followers: int
-    subscribers: int
-    stream_title: str
-    stream_category: str
-    uptime_minutes: int
+    action: str
 
 class StreamTitleUpdate(BaseModel):
     title: str
@@ -89,7 +133,7 @@ class MusicSubmission(BaseModel):
     submitted_by: str
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     votes: int = 0
-    status: str = "queued"  # queued, playing, played, skipped
+    status: str = "queued"
 
 class MusicSubmissionCreate(BaseModel):
     artist: str
@@ -99,18 +143,9 @@ class MusicSubmissionCreate(BaseModel):
 
 class MusicVote(BaseModel):
     song_id: str
-    vote: int  # 1-10
+    vote: int
 
-# Alert Models
-class StreamAlert(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    type: str  # follower, subscriber, donation, raid
-    username: str
-    message: str
-    amount: Optional[int] = None
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-# Mock data stores
+# Mock OBS state
 obs_state = {
     "streaming": False,
     "recording": False,
@@ -126,42 +161,73 @@ obs_state = {
     }
 }
 
-twitch_state = {
-    "stream_title": "🎵 Music Review Stream | Submit Your Tracks!",
-    "stream_category": "Music",
-    "viewers": 0,
-    "followers": 15234,
-    "subscribers": 487,
-    "uptime_start": None
-}
-
-music_queue = []
-recent_alerts = []
-
-# Mock chat messages
-mock_usernames = ["xXMusicLuvr", "VibezOnly", "KalliesFan", "BeatSeeker420", "MelodyQueen", 
-                  "PixelPrincess", "Y2KVibes", "StreamSniper", "ChatMod_Sarah", "ProducerMike"]
-mock_messages = [
-    "This song is fire! 🔥",
-    "Can you react to my submission next?",
-    "Love the Y2K setup Kallie!",
-    "What's the current queue position?",
-    "That drop was insane!",
-    "!queue",
-    "Rating this 10/10",
-    "Submit mine please!",
-    "The vibes are immaculate ✨",
-    "This stream aesthetic is everything"
-]
-
-
-# Add your routes to the router instead of directly to app
+# Routes
 @api_router.get("/")
 async def root():
-    return {"message": "CREATR Dashboard API"}
+    return {"message": "Kallie's Dashboard API - Twitch Connected"}
 
-# OBS Endpoints
-@api_router.get("/obs/stats", response_model=OBSStats)
+# Twitch Real Endpoints
+@api_router.get("/twitch/stats")
+async def get_twitch_stats():
+    """Get real Twitch stream stats"""
+    try:
+        stream_info = await twitch_service.get_stream_info()
+        channel_info = await twitch_service.get_channel_info()
+        uptime = await twitch_service.get_uptime()
+        
+        if not stream_info or not channel_info:
+            return {
+                "viewers": 0,
+                "followers": 0,
+                "subscribers": 487,  # Mock - requires user auth
+                "stream_title": "🎵 Music Review Stream | Submit Your Tracks!",
+                "stream_category": "Music",
+                "uptime_minutes": 0
+            }
+        
+        uptime_minutes = uptime['total_seconds'] // 60 if uptime else 0
+        
+        return {
+            "viewers": stream_info.get('viewer_count', 0),
+            "followers": channel_info.get('followers', 0),
+            "subscribers": 487,  # Mock - requires user auth
+            "stream_title": channel_info.get('title', ''),
+            "stream_category": channel_info.get('game_name', 'Music'),
+            "uptime_minutes": uptime_minutes
+        }
+    except Exception as e:
+        logger.error(f"Error getting Twitch stats: {e}")
+        return {
+            "viewers": 0,
+            "followers": 0,
+            "subscribers": 0,
+            "stream_title": "Error loading data",
+            "stream_category": "",
+            "uptime_minutes": 0
+        }
+
+@api_router.get("/twitch/chat")
+async def get_chat_messages():
+    """Get recent chat messages"""
+    messages = twitch_service.get_recent_messages()
+    return messages
+
+@api_router.post("/twitch/title")
+async def update_stream_title(update: StreamTitleUpdate):
+    success = await twitch_service.update_stream_title(update.title)
+    return {"success": success, "message": "Title update requires user authentication"}
+
+@api_router.post("/twitch/marker")
+async def create_marker():
+    return {"success": False, "message": "Stream markers require user authentication"}
+
+@api_router.get("/twitch/alerts")
+async def get_alerts():
+    # Mock alerts for now
+    return []
+
+# Mock OBS Endpoints
+@api_router.get("/obs/stats")
 async def get_obs_stats():
     return OBSStats(
         streaming=obs_state["streaming"],
@@ -178,12 +244,8 @@ async def get_obs_stats():
 async def control_stream(control: StreamControl):
     if control.action == "start":
         obs_state["streaming"] = True
-        twitch_state["uptime_start"] = datetime.now(timezone.utc)
-        twitch_state["viewers"] = random.randint(50, 150)
     elif control.action == "stop":
         obs_state["streaming"] = False
-        twitch_state["uptime_start"] = None
-        twitch_state["viewers"] = 0
     return {"success": True, "streaming": obs_state["streaming"]}
 
 @api_router.post("/obs/recording")
@@ -220,88 +282,21 @@ async def toggle_source(toggle: SourceToggle):
 async def save_clip():
     return {"success": True, "message": "Clip saved!", "filename": f"clip_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"}
 
-# Twitch Endpoints
-@api_router.get("/twitch/stats", response_model=TwitchStats)
-async def get_twitch_stats():
-    uptime_minutes = 0
-    if twitch_state["uptime_start"]:
-        uptime_minutes = int((datetime.now(timezone.utc) - twitch_state["uptime_start"]).total_seconds() / 60)
-    
-    # Simulate viewer fluctuation
-    if obs_state["streaming"] and twitch_state["viewers"] > 0:
-        twitch_state["viewers"] += random.randint(-5, 10)
-        twitch_state["viewers"] = max(10, min(500, twitch_state["viewers"]))
-    
-    return TwitchStats(
-        viewers=twitch_state["viewers"],
-        followers=twitch_state["followers"],
-        subscribers=twitch_state["subscribers"],
-        stream_title=twitch_state["stream_title"],
-        stream_category=twitch_state["stream_category"],
-        uptime_minutes=uptime_minutes
-    )
-
-@api_router.post("/twitch/title")
-async def update_stream_title(update: StreamTitleUpdate):
-    twitch_state["stream_title"] = update.title
-    return {"success": True, "title": twitch_state["stream_title"]}
-
-@api_router.get("/twitch/chat", response_model=List[TwitchMessage])
-async def get_chat_messages():
-    # Generate mock messages
-    messages = []
-    for _ in range(random.randint(3, 8)):
-        msg = TwitchMessage(
-            username=random.choice(mock_usernames),
-            message=random.choice(mock_messages),
-            badges=random.sample(["moderator", "subscriber", "vip"], k=random.randint(0, 2)),
-            color=random.choice(["#9147FF", "#FF69B4", "#00D9FF", "#FFD700", "#FF6B6B"])
-        )
-        messages.append(msg)
-    return messages
-
-@api_router.post("/twitch/marker")
-async def create_marker():
-    return {"success": True, "message": "Stream marker created", "timestamp": datetime.now(timezone.utc).isoformat()}
-
-@api_router.get("/twitch/alerts", response_model=List[StreamAlert])
-async def get_alerts():
-    # Generate random alerts
-    if random.random() > 0.7 and obs_state["streaming"]:
-        alert_types = [
-            {"type": "follower", "username": random.choice(mock_usernames), "message": "just followed!"},
-            {"type": "subscriber", "username": random.choice(mock_usernames), "message": "just subscribed!"},
-            {"type": "donation", "username": random.choice(mock_usernames), "message": "donated", "amount": random.randint(2, 50)},
-        ]
-        alert_data = random.choice(alert_types)
-        alert = StreamAlert(**alert_data)
-        recent_alerts.insert(0, alert)
-        recent_alerts[:10]  # Keep only last 10
-    
-    return recent_alerts[:5]
-
 # Music Queue Endpoints
-@api_router.post("/music/submit", response_model=MusicSubmission)
+@api_router.post("/music/submit")
 async def submit_music(submission: MusicSubmissionCreate):
     song = MusicSubmission(**submission.model_dump())
-    
-    # Store in MongoDB
     doc = song.model_dump()
     doc['timestamp'] = doc['timestamp'].isoformat()
     await db.music_queue.insert_one(doc)
-    
-    music_queue.append(song)
     return song
 
-@api_router.get("/music/queue", response_model=List[MusicSubmission])
+@api_router.get("/music/queue")
 async def get_music_queue():
-    # Get from MongoDB
     songs = await db.music_queue.find({"status": "queued"}, {"_id": 0}).sort("timestamp", 1).to_list(100)
-    
     for song in songs:
         if isinstance(song['timestamp'], str):
             song['timestamp'] = datetime.fromisoformat(song['timestamp'])
-    
     return songs
 
 @api_router.get("/music/now-playing")
@@ -313,12 +308,8 @@ async def get_now_playing():
 
 @api_router.post("/music/play/{song_id}")
 async def play_song(song_id: str):
-    # Set all others to queued/played
     await db.music_queue.update_many({"status": "playing"}, {"$set": {"status": "played"}})
-    
-    # Set this one to playing
     result = await db.music_queue.update_one({"id": song_id}, {"$set": {"status": "playing"}})
-    
     if result.modified_count > 0:
         return {"success": True, "message": "Song now playing"}
     return {"success": False, "error": "Song not found"}
@@ -326,23 +317,18 @@ async def play_song(song_id: str):
 @api_router.post("/music/skip/{song_id}")
 async def skip_song(song_id: str):
     result = await db.music_queue.update_one({"id": song_id}, {"$set": {"status": "skipped"}})
-    
     if result.modified_count > 0:
         return {"success": True, "message": "Song skipped"}
     return {"success": False, "error": "Song not found"}
 
 @api_router.post("/music/vote")
 async def vote_song(vote: MusicVote):
-    result = await db.music_queue.update_one(
-        {"id": vote.song_id},
-        {"$inc": {"votes": vote.vote}}
-    )
-    
+    result = await db.music_queue.update_one({"id": vote.song_id}, {"$inc": {"votes": vote.vote}})
     if result.modified_count > 0:
         return {"success": True, "message": "Vote recorded"}
     return {"success": False, "error": "Song not found"}
 
-# Analytics Endpoints
+# Analytics
 @api_router.get("/analytics/summary")
 async def get_analytics_summary():
     total_songs = await db.music_queue.count_documents({})
@@ -358,10 +344,10 @@ async def get_analytics_summary():
         "songs_in_queue": total_songs - played_songs,
         "chat_messages": random.randint(500, 2000),
         "clips_created": random.randint(5, 15),
-        "top_chatters": random.sample(mock_usernames, 5)
+        "top_chatters": ["VibezOnly", "BeatSeeker420", "MelodyQueen", "PixelPrincess", "Y2KVibes"]
     }
 
-# AI Mock Endpoints
+# AI Mock
 @api_router.get("/ai/sentiment")
 async def get_chat_sentiment():
     return {
@@ -381,7 +367,19 @@ async def get_highlights():
         ]
     }
 
-# Include the router in the main app
+# WebSocket endpoint
+@api_router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            # Echo back for testing
+            await websocket.send_json({"type": "pong", "data": data})
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+
+# Include router
 app.include_router(api_router)
 
 app.add_middleware(
@@ -391,13 +389,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
