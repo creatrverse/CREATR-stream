@@ -110,6 +110,7 @@ async def lifespan(app: FastAPI):
     logger.info("Shutting down integrations...")
     await twitch_service.stop()
     await obs_service.disconnect()
+    await irc_chat.disconnect()
     logger.info("Shutdown complete")
 
 # Create the main app
