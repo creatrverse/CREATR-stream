@@ -14,6 +14,7 @@ import asyncio
 from contextlib import asynccontextmanager
 
 from twitch_service import twitch_service
+from obs_service import obs_service
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
