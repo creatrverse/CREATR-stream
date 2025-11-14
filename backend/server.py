@@ -78,6 +78,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to start Twitch integration: {e}")
     
+    # Start OBS integration
+    try:
+        logger.info("Starting OBS integration...")
+        await obs_service.connect()
+        logger.info("OBS integration started successfully")
+    except Exception as e:
+        logger.error(f"Failed to start OBS integration: {e}")
+    
     yield
     
     # Shutdown
