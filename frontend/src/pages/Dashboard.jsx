@@ -744,14 +744,14 @@ const Dashboard = () => {
                   <Label className="text-sm text-gray-400">Quick Actions</Label>
                   <div className="grid grid-cols-2 gap-2">
                     <Button
-                      onClick={saveClip}
+                      onClick={createTwitchClip}
                       variant="outline"
                       size="sm"
-                      className="border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white"
-                      data-testid="btn-save-clip"
+                      className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
+                      data-testid="btn-twitch-clip"
                     >
-                      <Scissors className="w-4 h-4 mr-2" />
-                      Save Clip
+                      <Video className="w-4 h-4 mr-2" />
+                      Twitch Clip
                     </Button>
                     <Button
                       onClick={createMarker}
