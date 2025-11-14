@@ -374,6 +374,54 @@ async def create_marker(session: Session = Depends(get_session)):
         logger.error(f"Failed to create marker: {e}")
         return {"success": False, "error": str(e)}
 
+@api_router.post("/twitch/clip")
+async def create_twitch_clip(session: Session = Depends(get_session)):
+    """Create a Twitch clip using OAuth"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Refresh token if needed
+    if token_data.expires_at < datetime.now(timezone.utc):
+        try:
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            session.add(token_data)
+            session.commit()
+        except:
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"https://api.twitch.tv/helix/clips?broadcaster_id={token_data.user_id}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID')
+                }
+            )
+            
+            if response.status_code == 202:
+                data = response.json()
+                clip_data = data.get('data', [{}])[0]
+                return {
+                    "success": True,
+                    "message": "Clip created!",
+                    "clip_id": clip_data.get('id'),
+                    "edit_url": clip_data.get('edit_url')
+                }
+            else:
+                return {"success": False, "error": "Failed to create clip"}
+    except Exception as e:
+        logger.error(f"Failed to create clip: {e}")
+        return {"success": False, "error": str(e)}
+
 @api_router.get("/twitch/alerts")
 async def get_alerts():
     # Mock alerts for now
