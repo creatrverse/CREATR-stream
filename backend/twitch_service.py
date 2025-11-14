@@ -129,8 +129,11 @@ class TwitchService:
             followers_response = await self.twitch.get_channel_followers(broadcaster_id=self.user_id)
             follower_count = followers_response.total if followers_response else 0
             
-            # Get channel information
-            async for channel in self.twitch.get_channel_information(broadcaster_id=self.user_id):
+            # Get channel information - use first() helper with await
+            channel_gen = self.twitch.get_channel_information(broadcaster_id=self.user_id)
+            channel = await first(channel_gen)
+            
+            if channel:
                 return {
                     'followers': follower_count,
                     'title': channel.title,
@@ -144,6 +147,8 @@ class TwitchService:
             }
         except Exception as e:
             logger.error(f"Error getting channel info: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
     
     async def update_stream_title(self, title: str) -> bool:
