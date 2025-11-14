@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: kallie-dashboard-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - dashboard-network
+
+  # Backend (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kallie-dashboard-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017
+      - DB_NAME=kallie_dashboard
+      - CORS_ORIGINS=http://localhost:3000
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - TWITCH_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - TWITCH_CHANNEL_NAME=${TWITCH_CHANNEL_NAME}
+      - TWITCH_REDIRECT_URI=http://localhost:3000/api/auth/callback
+      - FRONTEND_URL=http://localhost:3000
+      - OBS_WEBSOCKET_HOST=host.docker.internal
+      - OBS_WEBSOCKET_PORT=4455
+      - OBS_WEBSOCKET_PASSWORD=${OBS_WEBSOCKET_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=sqlite:///./oauth_tokens.db
+    volumes:
+      - ./backend:/app/backend
+      - backend_data:/app/backend/data
+    depends_on:
+      - mongodb
+    networks:
+      - dashboard-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Frontend (React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kallie-dashboard-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8001
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    depends_on:
+      - backend
+    networks:
+      - dashboard-network
+
+volumes:
+  mongodb_data:
+  backend_data:
+
+networks:
+  dashboard-network:
+    driver: bridge
