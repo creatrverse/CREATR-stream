@@ -237,8 +237,8 @@ async def get_twitch_stats():
 
 @api_router.get("/twitch/chat")
 async def get_chat_messages():
-    """Get recent chat messages"""
-    messages = twitch_service.get_recent_messages()
+    """Get recent chat messages from IRC"""
+    messages = irc_chat.get_recent_messages()
     return messages
 
 @api_router.post("/twitch/title")
