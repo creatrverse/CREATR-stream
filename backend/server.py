@@ -371,6 +371,133 @@ async def save_clip():
         return {"success": True, "message": "Replay buffer saved!", "filename": f"replay_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"}
     return {"success": False, "error": "Failed to save replay buffer"}
 
+# OAuth Endpoints
+@api_router.get("/auth/login")
+async def oauth_login():
+    """Redirect to Twitch OAuth authorization"""
+    auth_url = oauth_service.get_authorization_url()
+    return {"authorization_url": auth_url}
+
+@api_router.get("/auth/callback")
+async def oauth_callback(code: str, session: Session = Depends(get_session)):
+    """Handle OAuth callback from Twitch"""
+    try:
+        # Exchange code for tokens
+        token_response = await oauth_service.exchange_code_for_token(code)
+        
+        if 'error' in token_response:
+            raise HTTPException(status_code=400, detail=token_response.get('error_description'))
+        
+        # Get user info
+        user_info = await oauth_service.get_user_info(token_response['access_token'])
+        if not user_info:
+            raise HTTPException(status_code=400, detail="Failed to get user information")
+        
+        user_id = user_info['id']
+        username = user_info['login']
+        
+        # Calculate expiration
+        expires_at = datetime.now(timezone.utc) + timedelta(seconds=token_response.get('expires_in', 3600))
+        
+        # Check if token exists for this user
+        from sqlmodel import select
+        existing_token = session.exec(select(TokenData).where(TokenData.user_id == user_id)).first()
+        
+        if existing_token:
+            # Update existing token
+            existing_token.access_token = token_response['access_token']
+            existing_token.refresh_token = token_response['refresh_token']
+            existing_token.expires_at = expires_at
+            existing_token.scopes = token_response.get('scope', oauth_service.scopes)
+            existing_token.updated_at = datetime.now(timezone.utc)
+            session.add(existing_token)
+        else:
+            # Create new token
+            new_token = TokenData(
+                user_id=user_id,
+                username=username,
+                access_token=token_response['access_token'],
+                refresh_token=token_response['refresh_token'],
+                expires_at=expires_at,
+                scopes=token_response.get('scope', oauth_service.scopes)
+            )
+            session.add(new_token)
+        
+        session.commit()
+        
+        # Create session token for frontend
+        session_token = oauth_service.create_session_token(user_id, timedelta(days=7))
+        
+        # Redirect to frontend with session token
+        frontend_url = os.getenv('FRONTEND_URL', 'https://obs-twitch-dash.preview.emergentagent.com')
+        return RedirectResponse(url=f"{frontend_url}/?session_token={session_token}&auth=success")
+        
+    except Exception as e:
+        logger.error(f"OAuth callback error: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise HTTPException(status_code=400, detail=str(e))
+
+@api_router.get("/auth/user")
+async def get_current_user(session: Session = Depends(get_session)):
+    """Get current authenticated user"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Check if token needs refresh
+    if token_data.expires_at < datetime.now(timezone.utc):
+        try:
+            # Refresh token
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            
+            if 'error' in new_token_response:
+                raise HTTPException(status_code=401, detail="Token refresh failed")
+            
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            token_data.updated_at = datetime.now(timezone.utc)
+            session.add(token_data)
+            session.commit()
+        except Exception as e:
+            logger.error(f"Token refresh failed: {e}")
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    return {
+        "user_id": token_data.user_id,
+        "username": token_data.username,
+        "access_token": token_data.access_token,
+        "scopes": token_data.scopes
+    }
+
+@api_router.post("/auth/logout")
+async def oauth_logout(session: Session = Depends(get_session)):
+    """Logout and clear OAuth tokens"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if token_data:
+        session.delete(token_data)
+        session.commit()
+    
+    return {"status": "logged out"}
+
+@api_router.get("/auth/status")
+async def auth_status(session: Session = Depends(get_session)):
+    """Check if user is authenticated"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    return {
+        "authenticated": token_data is not None,
+        "username": token_data.username if token_data else None
+    }
+
 # Music Queue Endpoints
 @api_router.post("/music/submit")
 async def submit_music(submission: MusicSubmissionCreate):
