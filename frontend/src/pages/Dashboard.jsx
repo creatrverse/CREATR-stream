@@ -339,10 +339,10 @@ const Dashboard = () => {
         <div className="flex items-center gap-4 mb-2">
           <Sparkles className="w-10 h-10 text-pink-400" />
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text">
-            CREATR Dashboard
+            Kallie's Dashboard
           </h1>
         </div>
-        <p className="text-base text-gray-400 ml-14">Your Y2K-inspired stream command center ✨</p>
+        <p className="text-base text-white ml-14">Your streaming command center ✨</p>
       </div>
 
       <Tabs defaultValue="control" className="space-y-6">
