@@ -87,6 +87,23 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to start OBS integration: {e}")
     
+    # Start IRC chat
+    try:
+        logger.info("Starting IRC chat integration...")
+        
+        # Set callback for chat messages
+        async def on_irc_message(msg):
+            await manager.broadcast({'type': 'chat_message', 'data': msg})
+        
+        irc_chat.set_message_callback(on_irc_message)
+        
+        # Start IRC in background
+        asyncio.create_task(irc_chat.connect())
+        
+        logger.info("IRC chat integration started")
+    except Exception as e:
+        logger.error(f"Failed to start IRC chat: {e}")
+    
     yield
     
     # Shutdown
