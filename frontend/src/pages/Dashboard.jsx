@@ -407,74 +407,118 @@ const Dashboard = () => {
           </div>
 
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Stream Preview */}
-            <Card className="glass" data-testid="stream-preview">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <Video className="w-4 h-4 text-pink-400" />
-                    Preview
-                  </span>
-                  {obsStats.streaming && (
-                    <Badge className="bg-red-500 animate-pulse text-xs">
-                      <Radio className="w-2 h-2 mr-1" />
-                      LIVE
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="relative w-full aspect-video bg-gradient-to-br from-purple-900/40 to-pink-900/40 rounded-lg overflow-hidden border border-pink-400/30">
-                  {/* Video Preview Area */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {obsStats.streaming ? (
-                      <div className="text-center space-y-2">
-                        <div className="relative">
-                          <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center animate-pulse">
-                            <Video className="w-6 h-6 text-white" />
-                          </div>
-                          <div className="absolute inset-0 w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 animate-ping opacity-20"></div>
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-pink-400">{obsStats.current_scene}</p>
-                          <p className="text-[10px] text-gray-400">{obsStats.fps} FPS • {(obsStats.bitrate / 1000).toFixed(1)}k</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center space-y-2">
-                        <Monitor className="w-10 h-10 mx-auto text-gray-500 opacity-50" />
-                        <p className="text-xs text-gray-400">Offline</p>
-                      </div>
+            {/* Left Column - Preview & Chat */}
+            <div className="space-y-4">
+              {/* Stream Preview */}
+              <Card className="glass" data-testid="stream-preview">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Video className="w-4 h-4 text-pink-400" />
+                      Preview
+                    </span>
+                    {obsStats.streaming && (
+                      <Badge className="bg-red-500 animate-pulse text-xs">
+                        <Radio className="w-2 h-2 mr-1" />
+                        LIVE
+                      </Badge>
                     )}
-                  </div>
-                  
-                  {/* Overlay Indicators */}
-                  {obsStats.streaming && (
-                    <>
-                      {/* Top Right - Live Indicator */}
-                      <div className="absolute top-2 right-2 bg-red-500 px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                        <p className="text-[9px] font-bold text-white">LIVE</p>
-                      </div>
-                      
-                      {/* Bottom Left - Recording Indicator */}
-                      {obsStats.recording && (
-                        <div className="absolute bottom-2 left-2 bg-red-600 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Circle className="w-2 h-2 fill-white text-white" />
-                          <p className="text-[9px] font-bold text-white">REC</p>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative w-full aspect-video bg-gradient-to-br from-purple-900/40 to-pink-900/40 rounded-lg overflow-hidden border border-pink-400/30">
+                    {/* Video Preview Area */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      {obsStats.streaming ? (
+                        <div className="text-center space-y-2">
+                          <div className="relative">
+                            <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center animate-pulse">
+                              <Video className="w-6 h-6 text-white" />
+                            </div>
+                            <div className="absolute inset-0 w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 animate-ping opacity-20"></div>
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-pink-400">{obsStats.current_scene}</p>
+                            <p className="text-[10px] text-gray-400">{obsStats.fps} FPS • {(obsStats.bitrate / 1000).toFixed(1)}k</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-center space-y-2">
+                          <Monitor className="w-10 h-10 mx-auto text-gray-500 opacity-50" />
+                          <p className="text-xs text-gray-400">Offline</p>
                         </div>
                       )}
-                      
-                      {/* Bottom Right - Viewer Count */}
-                      <div className="absolute bottom-2 right-2 glass px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <Users className="w-2 h-2 text-purple-400" />
-                        <p className="text-[9px] font-bold text-white">{twitchStats.viewers}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    </div>
+                    
+                    {/* Overlay Indicators */}
+                    {obsStats.streaming && (
+                      <>
+                        {/* Top Right - Live Indicator */}
+                        <div className="absolute top-2 right-2 bg-red-500 px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                          <p className="text-[9px] font-bold text-white">LIVE</p>
+                        </div>
+                        
+                        {/* Bottom Left - Recording Indicator */}
+                        {obsStats.recording && (
+                          <div className="absolute bottom-2 left-2 bg-red-600 px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <Circle className="w-2 h-2 fill-white text-white" />
+                            <p className="text-[9px] font-bold text-white">REC</p>
+                          </div>
+                        )}
+                        
+                        {/* Bottom Right - Viewer Count */}
+                        <div className="absolute bottom-2 right-2 glass px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Users className="w-2 h-2 text-purple-400" />
+                          <p className="text-[9px] font-bold text-white">{twitchStats.viewers}</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Live Chat Mini */}
+              <Card className="glass" data-testid="mini-chat">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageCircle className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm">Live Chat</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className="h-[200px] pr-2">
+                    <div className="space-y-2">
+                      {chatMessages.slice(0, 8).map((msg) => (
+                        <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
+                          <div className="flex items-start gap-1.5">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1 mb-0.5 flex-wrap">
+                                <span className="font-semibold truncate text-xs" style={{ color: msg.color }}>
+                                  {msg.username}
+                                </span>
+                                {msg.badges.map((badge, i) => (
+                                  <span key={i} className={`badge badge-${badge} text-[8px]`}>
+                                    {badge === "moderator" ? "MOD" : badge === "subscriber" ? "SUB" : "VIP"}
+                                  </span>
+                                ))}
+                              </div>
+                              <p className="text-[11px] text-gray-200 break-words">{msg.message}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {chatMessages.length === 0 && (
+                        <div className="text-center py-8 text-gray-500">
+                          <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                          <p className="text-xs">No messages yet</p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* OBS Control */}
             <Card className="glass">
