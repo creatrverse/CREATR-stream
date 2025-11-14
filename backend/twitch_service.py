@@ -26,8 +26,10 @@ class TwitchService:
     async def initialize(self):
         """Initialize Twitch API connection"""
         try:
+            logger.info(f"Initializing Twitch with client_id: {self.client_id[:10]}...")
             self.twitch = Twitch(self.client_id, self.client_secret)
             await self.twitch.authenticate_app([])
+            logger.info("Authenticated with Twitch")
             
             # Get user ID for the channel
             user = await first(self.twitch.get_users(logins=[self.channel_name]))
@@ -38,7 +40,9 @@ class TwitchService:
                 logger.error(f"Channel {self.channel_name} not found")
                 
         except Exception as e:
+            import traceback
             logger.error(f"Failed to initialize Twitch API: {e}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
             raise
     
     async def start_chat(self):
