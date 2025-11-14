@@ -46,6 +46,8 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const Dashboard = () => {
+  const { user, logout } = useAuth();
+  
   // OBS State
   const [obsStats, setObsStats] = useState({
     streaming: false,
