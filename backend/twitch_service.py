@@ -53,20 +53,10 @@ class TwitchService:
     
     async def start_chat(self):
         """Start listening to chat messages"""
-        if not self.twitch:
-            await self.initialize()
-            
-        try:
-            self.chat = await Chat(self.twitch)
-            
-            self.chat.register_event('ready', self._on_ready)
-            self.chat.register_event('message', self._on_message)
-            
-            await self.chat.start()
-            logger.info("Chat listener started")
-            
-        except Exception as e:
-            logger.error(f"Failed to start chat: {e}")
+        # Chat requires user authentication with chat:read scope
+        # For app-only auth, we can't access real-time chat
+        # Dashboard will show that chat requires OBS integration or user auth
+        logger.warning("Real-time chat requires user authentication - using mock chat")
     
     async def _on_ready(self, ready_event: EventData):
         """Called when chat is ready"""
