@@ -89,8 +89,9 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    logger.info("Shutting down Twitch integration...")
+    logger.info("Shutting down integrations...")
     await twitch_service.stop()
+    await obs_service.disconnect()
     logger.info("Shutdown complete")
 
 # Create the main app
