@@ -26,7 +26,7 @@ class TwitchService:
     async def initialize(self):
         """Initialize Twitch API connection"""
         try:
-            self.twitch = await Twitch(self.client_id, self.client_secret)
+            self.twitch = Twitch(self.client_id, self.client_secret)
             await self.twitch.authenticate_app([])
             
             # Get user ID for the channel
