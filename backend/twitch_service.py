@@ -140,12 +140,17 @@ class TwitchService:
             follower_count = followers_response.total if followers_response else 0
             
             # Get channel information
-            channel = await first(self.twitch.get_channel_information(broadcaster_id=self.user_id))
+            async for channel in self.twitch.get_channel_information(broadcaster_id=self.user_id):
+                return {
+                    'followers': follower_count,
+                    'title': channel.title,
+                    'game_name': channel.game_name
+                }
             
             return {
                 'followers': follower_count,
-                'title': channel.title if channel else None,
-                'game_name': channel.game_name if channel else None
+                'title': None,
+                'game_name': None
             }
         except Exception as e:
             logger.error(f"Error getting channel info: {e}")
