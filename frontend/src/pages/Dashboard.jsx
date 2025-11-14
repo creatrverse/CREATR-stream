@@ -235,7 +235,7 @@ const Dashboard = () => {
     }
   };
 
-  // Save clip
+  // Save OBS clip (replay buffer)
   const saveClip = async () => {
     try {
       const response = await axios.post(`${API}/obs/clip`);
@@ -245,24 +245,64 @@ const Dashboard = () => {
     }
   };
 
-  // Update stream title
-  const updateStreamTitle = async () => {
+  // Create Twitch clip
+  const createTwitchClip = async () => {
     try {
-      await axios.post(`${API}/twitch/title`, { title: newTitle });
-      toast.success("Stream title updated! ✨");
-      fetchTwitchStats();
+      const response = await axios.post(`${API}/twitch/clip`);
+      if (response.data.success) {
+        toast.success(`${response.data.message} 🎬`, {
+          description: response.data.edit_url ? "Click to view clip" : undefined,
+          action: response.data.edit_url ? {
+            label: "Open Clip",
+            onClick: () => window.open(response.data.edit_url, '_blank')
+          } : undefined
+        });
+      } else {
+        toast.error(response.data.error || "Failed to create clip");
+      }
     } catch (error) {
-      toast.error("Failed to update title");
+      if (error.response?.status === 401) {
+        toast.error("Please login to create clips");
+      } else {
+        toast.error("Failed to create Twitch clip");
+      }
     }
   };
 
-  // Create marker
+  // Update stream title
+  const updateStreamTitle = async () => {
+    try {
+      const response = await axios.post(`${API}/twitch/title`, { title: newTitle });
+      if (response.data.success) {
+        toast.success("Stream title updated! ✨");
+        fetchTwitchStats();
+      } else {
+        toast.error(response.data.error || "Failed to update title");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to update title");
+      } else {
+        toast.error("Failed to update title");
+      }
+    }
+  };
+
+  // Create stream marker
   const createMarker = async () => {
     try {
-      await axios.post(`${API}/twitch/marker`);
-      toast.success("Stream marker created! 📍");
+      const response = await axios.post(`${API}/twitch/marker`);
+      if (response.data.success) {
+        toast.success("Stream marker created! 📍");
+      } else {
+        toast.error(response.data.error || "Failed to create marker");
+      }
     } catch (error) {
-      toast.error("Failed to create marker");
+      if (error.response?.status === 401) {
+        toast.error("Please login to create markers");
+      } else {
+        toast.error("Failed to create marker");
+      }
     }
   };
 
