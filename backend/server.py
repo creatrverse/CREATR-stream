@@ -13,6 +13,7 @@ from datetime import datetime, timezone, timedelta
 import random
 import asyncio
 from contextlib import asynccontextmanager
+import httpx
 
 from twitch_service import twitch_service
 from obs_service import obs_service
