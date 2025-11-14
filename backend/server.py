@@ -288,13 +288,91 @@ async def get_chat_messages():
     return messages
 
 @api_router.post("/twitch/title")
-async def update_stream_title(update: StreamTitleUpdate):
-    success = await twitch_service.update_stream_title(update.title)
-    return {"success": success, "message": "Title update requires user authentication"}
+async def update_stream_title(update: StreamTitleUpdate, session: Session = Depends(get_session)):
+    """Update stream title using OAuth"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Refresh token if needed
+    if token_data.expires_at < datetime.now(timezone.utc):
+        try:
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            session.add(token_data)
+            session.commit()
+        except:
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/channels?broadcaster_id={token_data.user_id}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID'),
+                    'Content-Type': 'application/json'
+                },
+                json={"title": update.title}
+            )
+            
+            if response.status_code == 204:
+                return {"success": True, "title": update.title}
+            else:
+                return {"success": False, "error": "Failed to update title"}
+    except Exception as e:
+        logger.error(f"Failed to update stream title: {e}")
+        return {"success": False, "error": str(e)}
 
 @api_router.post("/twitch/marker")
-async def create_marker():
-    return {"success": False, "message": "Stream markers require user authentication"}
+async def create_marker(session: Session = Depends(get_session)):
+    """Create stream marker using OAuth"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Refresh token if needed
+    if token_data.expires_at < datetime.now(timezone.utc):
+        try:
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            session.add(token_data)
+            session.commit()
+        except:
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.twitch.tv/helix/streams/markers",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID'),
+                    'Content-Type': 'application/json'
+                },
+                json={"user_id": token_data.user_id, "description": "Dashboard marker"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                return {"success": True, "message": "Stream marker created", "data": data}
+            else:
+                return {"success": False, "error": "Failed to create marker"}
+    except Exception as e:
+        logger.error(f"Failed to create marker: {e}")
+        return {"success": False, "error": str(e)}
 
 @api_router.get("/twitch/alerts")
 async def get_alerts():
