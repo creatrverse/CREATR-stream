@@ -341,13 +341,36 @@ const Dashboard = () => {
     <div className="min-h-screen p-4 md:p-6 lg:p-8" data-testid="dashboard">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-4 mb-2">
-          <Sparkles className="w-10 h-10 text-pink-400" />
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text">
-            Kallie's Dashboard
-          </h1>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-4">
+            <Sparkles className="w-10 h-10 text-pink-400" />
+            <div>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold gradient-text">
+                Kallie's Dashboard
+              </h1>
+              <p className="text-base text-white ml-1">Your streaming command center ✨</p>
+            </div>
+          </div>
+          
+          {/* User info and logout */}
+          <div className="flex items-center gap-4">
+            {user && (
+              <div className="glass px-4 py-2 rounded-full flex items-center gap-3">
+                <User className="w-4 h-4 text-purple-400" />
+                <span className="text-sm font-semibold text-white">{user.username}</span>
+              </div>
+            )}
+            <Button
+              onClick={logout}
+              variant="outline"
+              className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+              data-testid="btn-logout"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
-        <p className="text-base text-white ml-14">Your streaming command center ✨</p>
       </div>
 
       <Tabs defaultValue="control" className="space-y-6">
