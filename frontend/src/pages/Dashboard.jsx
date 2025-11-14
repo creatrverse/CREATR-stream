@@ -27,8 +27,11 @@ import {
   Bookmark,
   BarChart3,
   Brain,
-  Send
+  Send,
+  LogOut,
+  User
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
