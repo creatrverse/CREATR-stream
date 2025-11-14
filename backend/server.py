@@ -19,6 +19,7 @@ from twitch_service import twitch_service
 from obs_service import obs_service
 from irc_chat_service import irc_chat
 from oauth_database import TokenData, create_db_and_tables, get_session
+from sqlmodel import Session
 from oauth_service import oauth_service
 
 ROOT_DIR = Path(__file__).parent
