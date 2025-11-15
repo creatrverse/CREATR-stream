@@ -8,7 +8,7 @@ You need to add the OAuth callback URL to your Twitch application:
 1. Go to **https://dev.twitch.tv/console/apps**
 2. Click **"Manage"** on your "Kallie Stream Dashboard" application
 3. In **"OAuth Redirect URLs"**, click **"Add"**
-4. Enter EXACTLY: `https://obs-twitch-dash.preview.emergentagent.com/auth/callback`
+4. Enter EXACTLY: `https://kallies-stream-hub.preview.emergentagent.com/auth/callback`
 5. Click **"Add"** and then **"Save"**
 
 ### Why This Is Needed:
@@ -49,7 +49,7 @@ Twitch requires the exact callback URL to be registered for security. Without th
 
 Once you've updated the redirect URI:
 
-1. **Go to dashboard**: https://obs-twitch-dash.preview.emergentagent.com
+1. **Go to dashboard**: https://kallies-stream-hub.preview.emergentagent.com
 2. **Look for "Login with Twitch"** button (will be added to UI)
 3. **Click login** - you'll be redirected to Twitch
 4. **Authorize the app** - grant the requested permissions

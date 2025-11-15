@@ -31,7 +31,7 @@ You'll see a form with these fields:
 - Click **"Add"** or the **"+"** button
 - Enter EXACTLY: `http://localhost:3000`
 - Click **"Add"** again
-- Enter EXACTLY: `https://obs-twitch-dash.preview.emergentagent.com/auth/callback`
+- Enter EXACTLY: `https://kallies-stream-hub.preview.emergentagent.com/auth/callback`
 - These URLs tell Twitch where to send authentication data
 
 **Category:**
