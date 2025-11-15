@@ -73,7 +73,7 @@ SECRET_KEY=kallie-local-dashboard-secret-key-12345
 5. Click **"Save"**
 
 Now you'll have both:
-- `https://kallies-stream-hub.preview.emergentagent.com/api/auth/callback` (cloud)
+- `https://obs-dashboard.preview.emergentagent.com/api/auth/callback` (cloud)
 - `http://localhost:3000/api/auth/callback` (local)
 
 ### Step 4: Start the Dashboard
