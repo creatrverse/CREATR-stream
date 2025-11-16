@@ -20,10 +20,8 @@ function AppContent() {
     );
   }
 
-  if (!isAuthenticated) {
-    return <LoginPrompt />;
-  }
-
+  // Always show dashboard regardless of authentication status
+  // Features requiring auth will be disabled in the dashboard
   return <Dashboard />;
 }
 
