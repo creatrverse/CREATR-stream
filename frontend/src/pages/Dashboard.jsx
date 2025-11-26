@@ -492,6 +492,10 @@ const Dashboard = () => {
     fetchNowPlaying();
     fetchAnalytics();
     fetchSentiment();
+    fetchSubmissions();
+    fetchSkipQueue();
+    fetchQueueStats();
+    fetchUsernameMappings();
 
     // Set up polling
     const interval = setInterval(() => {
@@ -502,6 +506,9 @@ const Dashboard = () => {
       fetchMusicQueue();
       fetchNowPlaying();
       fetchSentiment();
+      fetchSubmissions();
+      fetchSkipQueue();
+      fetchQueueStats();
     }, 3000);
 
     return () => clearInterval(interval);
