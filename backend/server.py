@@ -878,6 +878,108 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
         frontend_url = os.getenv('FRONTEND_URL', 'https://yk2-obs-center.preview.emergentagent.com')
         return RedirectResponse(url=f"{frontend_url}/?auth=error&message={str(e)}")
 
+# ============================================
+# Discord Queue Management Endpoints
+# ============================================
+
+@api_router.get("/queue/submissions")
+async def get_submissions():
+    """Get all pending music submissions"""
+    try:
+        queue = discord_manager.get_queue()
+        return {"submissions": queue, "count": len(queue)}
+    except Exception as e:
+        logger.error(f"Error getting submissions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/queue/skips")
+async def get_skip_submissions():
+    """Get all pending skip submissions"""
+    try:
+        skip_queue = discord_manager.get_skip_queue()
+        return {"submissions": skip_queue, "count": len(skip_queue)}
+    except Exception as e:
+        logger.error(f"Error getting skip submissions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+class MarkSubmissionRequest(BaseModel):
+    submission_id: str
+    status: str  # 'played' or 'skipped'
+
+@api_router.post("/queue/mark")
+async def mark_submission(request: MarkSubmissionRequest):
+    """Mark a submission as played or skipped"""
+    try:
+        success = discord_manager.mark_submission(request.submission_id, request.status)
+        if success:
+            return {"success": True, "message": f"Submission marked as {request.status}"}
+        else:
+            raise HTTPException(status_code=404, detail="Submission not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error marking submission: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/queue/mark-skip")
+async def mark_skip_submission(request: MarkSubmissionRequest):
+    """Mark a skip submission as played or skipped"""
+    try:
+        success = discord_manager.mark_skip_submission(request.submission_id, request.status)
+        if success:
+            return {"success": True, "message": f"Skip submission marked as {request.status}"}
+        else:
+            raise HTTPException(status_code=404, detail="Skip submission not found")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error marking skip submission: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+class UsernameMappingRequest(BaseModel):
+    discord_username: str
+    twitch_username: str
+
+@api_router.post("/queue/map-username")
+async def add_username_mapping(request: UsernameMappingRequest):
+    """Map Discord username to Twitch username"""
+    try:
+        discord_manager.add_username_mapping(request.discord_username, request.twitch_username)
+        return {"success": True, "message": "Username mapping added"}
+    except Exception as e:
+        logger.error(f"Error adding username mapping: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/queue/map-username/{discord_username}")
+async def remove_username_mapping(discord_username: str):
+    """Remove username mapping"""
+    try:
+        discord_manager.remove_username_mapping(discord_username)
+        return {"success": True, "message": "Username mapping removed"}
+    except Exception as e:
+        logger.error(f"Error removing username mapping: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/queue/mappings")
+async def get_username_mappings():
+    """Get all username mappings"""
+    try:
+        mappings = discord_manager.get_username_mappings()
+        return {"mappings": mappings}
+    except Exception as e:
+        logger.error(f"Error getting username mappings: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/queue/stats")
+async def get_queue_stats():
+    """Get queue statistics"""
+    try:
+        stats = discord_manager.get_stats()
+        return stats
+    except Exception as e:
+        logger.error(f"Error getting queue stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include router
 app.include_router(api_router)
 
