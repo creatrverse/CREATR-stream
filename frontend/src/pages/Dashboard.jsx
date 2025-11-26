@@ -349,6 +349,20 @@ const Dashboard = () => {
     }
   };
 
+  // Build Twitch player URL with dynamic parent
+  useEffect(() => {
+    const hostname = window.location.hostname;
+    const parents = ["localhost", "127.0.0.1", "yk2-obs-center.preview.emergentagent.com"];
+    
+    if (!parents.includes(hostname)) {
+      parents.push(hostname);
+    }
+    
+    const parentParams = parents.map(p => `parent=${p}`).join('&');
+    const url = `https://player.twitch.tv/?channel=kalliestockton&${parentParams}`;
+    setTwitchPlayerUrl(url);
+  }, []);
+
   // Initial data fetch
   useEffect(() => {
     fetchOBSStats();
