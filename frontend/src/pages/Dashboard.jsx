@@ -371,6 +371,21 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Initialize Twitch Embed Player
+  useEffect(() => {
+    if (window.Twitch && window.Twitch.Embed) {
+      new window.Twitch.Embed("twitch-embed", {
+        width: "100%",
+        height: "100%",
+        channel: "kalliestockton",
+        layout: "video",
+        autoplay: false,
+        muted: false,
+        parent: ["localhost"]
+      });
+    }
+  }, []);
+
   const formatUptime = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
