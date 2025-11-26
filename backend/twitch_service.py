@@ -129,9 +129,9 @@ class TwitchService:
             followers_response = await self.twitch.get_channel_followers(broadcaster_id=self.user_id)
             follower_count = followers_response.total if followers_response else 0
             
-            # Get channel information - use first() helper with await
-            channel_gen = await self.twitch.get_channel_information(broadcaster_id=self.user_id)
-            channel = await first(channel_gen)
+            # Get channel information - returns a list
+            channels = await self.twitch.get_channel_information(broadcaster_id=self.user_id)
+            channel = channels[0] if channels else None
             
             if channel:
                 return {
