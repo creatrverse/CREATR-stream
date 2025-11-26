@@ -520,7 +520,14 @@ const Dashboard = () => {
                 <CardContent>
                   <div className="relative w-full aspect-video bg-gradient-to-br from-purple-900/40 to-pink-900/40 rounded-lg overflow-hidden border border-pink-400/30">
                     {/* Twitch Embed Player */}
-                    <div id="twitch-embed" className="w-full h-full"></div>
+                    <iframe
+                      src="https://player.twitch.tv/?channel=kalliestockton&parent=localhost&parent=127.0.0.1&parent=yk2-obs-center.preview.emergentagent.com"
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allowFullScreen={true}
+                      scrolling="no"
+                      title="Twitch Stream"
+                    />
                   </div>
                 </CardContent>
               </Card>
