@@ -88,6 +88,9 @@ const Dashboard = () => {
   // Analytics State
   const [analytics, setAnalytics] = useState(null);
   const [sentiment, setSentiment] = useState(null);
+  
+  // Twitch Player URL with dynamic parent
+  const [twitchPlayerUrl, setTwitchPlayerUrl] = useState("");
 
   // Fetch OBS stats
   const fetchOBSStats = async () => {
