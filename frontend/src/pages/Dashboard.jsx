@@ -374,6 +374,15 @@ const Dashboard = () => {
   // Initialize Twitch Embed Player
   useEffect(() => {
     if (window.Twitch && window.Twitch.Embed) {
+      // Get current hostname dynamically
+      const currentHost = window.location.hostname;
+      const parents = ["localhost", "127.0.0.1", "yk2-obs-center.preview.emergentagent.com"];
+      
+      // Add current hostname if not already in the list
+      if (!parents.includes(currentHost)) {
+        parents.push(currentHost);
+      }
+      
       new window.Twitch.Embed("twitch-embed", {
         width: "100%",
         height: "100%",
@@ -381,7 +390,7 @@ const Dashboard = () => {
         layout: "video",
         autoplay: false,
         muted: false,
-        parent: ["localhost"]
+        parent: parents
       });
     }
   }, []);
