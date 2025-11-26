@@ -247,6 +247,72 @@ const Dashboard = () => {
       console.error("Error fetching sentiment:", error);
     }
   };
+  
+  // Mark submission as played or skipped
+  const markSubmission = async (submissionId, status) => {
+    try {
+      await axios.post(`${API}/queue/mark`, {
+        submission_id: submissionId,
+        status: status
+      });
+      toast.success(`Marked as ${status}! ✅`);
+      fetchSubmissions();
+      fetchQueueStats();
+    } catch (error) {
+      toast.error("Failed to mark submission");
+      console.error("Error marking submission:", error);
+    }
+  };
+  
+  // Mark skip submission as played or skipped
+  const markSkipSubmission = async (submissionId, status) => {
+    try {
+      await axios.post(`${API}/queue/mark-skip`, {
+        submission_id: submissionId,
+        status: status
+      });
+      toast.success(`Skip marked as ${status}! ✅`);
+      fetchSkipQueue();
+      fetchQueueStats();
+    } catch (error) {
+      toast.error("Failed to mark skip submission");
+      console.error("Error marking skip submission:", error);
+    }
+  };
+  
+  // Add username mapping
+  const addUsernameMapping = async () => {
+    if (!mappingForm.discord_username || !mappingForm.twitch_username) {
+      toast.error("Please fill in both usernames");
+      return;
+    }
+    
+    try {
+      await axios.post(`${API}/queue/map-username`, mappingForm);
+      toast.success("Username mapping added! 🔗");
+      fetchUsernameMappings();
+      fetchSubmissions();
+      fetchSkipQueue();
+      setMappingForm({ discord_username: '', twitch_username: '' });
+    } catch (error) {
+      toast.error("Failed to add mapping");
+      console.error("Error adding username mapping:", error);
+    }
+  };
+  
+  // Remove username mapping
+  const removeUsernameMapping = async (discordUsername) => {
+    try {
+      await axios.delete(`${API}/queue/map-username/${discordUsername}`);
+      toast.success("Mapping removed!");
+      fetchUsernameMappings();
+      fetchSubmissions();
+      fetchSkipQueue();
+    } catch (error) {
+      toast.error("Failed to remove mapping");
+      console.error("Error removing username mapping:", error);
+    }
+  };
 
   // Control stream
   const controlStream = async (action) => {
