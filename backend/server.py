@@ -114,6 +114,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to start IRC chat: {e}")
     
+    # Start Discord bot
+    try:
+        logger.info("Starting Discord integration...")
+        asyncio.create_task(discord_manager.start())
+        logger.info("Discord bot started")
+    except Exception as e:
+        logger.error(f"Failed to start Discord bot: {e}")
+    
     yield
     
     # Shutdown
@@ -121,6 +129,7 @@ async def lifespan(app: FastAPI):
     await twitch_service.stop()
     await obs_service.disconnect()
     await irc_chat.disconnect()
+    await discord_manager.stop()
     logger.info("Shutdown complete")
 
 # Create the main app
