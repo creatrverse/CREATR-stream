@@ -165,6 +165,46 @@ const Dashboard = () => {
       console.error("Error fetching alerts:", error);
     }
   };
+  
+  // Fetch queue submissions
+  const fetchSubmissions = async () => {
+    try {
+      const response = await axios.get(`${API}/queue/submissions`);
+      setSubmissions(response.data.submissions);
+    } catch (error) {
+      console.error("Error fetching submissions:", error);
+    }
+  };
+  
+  // Fetch skip queue
+  const fetchSkipQueue = async () => {
+    try {
+      const response = await axios.get(`${API}/queue/skips`);
+      setSkipQueue(response.data.submissions);
+    } catch (error) {
+      console.error("Error fetching skip queue:", error);
+    }
+  };
+  
+  // Fetch queue stats
+  const fetchQueueStats = async () => {
+    try {
+      const response = await axios.get(`${API}/queue/stats`);
+      setQueueStats(response.data);
+    } catch (error) {
+      console.error("Error fetching queue stats:", error);
+    }
+  };
+  
+  // Fetch username mappings
+  const fetchUsernameMappings = async () => {
+    try {
+      const response = await axios.get(`${API}/queue/mappings`);
+      setUsernameMappings(response.data.mappings);
+    } catch (error) {
+      console.error("Error fetching username mappings:", error);
+    }
+  };
 
   // Fetch music queue
   const fetchMusicQueue = async () => {
