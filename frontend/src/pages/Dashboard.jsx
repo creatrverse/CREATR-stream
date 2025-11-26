@@ -91,6 +91,19 @@ const Dashboard = () => {
   
   // Twitch Player URL with dynamic parent
   const [twitchPlayerUrl, setTwitchPlayerUrl] = useState("");
+  
+  // Queue Management State
+  const [submissions, setSubmissions] = useState([]);
+  const [skipQueue, setSkipQueue] = useState([]);
+  const [queueStats, setQueueStats] = useState({
+    total_submissions: 0,
+    played: 0,
+    skipped: 0,
+    pending: 0,
+    skip_queue_count: 0
+  });
+  const [usernameMappings, setUsernameMappings] = useState({});
+  const [mappingForm, setMappingForm] = useState({ discord_username: '', twitch_username: '' });
 
   // Fetch OBS stats
   const fetchOBSStats = async () => {
