@@ -495,53 +495,8 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="relative w-full aspect-video bg-gradient-to-br from-purple-900/40 to-pink-900/40 rounded-lg overflow-hidden border border-pink-400/30">
-                    {/* Video Preview Area */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {obsStats.streaming ? (
-                        <div className="text-center space-y-2">
-                          <div className="relative">
-                            <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center animate-pulse">
-                              <Video className="w-6 h-6 text-white" />
-                            </div>
-                            <div className="absolute inset-0 w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-pink-500 to-purple-500 animate-ping opacity-20"></div>
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold text-pink-400">{obsStats.current_scene}</p>
-                            <p className="text-[10px] text-gray-400">{obsStats.fps} FPS • {(obsStats.bitrate / 1000).toFixed(1)}k</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-center space-y-2">
-                          <Monitor className="w-10 h-10 mx-auto text-gray-500 opacity-50" />
-                          <p className="text-xs text-gray-400">Offline</p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Overlay Indicators */}
-                    {obsStats.streaming && (
-                      <>
-                        {/* Top Right - Live Indicator */}
-                        <div className="absolute top-2 right-2 bg-red-500 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                          <p className="text-[9px] font-bold text-white">LIVE</p>
-                        </div>
-                        
-                        {/* Bottom Left - Recording Indicator */}
-                        {obsStats.recording && (
-                          <div className="absolute bottom-2 left-2 bg-red-600 px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <Circle className="w-2 h-2 fill-white text-white" />
-                            <p className="text-[9px] font-bold text-white">REC</p>
-                          </div>
-                        )}
-                        
-                        {/* Bottom Right - Viewer Count */}
-                        <div className="absolute bottom-2 right-2 glass px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Users className="w-2 h-2 text-purple-400" />
-                          <p className="text-[9px] font-bold text-white">{twitchStats.viewers}</p>
-                        </div>
-                      </>
-                    )}
+                    {/* Twitch Embed Player */}
+                    <div id="twitch-embed" className="w-full h-full"></div>
                   </div>
                 </CardContent>
               </Card>
