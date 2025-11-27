@@ -995,6 +995,141 @@ const Dashboard = () => {
     }
   };
 
+  // Toggle Slow Mode
+  const toggleSlowMode = async (enabled) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/slow-mode`, { 
+        enabled, 
+        wait_time: enabled ? 30 : 0 
+      });
+      if (response.data.success) {
+        toast.success(response.data.message + " ⏱️");
+      } else {
+        toast.error(response.data.error || "Failed to toggle slow mode");
+      }
+    } catch (error) {
+      toast.error("Failed to toggle slow mode");
+    }
+  };
+
+  // Toggle Follower-Only Mode
+  const toggleFollowerOnly = async (enabled) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/follower-only`, { 
+        enabled, 
+        duration: 0 
+      });
+      if (response.data.success) {
+        toast.success(response.data.message + " 👥");
+      } else {
+        toast.error(response.data.error || "Failed to toggle follower-only mode");
+      }
+    } catch (error) {
+      toast.error("Failed to toggle follower-only mode");
+    }
+  };
+
+  // Toggle Subscriber-Only Mode
+  const toggleSubscriberOnly = async (enabled) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/subscriber-only`, { enabled });
+      if (response.data.success) {
+        toast.success(response.data.message + " 👑");
+      } else {
+        toast.error(response.data.error || "Failed to toggle subscriber-only mode");
+      }
+    } catch (error) {
+      toast.error("Failed to toggle subscriber-only mode");
+    }
+  };
+
+  // Toggle Emote-Only Mode
+  const toggleEmoteOnly = async (enabled) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/emote-only`, { enabled });
+      if (response.data.success) {
+        toast.success(response.data.message + " 😀");
+      } else {
+        toast.error(response.data.error || "Failed to toggle emote-only mode");
+      }
+    } catch (error) {
+      toast.error("Failed to toggle emote-only mode");
+    }
+  };
+
+  // Timeout User
+  const timeoutUser = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const username = prompt("Enter username to timeout:");
+    if (!username) return;
+    
+    const duration = prompt("Timeout duration in seconds (default 600):", "600");
+    if (!duration) return;
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/timeout`, { 
+        username, 
+        duration: parseInt(duration) 
+      });
+      if (response.data.success) {
+        toast.success(response.data.message + " ⏰");
+      } else {
+        toast.error(response.data.error || "Failed to timeout user");
+      }
+    } catch (error) {
+      toast.error("Failed to timeout user");
+    }
+  };
+
+  // Ban User
+  const banUser = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const username = prompt("Enter username to ban:");
+    if (!username) return;
+    
+    const confirmed = window.confirm(`Are you sure you want to permanently ban ${username}?`);
+    if (!confirmed) return;
+    
+    try {
+      const response = await axios.post(`${API}/twitch/chat/ban`, { username });
+      if (response.data.success) {
+        toast.success(response.data.message + " 🔨");
+      } else {
+        toast.error(response.data.error || "Failed to ban user");
+      }
+    } catch (error) {
+      toast.error("Failed to ban user");
+    }
+  };
+
   // Create stream marker
   const createMarker = async () => {
     try {
