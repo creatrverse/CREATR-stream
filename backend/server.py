@@ -897,6 +897,311 @@ async def clear_chat(session: Session = Depends(get_session)):
         logger.error(f"Failed to clear chat: {e}")
         return {"success": False, "error": str(e)}
 
+@api_router.post("/twitch/chat/slow-mode")
+async def toggle_slow_mode(data: dict, session: Session = Depends(get_session)):
+    """Toggle slow mode in chat"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        wait_time = data.get('wait_time', 30) if data.get('enabled', True) else None
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/chat/settings?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                headers=headers,
+                json={"slow_mode": True, "slow_mode_wait_time": wait_time} if wait_time else {"slow_mode": False}
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": f"Slow mode {'enabled' if wait_time else 'disabled'}"}
+            else:
+                return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to toggle slow mode: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/chat/follower-only")
+async def toggle_follower_only(data: dict, session: Session = Depends(get_session)):
+    """Toggle follower-only mode"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        enabled = data.get('enabled', True)
+        duration = data.get('duration', 0) if enabled else None
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/chat/settings?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                headers=headers,
+                json={"follower_mode": enabled, "follower_mode_duration": duration} if enabled else {"follower_mode": False}
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": f"Follower-only mode {'enabled' if enabled else 'disabled'}"}
+            else:
+                return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to toggle follower-only mode: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/chat/subscriber-only")
+async def toggle_subscriber_only(data: dict, session: Session = Depends(get_session)):
+    """Toggle subscriber-only mode"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        enabled = data.get('enabled', True)
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/chat/settings?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                headers=headers,
+                json={"subscriber_mode": enabled}
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": f"Subscriber-only mode {'enabled' if enabled else 'disabled'}"}
+            else:
+                return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to toggle subscriber-only mode: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/chat/emote-only")
+async def toggle_emote_only(data: dict, session: Session = Depends(get_session)):
+    """Toggle emote-only mode"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        enabled = data.get('enabled', True)
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/chat/settings?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                headers=headers,
+                json={"emote_mode": enabled}
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": f"Emote-only mode {'enabled' if enabled else 'disabled'}"}
+            else:
+                return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to toggle emote-only mode: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/chat/timeout")
+async def timeout_user(data: dict, session: Session = Depends(get_session)):
+    """Timeout a user in chat"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        username = data.get('username', '')
+        duration = data.get('duration', 600)  # Default 10 minutes
+        reason = data.get('reason', 'Timeout')
+        
+        if not username:
+            return {"success": False, "error": "Username required"}
+        
+        async with httpx.AsyncClient() as client:
+            # Get user ID
+            user_response = await client.get(
+                f"https://api.twitch.tv/helix/users?login={username}",
+                headers=headers
+            )
+            
+            if user_response.status_code == 200:
+                users = user_response.json().get('data', [])
+                if not users:
+                    return {"success": False, "error": "User not found"}
+                
+                user_id = users[0]['id']
+                
+                # Timeout user
+                response = await client.post(
+                    f"https://api.twitch.tv/helix/moderation/bans?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                    headers=headers,
+                    json={
+                        "data": {
+                            "user_id": user_id,
+                            "duration": duration,
+                            "reason": reason
+                        }
+                    }
+                )
+                
+                if response.status_code == 200:
+                    return {"success": True, "message": f"{username} timed out for {duration}s"}
+                else:
+                    return {"success": False, "error": response.text}
+            else:
+                return {"success": False, "error": "Failed to find user"}
+    except Exception as e:
+        logger.error(f"Failed to timeout user: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/chat/ban")
+async def ban_user(data: dict, session: Session = Depends(get_session)):
+    """Ban a user from chat"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        username = data.get('username', '')
+        reason = data.get('reason', 'Banned')
+        
+        if not username:
+            return {"success": False, "error": "Username required"}
+        
+        async with httpx.AsyncClient() as client:
+            # Get user ID
+            user_response = await client.get(
+                f"https://api.twitch.tv/helix/users?login={username}",
+                headers=headers
+            )
+            
+            if user_response.status_code == 200:
+                users = user_response.json().get('data', [])
+                if not users:
+                    return {"success": False, "error": "User not found"}
+                
+                user_id = users[0]['id']
+                
+                # Ban user (no duration = permanent ban)
+                response = await client.post(
+                    f"https://api.twitch.tv/helix/moderation/bans?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                    headers=headers,
+                    json={
+                        "data": {
+                            "user_id": user_id,
+                            "reason": reason
+                        }
+                    }
+                )
+                
+                if response.status_code == 200:
+                    return {"success": True, "message": f"{username} banned"}
+                else:
+                    return {"success": False, "error": response.text}
+            else:
+                return {"success": False, "error": "Failed to find user"}
+    except Exception as e:
+        logger.error(f"Failed to ban user: {e}")
+        return {"success": False, "error": str(e)}
+
 # Real OBS Endpoints
 @api_router.get("/obs/stats")
 async def get_obs_stats():
