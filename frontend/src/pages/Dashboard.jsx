@@ -2570,7 +2570,7 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ScrollArea className="h-[500px] pr-4">
+                <ScrollArea className="h-[400px] pr-4 mb-4">
                   <div className="space-y-3">
                     {chatMessages.map((msg) => (
                       <div key={msg.id} className="slide-in p-3 rounded-lg glass" data-testid={`chat-message-${msg.id}`}>
@@ -2593,6 +2593,67 @@ const Dashboard = () => {
                     ))}
                   </div>
                 </ScrollArea>
+                
+                {/* Chat Moderation Controls */}
+                <div className="space-y-3 pt-4 border-t border-white/10">
+                  <Label className="text-sm text-gray-400">Chat Moderation</Label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <Button
+                      onClick={() => toggleSlowMode(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      ⏱️ Slow Mode
+                    </Button>
+                    <Button
+                      onClick={() => toggleFollowerOnly(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      👥 Follower-Only
+                    </Button>
+                    <Button
+                      onClick={() => toggleSubscriberOnly(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      👑 Sub-Only
+                    </Button>
+                    <Button
+                      onClick={() => toggleEmoteOnly(true)}
+                      variant="outline"
+                      size="sm"
+                      className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      😀 Emote-Only
+                    </Button>
+                    <Button
+                      onClick={timeoutUser}
+                      variant="outline"
+                      size="sm"
+                      className="border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      ⏰ Timeout User
+                    </Button>
+                    <Button
+                      onClick={banUser}
+                      variant="outline"
+                      size="sm"
+                      className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                      disabled={!isAuthenticated}
+                    >
+                      🔨 Ban User
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
