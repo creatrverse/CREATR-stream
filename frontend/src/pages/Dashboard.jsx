@@ -426,6 +426,31 @@ const Dashboard = () => {
       }
     }
   };
+  
+  // Update stream category
+  const updateStreamCategory = async (category) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/category`, { category });
+      if (response.data.success) {
+        toast.success(`Category updated to ${category}! 🎯`);
+        fetchTwitchStats();
+        setShowCategoryInput(false);
+      } else {
+        toast.error(response.data.error || "Failed to update category");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login with Twitch to edit stream category");
+      } else {
+        toast.error("Failed to update category");
+      }
+    }
+  };
 
   // Create stream marker
   const createMarker = async () => {
