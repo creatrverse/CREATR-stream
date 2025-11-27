@@ -1474,17 +1474,17 @@ const Dashboard = () => {
               </Card>
               
               {/* Sources Card */}
-              <Card className="glass">
+              <Card className="glass h-full flex flex-col">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
                     <Eye className="w-4 h-4 text-cyan-400" />
                     Sources
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2 flex-1">
                   {/* Sources Toggle */}
                   <div className="space-y-1">
-                    {Object.entries(sources).slice(0, 3).map(([name, visible]) => (
+                    {Object.entries(sources).map(([name, visible]) => (
                       <div key={name} className="flex items-center justify-between">
                         <span className="text-xs truncate">{name}</span>
                         <Button
