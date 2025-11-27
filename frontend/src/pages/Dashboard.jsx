@@ -1546,11 +1546,12 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* RIGHT COLUMN (9 columns) */}
-            <div className="lg:col-span-9 space-y-4">
-              
-              {/* Live Preview */}
-              <div className="lg:col-span-6">
+            {/* RIGHT COLUMN (9 columns) - Split into Preview and Chat */}
+            <div className="lg:col-span-9">
+              <div className="grid lg:grid-cols-3 gap-4 h-full">
+                
+                {/* Live Preview (2/3) */}
+                <div className="lg:col-span-2">
               <Card className="glass h-full" data-testid="stream-preview">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center justify-between">
