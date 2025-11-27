@@ -1922,7 +1922,8 @@ const Dashboard = () => {
                     <Button
                       onClick={() => updateSound(editingSound.name, {
                         displayName: editForm.displayName,
-                        color: editForm.color
+                        color: editForm.color,
+                        category: editForm.category
                       })}
                       className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
                     >
