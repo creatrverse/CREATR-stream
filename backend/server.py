@@ -351,6 +351,74 @@ async def update_stream_title(update: StreamTitleUpdate, session: Session = Depe
         logger.error(f"Failed to update stream title: {e}")
         return {"success": False, "error": str(e)}
 
+@api_router.post("/twitch/category")
+async def update_stream_category(update: StreamCategoryUpdate, session: Session = Depends(get_session)):
+    """Update stream category using OAuth"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Refresh token if needed
+    expires_at = token_data.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
+        try:
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            session.add(token_data)
+            session.commit()
+        except:
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    try:
+        # First, search for the game/category ID
+        async with httpx.AsyncClient() as client:
+            # Search for the category
+            search_response = await client.get(
+                f"https://api.twitch.tv/helix/search/categories?query={update.category}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID')
+                }
+            )
+            
+            if search_response.status_code != 200:
+                return {"success": False, "error": "Failed to find category"}
+            
+            categories = search_response.json().get('data', [])
+            if not categories:
+                return {"success": False, "error": f"Category '{update.category}' not found"}
+            
+            # Get the first matching category ID
+            game_id = categories[0]['id']
+            
+            # Update the stream category
+            update_response = await client.patch(
+                f"https://api.twitch.tv/helix/channels?broadcaster_id={token_data.user_id}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID'),
+                    'Content-Type': 'application/json'
+                },
+                json={"game_id": game_id}
+            )
+            
+            if update_response.status_code == 204:
+                return {"success": True, "category": update.category}
+            else:
+                return {"success": False, "error": "Failed to update category"}
+    except Exception as e:
+        logger.error(f"Failed to update stream category: {e}")
+        return {"success": False, "error": str(e)}
+
 @api_router.post("/twitch/marker")
 async def create_marker(session: Session = Depends(get_session)):
     """Create stream marker using OAuth"""
