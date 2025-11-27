@@ -1266,6 +1266,171 @@ const Dashboard = () => {
           </Card>
         </TabsContent>
 
+        {/* Stream Deck Tab - Touch Optimized */}
+        <TabsContent value="streamdeck" className="space-y-6">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-purple-400 mb-2">Virtual Stream Deck</h2>
+            <p className="text-sm text-gray-400">Touch-optimized controls for streaming</p>
+          </div>
+
+          {/* Stream Controls Section */}
+          <Card className="glass">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Stream Controls</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* Start/Stop Stream */}
+                <button
+                  onClick={() => controlStream(obsStats.streaming ? "stop" : "start")}
+                  className={`aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 ${
+                    obsStats.streaming 
+                      ? "bg-gradient-to-br from-red-500 to-red-700 hover:from-red-600 hover:to-red-800" 
+                      : "bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800"
+                  } shadow-lg`}
+                >
+                  {obsStats.streaming ? (
+                    <Square className="w-12 h-12 text-white" />
+                  ) : (
+                    <Play className="w-12 h-12 text-white" />
+                  )}
+                  <span className="text-white font-bold text-lg">
+                    {obsStats.streaming ? "Stop Stream" : "Start Stream"}
+                  </span>
+                </button>
+
+                {/* Record */}
+                <button
+                  onClick={() => controlRecording(obsStats.recording ? "stop" : "start")}
+                  className={`aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 ${
+                    obsStats.recording
+                      ? "bg-gradient-to-br from-red-500 to-pink-700 hover:from-red-600 hover:to-pink-800"
+                      : "bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800"
+                  } shadow-lg`}
+                >
+                  <Circle className="w-12 h-12 text-white" />
+                  <span className="text-white font-bold text-lg">
+                    {obsStats.recording ? "Stop Rec" : "Record"}
+                  </span>
+                </button>
+
+                {/* Twitch Clip */}
+                <button
+                  onClick={createTwitchClip}
+                  className="aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg"
+                >
+                  <Scissors className="w-12 h-12 text-white" />
+                  <span className="text-white font-bold text-lg">Create Clip</span>
+                </button>
+
+                {/* Marker */}
+                <button
+                  onClick={createMarker}
+                  className="aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 shadow-lg"
+                >
+                  <Bookmark className="w-12 h-12 text-white" />
+                  <span className="text-white font-bold text-lg">Marker</span>
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Scene Switcher */}
+          <Card className="glass">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Monitor className="w-5 h-5 text-purple-400" />
+                Scenes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {scenes.map((scene) => (
+                  <button
+                    key={scene}
+                    onClick={() => switchScene(scene)}
+                    className={`aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 shadow-lg ${
+                      obsStats.current_scene === scene
+                        ? "bg-gradient-to-br from-pink-500 to-purple-600"
+                        : "bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700"
+                    }`}
+                  >
+                    <Video className="w-10 h-10 text-white" />
+                    <span className="text-white font-bold text-center text-sm leading-tight">
+                      {scene}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Source Toggle */}
+          <Card className="glass">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Eye className="w-5 h-5 text-cyan-400" />
+                Sources
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Object.entries(sources).map(([name, visible]) => (
+                  <button
+                    key={name}
+                    onClick={() => toggleSource(name, !visible)}
+                    className={`aspect-square rounded-2xl p-6 flex flex-col items-center justify-center gap-3 transition-all transform hover:scale-105 active:scale-95 shadow-lg ${
+                      visible
+                        ? "bg-gradient-to-br from-green-500 to-emerald-600"
+                        : "bg-gradient-to-br from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700"
+                    }`}
+                  >
+                    {visible ? (
+                      <Eye className="w-10 h-10 text-white" />
+                    ) : (
+                      <EyeOff className="w-10 h-10 text-white opacity-50" />
+                    )}
+                    <span className="text-white font-bold text-center text-sm leading-tight">
+                      {name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Stats */}
+          <Card className="glass">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Live Stats</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="glass p-6 rounded-xl text-center">
+                  <Users className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                  <p className="text-3xl font-bold text-white">{twitchStats.viewers}</p>
+                  <p className="text-sm text-gray-400">Viewers</p>
+                </div>
+                <div className="glass p-6 rounded-xl text-center">
+                  <Heart className="w-8 h-8 mx-auto mb-2 text-pink-400" />
+                  <p className="text-3xl font-bold text-white">{twitchStats.followers}</p>
+                  <p className="text-sm text-gray-400">Followers</p>
+                </div>
+                <div className="glass p-6 rounded-xl text-center">
+                  <Crown className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                  <p className="text-3xl font-bold text-white">{twitchStats.subscribers}</p>
+                  <p className="text-sm text-gray-400">Subs</p>
+                </div>
+                <div className="glass p-6 rounded-xl text-center">
+                  <Activity className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                  <p className="text-3xl font-bold text-white">{obsStats.fps}</p>
+                  <p className="text-sm text-gray-400">FPS</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Feedback Queue Tab */}
         <TabsContent value="queue" className="space-y-6">
           <QueueManager
