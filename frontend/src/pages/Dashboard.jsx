@@ -413,11 +413,18 @@ const Dashboard = () => {
       return;
     }
     
+    if (!newTitle || newTitle.trim() === "") {
+      toast.error("Please enter a stream title");
+      return;
+    }
+    
     try {
       const response = await axios.post(`${API}/twitch/title`, { title: newTitle });
       if (response.data.success) {
         toast.success("Stream title updated! ✨");
-        fetchTwitchStats();
+        // Fetch updated stats (but don't reset newTitle since we just set it)
+        const statsResponse = await axios.get(`${API}/twitch/stats`);
+        setTwitchStats(statsResponse.data);
       } else {
         toast.error(response.data.error || "Failed to update title");
       }
