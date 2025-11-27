@@ -519,8 +519,15 @@ const Dashboard = () => {
     setEditingSound(sound);
     setEditForm({
       displayName: sound.displayName || sound.name.replace(/\.[^/.]+$/, ''),
-      color: sound.color || 'purple-pink'
+      color: sound.color || 'purple-pink',
+      category: sound.category || 'other'
     });
+  };
+  
+  // Get filtered sounds by category
+  const getFilteredSounds = () => {
+    if (selectedCategory === 'all') return sounds;
+    return sounds.filter(sound => (sound.category || 'other') === selectedCategory);
   };
   
   // Drag and drop sensors
