@@ -1222,6 +1222,54 @@ const Dashboard = () => {
                     <Label className="text-[10px] text-gray-400">Scene</Label>
                     <p className="text-xs text-purple-400 font-semibold truncate">{obsStats.current_scene}</p>
                   </div>
+                  
+                  <Separator />
+                  
+                  {/* Scene Switcher */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-400">Scenes</Label>
+                    <div className="space-y-1">
+                      {scenes.slice(0, 4).map((scene) => (
+                        <Button
+                          key={scene}
+                          onClick={() => switchScene(scene)}
+                          variant={obsStats.current_scene === scene ? "default" : "outline"}
+                          size="sm"
+                          className={`w-full text-xs ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
+                          data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          {scene}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <Separator />
+                  
+                  {/* Sources Toggle */}
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-400">Sources</Label>
+                    <div className="space-y-1">
+                      {Object.entries(sources).slice(0, 3).map(([name, visible]) => (
+                        <div key={name} className="flex items-center justify-between">
+                          <span className="text-xs truncate">{name}</span>
+                          <Button
+                            onClick={() => toggleSource(name, !visible)}
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                            data-testid={`btn-toggle-source-${name.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            {visible ? (
+                              <Eye className="w-3 h-3 text-green-400" />
+                            ) : (
+                              <EyeOff className="w-3 h-3 text-gray-500" />
+                            )}
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
