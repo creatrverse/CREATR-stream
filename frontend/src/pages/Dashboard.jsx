@@ -253,7 +253,10 @@ const Dashboard = () => {
   const fetchScenes = async () => {
     try {
       const response = await axios.get(`${API}/obs/scenes`);
-      if (response.data.scenes && response.data.scenes.length > 0) {
+      // Only update if we get real scenes (not OBS Not Connected)
+      if (response.data.scenes && 
+          response.data.scenes.length > 0 && 
+          response.data.scenes[0] !== 'OBS Not Connected') {
         setScenes(response.data.scenes);
       }
     } catch (error) {
