@@ -75,6 +75,17 @@ const Dashboard = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [alerts, setAlerts] = useState([]);
   const [newTitle, setNewTitle] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
+  
+  // Popular Twitch categories for music feedback
+  const popularCategories = [
+    "Just Chatting",
+    "Music",
+    "Creative",
+    "Talk Shows & Podcasts",
+    "Special Events"
+  ];
 
   // Music Queue State
   const [musicQueue, setMusicQueue] = useState([]);
