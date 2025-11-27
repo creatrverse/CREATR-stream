@@ -1574,6 +1574,58 @@ const Dashboard = () => {
                       )}
                     </div>
                   </div>
+                  
+                  {/* Transition Triggers Section */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <Label className="text-sm text-gray-400 mb-2 block">Transition Triggers</Label>
+                    <div className="grid grid-cols-5 gap-1">
+                      <Button
+                        onClick={() => toast.success("Fade transition applied! 🎬")}
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] px-1 py-1 h-7 border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        Fade
+                      </Button>
+                      <Button
+                        onClick={() => toast.success("Cut transition applied! ✂️")}
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] px-1 py-1 h-7 border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        Cut
+                      </Button>
+                      <Button
+                        onClick={() => toast.success("Slide transition applied! 📐")}
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] px-1 py-1 h-7 border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        Slide
+                      </Button>
+                      <Button
+                        onClick={() => toast.success("Stinger transition applied! ⚡")}
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] px-1 py-1 h-7 border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        Stinger
+                      </Button>
+                      <Button
+                        onClick={() => toast.success("Swipe transition applied! 👆")}
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] px-1 py-1 h-7 border-green-400/50 text-green-400 hover:bg-green-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        Swipe
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
