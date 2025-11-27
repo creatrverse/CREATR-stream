@@ -221,6 +221,8 @@ const Dashboard = () => {
   const [editingSound, setEditingSound] = useState(null);
   const [editForm, setEditForm] = useState({ displayName: '', color: '', category: '' });
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentAudio, setCurrentAudio] = useState(null);
+  const [playingSound, setPlayingSound] = useState(null);
   
   // Sound categories
   const soundCategories = [
