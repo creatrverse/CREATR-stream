@@ -677,16 +677,17 @@ async def create_poll(poll_data: dict, session: Session = Depends(get_session)):
             'Content-Type': 'application/json'
         }
         
-        response = await httpx_client.post(
-            "https://api.twitch.tv/helix/polls",
-            headers=headers,
-            json={
-                "broadcaster_id": token_data.user_id,
-                "title": poll_data.get('title', 'New Poll'),
-                "choices": poll_data.get('choices', [{"title": "Yes"}, {"title": "No"}]),
-                "duration": poll_data.get('duration', 60)
-            }
-        )
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.twitch.tv/helix/polls",
+                headers=headers,
+                json={
+                    "broadcaster_id": token_data.user_id,
+                    "title": poll_data.get('title', 'New Poll'),
+                    "choices": poll_data.get('choices', [{"title": "Yes"}, {"title": "No"}]),
+                    "duration": poll_data.get('duration', 60)
+                }
+            )
         
         if response.status_code == 200:
             return {"success": True, "message": "Poll created"}
