@@ -425,9 +425,12 @@ const Dashboard = () => {
       const response = await axios.post(`${API}/twitch/title`, { title: newTitle });
       if (response.data.success) {
         toast.success("Stream title updated! ✨");
-        // Fetch updated stats (but don't reset newTitle since we just set it)
+        // Stop editing mode
+        isEditingTitle.current = false;
+        // Fetch updated stats
         const statsResponse = await axios.get(`${API}/twitch/stats`);
         setTwitchStats(statsResponse.data);
+        setNewTitle(statsResponse.data.stream_title);
       } else {
         toast.error(response.data.error || "Failed to update title");
       }
@@ -438,6 +441,12 @@ const Dashboard = () => {
         toast.error("Failed to update title");
       }
     }
+  };
+  
+  // Handle title input change
+  const handleTitleChange = (e) => {
+    isEditingTitle.current = true;
+    setNewTitle(e.target.value);
   };
   
   // Update stream category
