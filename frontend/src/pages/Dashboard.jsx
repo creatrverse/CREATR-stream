@@ -1783,8 +1783,8 @@ const Dashboard = () => {
                         🔨 Ban
                       </Button>
                     </div>
+                    )}
                   </div>
-                  )}
                 </CardContent>
               </Card>
             </div>
