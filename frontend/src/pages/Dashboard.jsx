@@ -152,7 +152,10 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${API}/twitch/stats`);
       setTwitchStats(response.data);
-      setNewTitle(response.data.stream_title);
+      // Only set newTitle if it's empty (initial load) to avoid overwriting user input
+      if (!newTitle) {
+        setNewTitle(response.data.stream_title);
+      }
     } catch (error) {
       console.error("Error fetching Twitch stats:", error);
     }
