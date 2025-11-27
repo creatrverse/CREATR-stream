@@ -1481,7 +1481,7 @@ const Dashboard = () => {
                     Sources
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2 pb-6">
+                <CardContent className="space-y-2 pb-12">
                   {/* Sources Toggle */}
                   <div className="space-y-1">
                     {Object.entries(sources).map(([name, visible]) => (
