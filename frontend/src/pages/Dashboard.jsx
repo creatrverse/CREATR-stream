@@ -846,7 +846,7 @@ const Dashboard = () => {
                   <CardTitle className="flex items-center justify-between">
                     <span className="flex items-center gap-2">
                       <Video className="w-4 h-4 text-pink-400" />
-                      Preview
+                      Live Preview
                     </span>
                     {obsStats.streaming && (
                       <Badge className="bg-red-500 animate-pulse text-xs">
@@ -872,9 +872,11 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
 
-              {/* Live Chat Mini */}
-              <Card className="glass" data-testid="mini-chat">
+            {/* Live Chat (Right - 2 columns) */}
+            <div className="lg:col-span-2">
+              <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2">
                     <MessageCircle className="w-4 h-4 text-cyan-400" />
