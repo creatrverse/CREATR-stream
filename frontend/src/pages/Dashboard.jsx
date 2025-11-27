@@ -1066,8 +1066,9 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
+          </div>
 
-          {/* Stream Info */}
+          {/* Stream Info - Full Width */}
           <Card className="glass">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
