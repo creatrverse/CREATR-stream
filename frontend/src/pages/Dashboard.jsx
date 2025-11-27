@@ -149,6 +149,9 @@ const Dashboard = () => {
   });
   const [scenes, setScenes] = useState(['Starting Soon', 'Webcam', 'Gaming', 'BRB', 'Chatting', 'Desktop', 'Ending', 'Full Screen', 'Split Cam', 'Screen Share']);
   const [sources, setSources] = useState({ 'Webcam': true, 'Mic/Aux': true, 'Desktop Audio': false, 'Camera 2': true, 'Mic 2': true });
+  const [previewTab, setPreviewTab] = useState('stream');
+  const videoRef = useRef(null);
+  const [cameraStream, setCameraStream] = useState(null);
 
   // Twitch State
   const [twitchStats, setTwitchStats] = useState({
