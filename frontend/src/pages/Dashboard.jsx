@@ -1397,10 +1397,14 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* TOP ROW: Stream Deck | Live Preview | Live Chat */}
+          {/* MAIN LAYOUT: Left Column (Stream Deck + Scenes) | Right Column (Live Preview + Chat) */}
           <div className="grid lg:grid-cols-12 gap-4">
-            {/* Stream Deck (Left - 3 columns) - Now with Sound Board */}
-            <div className="lg:col-span-3">
+            
+            {/* LEFT COLUMN (3 columns) */}
+            <div className="lg:col-span-3 space-y-4">
+              
+              {/* Stream Deck Card */}
+              <Card className="glass">
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
