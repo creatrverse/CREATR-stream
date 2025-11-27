@@ -641,6 +641,7 @@ const Dashboard = () => {
     fetchSkipQueue();
     fetchQueueStats();
     fetchUsernameMappings();
+    fetchStreamTags();
 
     // Set up polling
     const interval = setInterval(() => {
@@ -654,6 +655,7 @@ const Dashboard = () => {
       fetchSubmissions();
       fetchSkipQueue();
       fetchQueueStats();
+      fetchStreamTags();
     }, 3000);
 
     return () => clearInterval(interval);
