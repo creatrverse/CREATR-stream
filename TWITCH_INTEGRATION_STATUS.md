@@ -142,6 +142,6 @@ Your Twitch credentials are:
 
 If you encounter any problems or want to enable additional features, just let me know!
 
-**Dashboard URL:** https://yk2-obs-center.preview.emergentagent.com
+**Dashboard URL:** https://streamhub-1222.preview.emergentagent.com
 
 **Twitch Channel:** https://twitch.tv/kalliestockton

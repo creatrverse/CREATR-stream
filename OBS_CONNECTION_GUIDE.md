@@ -37,7 +37,7 @@ Display the dashboard inside OBS as a browser source:
 
 **Steps:**
 1. In OBS, add a **Browser Source**
-2. URL: `https://yk2-obs-center.preview.emergentagent.com`
+2. URL: `https://streamhub-1222.preview.emergentagent.com`
 3. Width: 1920, Height: 1080
 4. Set it on a separate scene for monitoring
 

@@ -17,7 +17,7 @@ class OAuthService:
     def __init__(self):
         self.client_id = os.getenv('TWITCH_CLIENT_ID')
         self.client_secret = os.getenv('TWITCH_CLIENT_SECRET')
-        self.redirect_uri = os.getenv('TWITCH_REDIRECT_URI', 'https://yk2-obs-center.preview.emergentagent.com/auth/callback')
+        self.redirect_uri = os.getenv('TWITCH_REDIRECT_URI', 'https://streamhub-1222.preview.emergentagent.com/auth/callback')
         self.scopes = 'channel:read:subscriptions clips:edit channel:manage:broadcast user:read:email'
         self.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production-12345678')
         self.algorithm = 'HS256'

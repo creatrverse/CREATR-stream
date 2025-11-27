@@ -24,5 +24,10 @@
     "We are the champions.mp3",
     "Fire in the booth.mp3",
     "SpongeBob fail.mp3"
-  ]
+  ],
+  "Sound - awk among us.mp3": {
+    "displayName": "Sound - awk among us",
+    "color": "green-emerald",
+    "category": "alerts"
+  }
 }
