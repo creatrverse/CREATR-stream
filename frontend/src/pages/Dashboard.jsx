@@ -878,7 +878,7 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* Stream Title Editor */}
+          {/* Stream Info Display */}
           <Card className="glass">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -888,23 +888,9 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="stream-title">Stream Title</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="stream-title"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    placeholder="Enter stream title..."
-                    className="glass"
-                    data-testid="input-stream-title"
-                  />
-                  <Button
-                    onClick={updateStreamTitle}
-                    className="bg-gradient-to-r from-pink-500 to-purple-500"
-                    data-testid="btn-update-title"
-                  >
-                    Update
-                  </Button>
+                <Label>Stream Title</Label>
+                <div className="glass p-3 rounded-lg border border-pink-400/30">
+                  <p className="text-white">{twitchStats.stream_title || "No stream title"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 text-sm">
