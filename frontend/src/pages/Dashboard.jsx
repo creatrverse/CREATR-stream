@@ -148,7 +148,7 @@ const Dashboard = () => {
     current_scene: "Main Camera"
   });
   const [scenes, setScenes] = useState(['Starting Soon', 'Webcam', 'Gaming', 'BRB']);
-  const [sources, setSources] = useState({});
+  const [sources, setSources] = useState({ 'Webcam': true, 'Mic/Aux': true, 'Desktop Audio': false });
 
   // Twitch State
   const [twitchStats, setTwitchStats] = useState({
