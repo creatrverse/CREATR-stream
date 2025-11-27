@@ -634,14 +634,15 @@ async def run_ad(duration: dict, session: Session = Depends(get_session)):
             'Content-Type': 'application/json'
         }
         
-        response = await httpx_client.post(
-            f"https://api.twitch.tv/helix/channels/commercial",
-            headers=headers,
-            json={
-                "broadcaster_id": token_data.user_id,
-                "length": duration.get('duration', 30)
-            }
-        )
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"https://api.twitch.tv/helix/channels/commercial",
+                headers=headers,
+                json={
+                    "broadcaster_id": token_data.user_id,
+                    "length": duration.get('duration', 30)
+                }
+            )
         
         if response.status_code == 200:
             return {"success": True, "message": f"Ad started ({duration.get('duration')}s)"}
