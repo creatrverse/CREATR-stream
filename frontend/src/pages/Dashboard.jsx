@@ -762,6 +762,51 @@ const Dashboard = () => {
       console.error("Error removing tag:", error);
     }
   };
+
+  // Stream Presets
+  const streamPresets = {
+    grwm: {
+      title: "GRWM | Get Ready With Me 💄✨",
+      category: "Just Chatting",
+      tags: ["English", "Chatting", "GRWM"]
+    },
+    coworking: {
+      title: "Co-Working Stream | Work & Chat 💻☕",
+      category: "Just Chatting",
+      tags: ["English", "Chatting", "Study", "Productivity"]
+    },
+    musicfeedback: {
+      title: "Music Feedback Queue | Submit Your Tracks! 🎵",
+      category: "Music",
+      tags: ["English", "Music", "Creative"]
+    }
+  };
+
+  const applyPreset = async (presetKey) => {
+    const preset = streamPresets[presetKey];
+    if (!preset) return;
+
+    try {
+      // Update title
+      setNewTitle(preset.title);
+      await axios.post(`${API}/twitch/title`, { title: preset.title });
+      
+      // Update category
+      await axios.post(`${API}/twitch/category`, { category: preset.category });
+      
+      // Update tags
+      await axios.post(`${API}/twitch/tags`, { tags: preset.tags });
+      setStreamTags(preset.tags);
+      
+      // Refresh stats to show new values
+      await fetchTwitchStats();
+      
+      toast.success(`${presetKey.toUpperCase()} preset applied! 🎯`);
+    } catch (error) {
+      console.error("Error applying preset:", error);
+      toast.error("Failed to apply preset");
+    }
+  };
   
   // Update stream category
   const updateStreamCategory = async (category) => {
