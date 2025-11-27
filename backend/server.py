@@ -1162,9 +1162,12 @@ SOUNDS_METADATA_FILE = SOUNDS_DIR / "metadata.json"
 
 def load_sound_metadata():
     """Load sound metadata from JSON file"""
-    if SOUNDS_METADATA_FILE.exists():
-        with open(SOUNDS_METADATA_FILE, 'r') as f:
-            return json.load(f)
+    try:
+        if SOUNDS_METADATA_FILE.exists() and SOUNDS_METADATA_FILE.stat().st_size > 0:
+            with open(SOUNDS_METADATA_FILE, 'r') as f:
+                return json.load(f)
+    except (json.JSONDecodeError, Exception) as e:
+        logger.warning(f"Error loading sound metadata: {e}")
     return {}
 
 def save_sound_metadata(metadata):
