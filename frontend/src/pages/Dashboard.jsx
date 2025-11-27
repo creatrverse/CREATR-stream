@@ -1854,20 +1854,22 @@ const Dashboard = () => {
                   {/* Scene Switcher */}
                   <div className="space-y-2">
                     <Label className="text-xs text-gray-400">Scenes</Label>
-                    <div className="space-y-1">
+                    <div>
                       {scenes.length > 0 ? (
-                        scenes.map((scene) => (
-                          <Button
-                            key={scene}
-                            onClick={() => switchScene(scene)}
-                            variant={obsStats.current_scene === scene ? "default" : "outline"}
-                            size="sm"
-                            className={`w-full text-xs ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
-                            data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            {scene}
-                          </Button>
-                        ))
+                        <div className="grid grid-cols-5 gap-1">
+                          {scenes.map((scene) => (
+                            <Button
+                              key={scene}
+                              onClick={() => switchScene(scene)}
+                              variant={obsStats.current_scene === scene ? "default" : "outline"}
+                              size="sm"
+                              className={`text-[10px] px-1 py-1 h-7 ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
+                              data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
+                            >
+                              {scene}
+                            </Button>
+                          ))}
+                        </div>
                       ) : (
                         <Button
                           variant="outline"
