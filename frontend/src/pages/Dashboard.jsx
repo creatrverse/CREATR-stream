@@ -253,9 +253,12 @@ const Dashboard = () => {
   const fetchScenes = async () => {
     try {
       const response = await axios.get(`${API}/obs/scenes`);
-      setScenes(response.data.scenes);
+      if (response.data.scenes && response.data.scenes.length > 0) {
+        setScenes(response.data.scenes);
+      }
     } catch (error) {
       console.error("Error fetching scenes:", error);
+      // Keep mockup data if fetch fails
     }
   };
 
