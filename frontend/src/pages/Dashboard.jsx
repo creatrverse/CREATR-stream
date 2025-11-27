@@ -218,7 +218,20 @@ const Dashboard = () => {
   const [sounds, setSounds] = useState([]);
   const [uploadingSound, setUploadingSound] = useState(false);
   const [editingSound, setEditingSound] = useState(null);
-  const [editForm, setEditForm] = useState({ displayName: '', color: '' });
+  const [editForm, setEditForm] = useState({ displayName: '', color: '', category: '' });
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Sound categories
+  const soundCategories = [
+    { id: 'all', name: 'All Sounds', icon: '🎵' },
+    { id: 'alerts', name: 'Alerts', icon: '🔔' },
+    { id: 'effects', name: 'Effects', icon: '✨' },
+    { id: 'music', name: 'Music', icon: '🎶' },
+    { id: 'memes', name: 'Memes', icon: '😂' },
+    { id: 'reactions', name: 'Reactions', icon: '🎭' },
+    { id: 'celebrations', name: 'Celebrations', icon: '🎉' },
+    { id: 'other', name: 'Other', icon: '📁' }
+  ];
 
   // Fetch OBS stats
   const fetchOBSStats = async () => {
