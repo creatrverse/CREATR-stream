@@ -791,11 +791,11 @@ async def shoutout_streamer(shoutout_data: dict, session: Session = Depends(get_
                 )
             
             if response.status_code == 204:
-                return {"success": True, "message": f"Shoutout sent to {username}"}
+                    return {"success": True, "message": f"Shoutout sent to {username}"}
+                else:
+                    return {"success": False, "error": response.text}
             else:
-                return {"success": False, "error": response.text}
-        else:
-            return {"success": False, "error": "Failed to find user"}
+                return {"success": False, "error": "Failed to find user"}
     except Exception as e:
         logger.error(f"Failed to send shoutout: {e}")
         return {"success": False, "error": str(e)}
