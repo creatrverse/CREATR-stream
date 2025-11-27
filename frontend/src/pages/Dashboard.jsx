@@ -441,6 +441,37 @@ const Dashboard = () => {
       color: sound.color || 'purple-pink'
     });
   };
+  
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  
+  // Handle drag end
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    
+    if (active.id !== over.id) {
+      const oldIndex = sounds.findIndex((sound) => sound.name === active.id);
+      const newIndex = sounds.findIndex((sound) => sound.name === over.id);
+      
+      const newSounds = arrayMove(sounds, oldIndex, newIndex);
+      setSounds(newSounds);
+      
+      // Save order to backend
+      try {
+        const soundOrder = newSounds.map(s => s.name);
+        await axios.post(`${API}/sounds/reorder`, { order: soundOrder });
+        toast.success("Sound order saved! 🎯");
+      } catch (error) {
+        console.error("Error saving sound order:", error);
+        toast.error("Failed to save order");
+      }
+    }
+  };
 
   // Control stream
   const controlStream = async (action) => {
