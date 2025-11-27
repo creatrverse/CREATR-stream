@@ -1458,6 +1458,133 @@ const Dashboard = () => {
                       />
                     )}
                   </div>
+
+                  {/* Quick Actions - Compact */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <Label className="text-[10px] text-gray-400 mb-2 block">Quick Actions</Label>
+                    <div className="grid grid-cols-4 gap-1">
+                      {/* Run Ad with dropdown */}
+                      <div className="relative">
+                        <Button
+                          onClick={() => setShowAdMenu(!showAdMenu)}
+                          variant="outline"
+                          size="sm"
+                          className="w-full h-8 text-[9px] border-red-400/50 text-red-400 hover:bg-red-400/20"
+                          disabled={!isAuthenticated}
+                        >
+                          <Radio className="w-3 h-3" />
+                        </Button>
+                        {showAdMenu && isAuthenticated && (
+                          <div className="absolute top-full left-0 right-0 mt-1 glass rounded border border-red-400/30 p-1 space-y-1 z-10">
+                            <Button
+                              onClick={() => { runAd(30); setShowAdMenu(false); }}
+                              variant="ghost"
+                              size="sm"
+                              className="w-full text-[9px] hover:bg-red-400/20"
+                            >
+                              30s
+                            </Button>
+                            <Button
+                              onClick={() => { runAd(60); setShowAdMenu(false); }}
+                              variant="ghost"
+                              size="sm"
+                              className="w-full text-[9px] hover:bg-red-400/20"
+                            >
+                              60s
+                            </Button>
+                            <Button
+                              onClick={() => { runAd(90); setShowAdMenu(false); }}
+                              variant="ghost"
+                              size="sm"
+                              className="w-full text-[9px] hover:bg-red-400/20"
+                            >
+                              90s
+                            </Button>
+                            <Button
+                              onClick={() => { runAd(180); setShowAdMenu(false); }}
+                              variant="ghost"
+                              size="sm"
+                              className="w-full text-[9px] hover:bg-red-400/20"
+                            >
+                              180s
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      <Button
+                        onClick={createPoll}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        <BarChart3 className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={createPrediction}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        <Brain className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={shoutoutStreamer}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        <Send className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={createMarker}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                        data-testid="btn-create-marker"
+                        disabled={!isAuthenticated}
+                      >
+                        <Bookmark className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={startRaid}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        <Users className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={clearChat}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-orange-400/50 text-orange-400 hover:bg-orange-400/20"
+                        disabled={!isAuthenticated}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+
+                      <Button
+                        onClick={createTwitchClip}
+                        variant="outline"
+                        size="sm"
+                        className="h-8 text-[9px] border-green-400/50 text-green-400 hover:bg-green-400/20"
+                        data-testid="btn-twitch-clip"
+                        disabled={!isAuthenticated}
+                      >
+                        <Scissors className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
