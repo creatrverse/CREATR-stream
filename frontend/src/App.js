@@ -20,8 +20,7 @@ function AppContent() {
     );
   }
 
-  // Always show dashboard regardless of authentication status
-  // Features requiring auth will be disabled in the dashboard
+  // Show dashboard - login optional but enables editing features
   return <Dashboard />;
 }
 
