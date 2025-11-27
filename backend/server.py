@@ -1157,17 +1157,36 @@ from fastapi.responses import FileResponse
 SOUNDS_DIR = Path("/app/backend/sounds")
 SOUNDS_DIR.mkdir(exist_ok=True)
 
+SOUNDS_METADATA_FILE = SOUNDS_DIR / "metadata.json"
+
+def load_sound_metadata():
+    """Load sound metadata from JSON file"""
+    if SOUNDS_METADATA_FILE.exists():
+        with open(SOUNDS_METADATA_FILE, 'r') as f:
+            return json.load(f)
+    return {}
+
+def save_sound_metadata(metadata):
+    """Save sound metadata to JSON file"""
+    with open(SOUNDS_METADATA_FILE, 'w') as f:
+        json.dump(metadata, f, indent=2)
+
 @api_router.get("/sounds")
 async def get_sounds():
-    """Get list of available sounds"""
+    """Get list of available sounds with metadata"""
     try:
+        metadata = load_sound_metadata()
         sounds = []
         for sound_file in SOUNDS_DIR.glob("*"):
             if sound_file.is_file() and sound_file.suffix.lower() in ['.mp3', '.wav', '.ogg', '.m4a']:
-                sounds.append({
+                sound_data = {
                     "name": sound_file.name,
                     "size": sound_file.stat().st_size
-                })
+                }
+                # Add metadata if exists
+                if sound_file.name in metadata:
+                    sound_data.update(metadata[sound_file.name])
+                sounds.append(sound_data)
         return {"success": True, "sounds": sounds}
     except Exception as e:
         logger.error(f"Error getting sounds: {e}")
