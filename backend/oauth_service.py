@@ -18,7 +18,7 @@ class OAuthService:
         self.client_id = os.getenv('TWITCH_CLIENT_ID')
         self.client_secret = os.getenv('TWITCH_CLIENT_SECRET')
         self.redirect_uri = os.getenv('TWITCH_REDIRECT_URI', 'https://streamhub-1222.preview.emergentagent.com/auth/callback')
-        self.scopes = 'channel:read:subscriptions clips:edit channel:manage:broadcast user:read:email'
+        self.scopes = 'channel:read:subscriptions clips:edit channel:manage:broadcast user:read:email moderator:manage:chat_settings moderator:manage:banned_users channel:manage:ads channel:manage:polls channel:manage:predictions moderator:manage:shoutouts channel:manage:raids moderator:manage:chat_messages channel:read:stream_key'
         self.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production-12345678')
         self.algorithm = 'HS256'
     
