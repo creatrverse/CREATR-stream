@@ -60,12 +60,22 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(`${BACKEND_URL}/api/auth/logout`);
-      localStorage.removeItem('twitch_session');
+      // Clear all auth-related storage
+      localStorage.clear();
+      sessionStorage.clear();
+      setIsAuthenticated(false);
+      setUser(null);
+      // Force a full page reload to clear any cached state
+      window.location.href = '/';
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if backend fails, clear local state
+      localStorage.clear();
+      sessionStorage.clear();
       setIsAuthenticated(false);
       setUser(null);
       window.location.href = '/';
-    } catch (error) {
-      console.error('Logout failed:', error);
     }
   };
 
