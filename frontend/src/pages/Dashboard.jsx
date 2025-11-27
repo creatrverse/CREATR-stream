@@ -702,6 +702,7 @@ const Dashboard = () => {
     fetchQueueStats();
     fetchUsernameMappings();
     fetchStreamTags();
+    fetchSounds();
 
     // Set up polling
     const interval = setInterval(() => {
