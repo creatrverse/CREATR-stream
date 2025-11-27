@@ -403,6 +403,28 @@ const Dashboard = () => {
       console.error("Error deleting sound:", error);
     }
   };
+  
+  // Update sound metadata
+  const updateSound = async (soundName, metadata) => {
+    try {
+      await axios.patch(`${API}/sounds/${soundName}`, metadata);
+      toast.success("Sound updated! ✨");
+      fetchSounds();
+      setEditingSound(null);
+    } catch (error) {
+      toast.error("Failed to update sound");
+      console.error("Error updating sound:", error);
+    }
+  };
+  
+  // Open edit modal
+  const openEditModal = (sound) => {
+    setEditingSound(sound);
+    setEditForm({
+      displayName: sound.displayName || sound.name.replace(/\.[^/.]+$/, ''),
+      color: sound.color || 'purple-pink'
+    });
+  };
 
   // Control stream
   const controlStream = async (action) => {
