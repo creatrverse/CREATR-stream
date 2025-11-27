@@ -1674,19 +1674,9 @@ const Dashboard = () => {
             <div className="lg:col-span-3">
               <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <MessageCircle className="w-4 h-4 text-cyan-400" />
-                      Live Chat
-                    </div>
-                    <Button
-                      onClick={() => setShowModeration(!showModeration)}
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-white"
-                    >
-                      {showModeration ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </Button>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <MessageCircle className="w-4 h-4 text-cyan-400" />
+                    Live Chat
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -1721,9 +1711,22 @@ const Dashboard = () => {
                   </ScrollArea>
                   
                   {/* Chat Moderation - Collapsible */}
-                  {showModeration && (
-                    <div className="mt-3 pt-3 border-t border-white/10">
-                      <Label className="text-[10px] text-gray-400 mb-2 block">Moderation</Label>
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <div 
+                      className="flex items-center justify-between mb-2 cursor-pointer group"
+                      onClick={() => setShowModeration(!showModeration)}
+                    >
+                      <Label className="text-[10px] text-gray-400 cursor-pointer">Moderation</Label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-4 w-4 p-0 text-gray-400 group-hover:text-white"
+                      >
+                        {showModeration ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </Button>
+                    </div>
+                    
+                    {showModeration && (
                       <div className="grid grid-cols-3 gap-1">
                       <Button
                         onClick={() => toggleSlowMode(true)}
