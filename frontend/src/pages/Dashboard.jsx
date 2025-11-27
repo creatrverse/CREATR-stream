@@ -1462,8 +1462,8 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* Live Chat (Right - 2 columns) */}
-            <div className="lg:col-span-2">
+            {/* Live Chat (Right - 3 columns) */}
+            <div className="lg:col-span-3">
               <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
