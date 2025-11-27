@@ -165,6 +165,7 @@ const Dashboard = () => {
   const [streamTags, setStreamTags] = useState([]);
   const [newTag, setNewTag] = useState("");
   const [showTagInput, setShowTagInput] = useState(false);
+  const [showAdMenu, setShowAdMenu] = useState(false);
   
   // Track if user is actively editing title (prevents auto-refresh from overwriting)
   const isEditingTitle = useRef(false);
