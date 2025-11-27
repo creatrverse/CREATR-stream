@@ -33,7 +33,20 @@ function App() {
           <Routes>
             <Route path="/" element={<AppContent />} />
           </Routes>
-          <Toaster position="top-right" richColors />
+          <Toaster 
+            position="top-right" 
+            richColors 
+            toastOptions={{
+              style: {
+                background: 'rgba(0, 0, 0, 0.8)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(236, 72, 153, 0.3)',
+                color: 'white',
+                fontFamily: 'inherit',
+              },
+              className: 'glass',
+            }}
+          />
         </AuthProvider>
       </BrowserRouter>
     </div>
