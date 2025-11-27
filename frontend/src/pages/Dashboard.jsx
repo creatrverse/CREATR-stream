@@ -543,16 +543,29 @@ const Dashboard = () => {
     const { active, over } = event;
     
     if (active.id !== over.id) {
-      const oldIndex = sounds.findIndex((sound) => sound.name === active.id);
-      const newIndex = sounds.findIndex((sound) => sound.name === over.id);
+      const filteredSounds = getFilteredSounds();
+      const oldIndex = filteredSounds.findIndex((sound) => sound.name === active.id);
+      const newIndex = filteredSounds.findIndex((sound) => sound.name === over.id);
       
-      const newSounds = arrayMove(sounds, oldIndex, newIndex);
-      setSounds(newSounds);
+      // Reorder within the filtered category
+      const newFilteredSounds = arrayMove(filteredSounds, oldIndex, newIndex);
+      
+      // Merge back with all sounds
+      const updatedSounds = sounds.map(sound => {
+        const filtered = newFilteredSounds.find(s => s.name === sound.name);
+        return filtered || sound;
+      });
+      
+      // Replace category sounds in original order
+      const otherSounds = sounds.filter(s => !filteredSounds.find(f => f.name === s.name));
+      const finalSounds = [...newFilteredSounds, ...otherSounds];
+      
+      setSounds(finalSounds);
       
       // Save order to backend
       try {
-        const soundOrder = newSounds.map(s => s.name);
-        await axios.post(`${API}/sounds/reorder`, { order: soundOrder });
+        const soundOrder = finalSounds.map(s => s.name);
+        await axios.post(`${API}/sounds/reorder`, { order: soundOrder, category: selectedCategory });
         toast.success("Sound order saved! 🎯");
       } catch (error) {
         console.error("Error saving sound order:", error);
