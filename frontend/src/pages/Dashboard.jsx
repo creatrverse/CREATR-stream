@@ -663,6 +663,46 @@ const Dashboard = () => {
     }
   };
 
+  // Start camera preview
+  const startCameraPreview = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: 1920, height: 1080 }, 
+        audio: false 
+      });
+      setCameraStream(stream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+      toast.error("Failed to access camera. Please check permissions.");
+    }
+  };
+
+  // Stop camera preview
+  const stopCameraPreview = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    }
+  };
+
+  // Handle preview tab change
+  useEffect(() => {
+    if (previewTab === 'preview') {
+      startCameraPreview();
+    } else {
+      stopCameraPreview();
+    }
+    return () => {
+      stopCameraPreview();
+    };
+  }, [previewTab]);
+
   // Save OBS clip (replay buffer)
   const saveClip = async () => {
     try {
