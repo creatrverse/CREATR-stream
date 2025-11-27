@@ -1885,6 +1885,45 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                  {/* Stream Controls */}
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => controlStream(obsStats.streaming ? "stop" : "start")}
+                        className={`flex-1 text-xs ${obsStats.streaming ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+                        data-testid="btn-toggle-stream"
+                        size="sm"
+                      >
+                        {obsStats.streaming ? (
+                          <><Square className="w-3 h-3 mr-1" /> Stop</>
+                        ) : (
+                          <><Play className="w-3 h-3 mr-1" /> Start</>
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => controlRecording(obsStats.recording ? "stop" : "start")}
+                        variant="outline"
+                        className={`flex-1 text-xs ${obsStats.recording ? "border-red-400 text-red-400" : ""}`}
+                        data-testid="btn-toggle-recording"
+                        size="sm"
+                      >
+                        {obsStats.recording ? (
+                          <><Square className="w-3 h-3 mr-1" /> Stop Rec</>
+                        ) : (
+                          <><Circle className="w-3 h-3 mr-1" /> Record</>
+                        )}
+                      </Button>
+                    </div>
+                    {obsStats.streaming && (
+                      <div className="flex items-center justify-center gap-1 text-xs text-green-400">
+                        <Radio className="w-3 h-3 pulse" />
+                        LIVE
+                      </div>
+                    )}
+                  </div>
+
+                  <Separator />
+
                   {/* Stream Title */}
                   <div className="space-y-1">
                     <Label htmlFor="stream-title-mid" className="text-xs">Title</Label>
