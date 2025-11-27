@@ -772,22 +772,23 @@ async def shoutout_streamer(shoutout_data: dict, session: Session = Depends(get_
         if not username:
             return {"success": False, "error": "Username required"}
         
-        user_response = await httpx_client.get(
-            f"https://api.twitch.tv/helix/users?login={username}",
-            headers=headers
-        )
-        
-        if user_response.status_code == 200:
-            users = user_response.json().get('data', [])
-            if not users:
-                return {"success": False, "error": "User not found"}
-            
-            to_broadcaster_id = users[0]['id']
-            
-            response = await httpx_client.post(
-                f"https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id={token_data.user_id}&to_broadcaster_id={to_broadcaster_id}&moderator_id={token_data.user_id}",
+        async with httpx.AsyncClient() as client:
+            user_response = await client.get(
+                f"https://api.twitch.tv/helix/users?login={username}",
                 headers=headers
             )
+            
+            if user_response.status_code == 200:
+                users = user_response.json().get('data', [])
+                if not users:
+                    return {"success": False, "error": "User not found"}
+                
+                to_broadcaster_id = users[0]['id']
+                
+                response = await client.post(
+                    f"https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id={token_data.user_id}&to_broadcaster_id={to_broadcaster_id}&moderator_id={token_data.user_id}",
+                    headers=headers
+                )
             
             if response.status_code == 204:
                 return {"success": True, "message": f"Shoutout sent to {username}"}
