@@ -1841,31 +1841,34 @@ const Dashboard = () => {
                   </div>
 
                   <Separator />
-
-                  {/* Current Scene */}
-                  <div className="space-y-1">
-                    <Label className="text-[10px] text-gray-400">Scene</Label>
-                    <p className="text-xs text-purple-400 font-semibold truncate">{obsStats.current_scene}</p>
-                  </div>
-                  
-                  <Separator />
                   
                   {/* Scene Switcher */}
                   <div className="space-y-2">
                     <Label className="text-xs text-gray-400">Scenes</Label>
                     <div className="space-y-1">
-                      {scenes.slice(0, 4).map((scene) => (
+                      {scenes.length > 0 ? (
+                        scenes.map((scene) => (
+                          <Button
+                            key={scene}
+                            onClick={() => switchScene(scene)}
+                            variant={obsStats.current_scene === scene ? "default" : "outline"}
+                            size="sm"
+                            className={`w-full text-xs ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
+                            data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
+                          >
+                            {scene}
+                          </Button>
+                        ))
+                      ) : (
                         <Button
-                          key={scene}
-                          onClick={() => switchScene(scene)}
-                          variant={obsStats.current_scene === scene ? "default" : "outline"}
+                          variant="outline"
                           size="sm"
-                          className={`w-full text-xs ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
-                          data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="w-full text-xs"
+                          disabled
                         >
-                          {scene}
+                          OBS Not Connected
                         </Button>
-                      ))}
+                      )}
                     </div>
                   </div>
                   
