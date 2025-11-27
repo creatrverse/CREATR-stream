@@ -1623,51 +1623,28 @@ const Dashboard = () => {
                   <p className="text-sm text-gray-500 mt-2">Upload your first sound above!</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-                  {sounds.map((sound) => {
-                    const colorClass = sound.color || 'purple-pink';
-                    const gradients = {
-                      'purple-pink': 'from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700',
-                      'blue-cyan': 'from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700',
-                      'green-emerald': 'from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700',
-                      'red-orange': 'from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700',
-                      'yellow-amber': 'from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700',
-                      'pink-rose': 'from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700',
-                      'indigo-purple': 'from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700',
-                      'gray-slate': 'from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700'
-                    };
-                    
-                    return (
-                      <div key={sound.name} className="relative group">
-                        <button
-                          onClick={() => playSound(sound.name)}
-                          className={`w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg`}
-                        >
-                          <Music className="w-8 h-8 text-white" />
-                          <span className="text-white font-bold text-xs text-center leading-tight break-words">
-                            {sound.displayName || sound.name.replace(/\.[^/.]+$/, '')}
-                          </span>
-                        </button>
-                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => openEditModal(sound)}
-                            className="w-6 h-6 rounded-full bg-cyan-500 hover:bg-cyan-600 flex items-center justify-center"
-                            title="Edit sound"
-                          >
-                            <Zap className="w-3 h-3 text-white" />
-                          </button>
-                          <button
-                            onClick={() => deleteSound(sound.name)}
-                            className="w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center"
-                            title="Delete sound"
-                          >
-                            <Trash2 className="w-3 h-3 text-white" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={sounds.map(s => s.name)}
+                    strategy={rectSortingStrategy}
+                  >
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                      {sounds.map((sound) => (
+                        <SortableSound
+                          key={sound.name}
+                          sound={sound}
+                          playSound={playSound}
+                          openEditModal={openEditModal}
+                          deleteSound={deleteSound}
+                        />
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
               )}
             </CardContent>
           </Card>
