@@ -953,7 +953,6 @@ const Dashboard = () => {
       <Tabs defaultValue="control" className="space-y-6">
         <TabsList className="glass p-1">
           <TabsTrigger value="control" data-testid="tab-control">🎥 Control</TabsTrigger>
-          <TabsTrigger value="streamdeck" data-testid="tab-streamdeck">🎮 Stream Deck</TabsTrigger>
           <TabsTrigger value="soundboard" data-testid="tab-soundboard">🔊 Sound Board</TabsTrigger>
           <TabsTrigger value="queue" data-testid="tab-queue">🎵 Feedback Queue</TabsTrigger>
           <TabsTrigger value="music" data-testid="tab-music">🎵 Music Queue</TabsTrigger>
