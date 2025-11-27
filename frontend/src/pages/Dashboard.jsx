@@ -132,7 +132,7 @@ const Dashboard = () => {
   
   // Sound Board State
   const [sounds, setSounds] = useState([]);
-  const [uploadingSo, setUploadingSound] = useState(false);
+  const [uploadingSound, setUploadingSound] = useState(false);
 
   // Fetch OBS stats
   const fetchOBSStats = async () => {
