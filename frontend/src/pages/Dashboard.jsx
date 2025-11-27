@@ -1438,11 +1438,13 @@ const Dashboard = () => {
                             'gray-slate': 'from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700'
                           };
                           
+                          const isPlaying = playingSound === sound.name;
+                          
                           return (
                             <button
                               key={sound.name}
                               onClick={() => playSound(sound.name)}
-                              className={`aspect-square rounded-lg p-2 flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg`}
+                              className={`aspect-square rounded-lg p-2 flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg ${isPlaying ? 'ring-2 ring-white animate-pulse' : ''}`}
                             >
                               <span className="text-[8px] font-bold text-white text-center leading-tight line-clamp-2">
                                 {sound.displayName || sound.name}
