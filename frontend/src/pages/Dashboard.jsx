@@ -266,9 +266,12 @@ const Dashboard = () => {
   const fetchSources = async () => {
     try {
       const response = await axios.get(`${API}/obs/sources`);
-      setSources(response.data.sources);
+      if (response.data.sources && Object.keys(response.data.sources).length > 0) {
+        setSources(response.data.sources);
+      }
     } catch (error) {
       console.error("Error fetching sources:", error);
+      // Keep mockup data if fetch fails
     }
   };
 
