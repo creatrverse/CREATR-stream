@@ -988,82 +988,98 @@ const Dashboard = () => {
                     Stream Info
                   </CardTitle>
                 </CardHeader>
-              <CardContent className="space-y-4">
-                {/* CPU Usage */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2">
-                      <Cpu className="w-4 h-4 text-purple-400" />
-                      CPU Usage
-                    </span>
-                    <span className="font-semibold">{obsStats.cpu_usage.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={obsStats.cpu_usage} className="h-2" />
-                </div>
-
-                {/* GPU Usage */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="flex items-center gap-2">
-                      <Gauge className="w-4 h-4 text-pink-400" />
-                      GPU Usage
-                    </span>
-                    <span className="font-semibold">{obsStats.gpu_usage.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={obsStats.gpu_usage} className="h-2" />
-                </div>
-
-                <Separator />
-
-                {/* Stream Stats */}
-                <div className="grid grid-cols-2 gap-4">
+              <CardContent className="space-y-2">
+                <div className="grid grid-cols-4 gap-4 text-center">
                   <div>
                     <p className="text-xs text-gray-400">FPS</p>
-                    <p className="text-2xl font-bold text-green-400">{obsStats.fps}</p>
+                    <p className="text-xl font-bold text-green-400">{obsStats.fps}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Bitrate</p>
-                    <p className="text-2xl font-bold text-blue-400">{(obsStats.bitrate / 1000).toFixed(1)}k</p>
+                    <p className="text-xl font-bold text-blue-400">{(obsStats.bitrate / 1000).toFixed(1)}k</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Dropped</p>
-                    <p className="text-2xl font-bold text-yellow-400">{obsStats.dropped_frames}</p>
+                    <p className="text-xl font-bold text-yellow-400">{obsStats.dropped_frames}</p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-400">Status</p>
-                    <p className="text-2xl font-bold text-purple-400">{obsStats.streaming ? "LIVE" : "OFF"}</p>
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Quick Actions */}
-                <div className="space-y-2">
-                  <Label className="text-sm text-gray-400">Quick Actions</Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      onClick={createTwitchClip}
-                      variant="outline"
-                      size="sm"
-                      className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
-                      data-testid="btn-twitch-clip"
-                    >
-                      <Video className="w-4 h-4 mr-2" />
-                      Twitch Clip
-                    </Button>
-                    <Button
-                      onClick={createMarker}
-                      variant="outline"
-                      size="sm"
-                      className="border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white"
-                      data-testid="btn-create-marker"
-                    >
-                      <Bookmark className="w-4 h-4 mr-2" />
-                      Marker
-                    </Button>
+                    <p className="text-xl font-bold text-purple-400">{obsStats.streaming ? "LIVE" : "OFF"}</p>
                   </div>
                 </div>
               </CardContent>
+            </Card>
+            </div>
+
+            {/* Quick Actions (Right - 2 columns) */}
+            <div className="lg:col-span-2">
+              <Card className="glass h-full">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Zap className="w-4 h-4 text-cyan-400" />
+                    Quick Actions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Button
+                    onClick={createTwitchClip}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white text-xs"
+                    data-testid="btn-twitch-clip"
+                  >
+                    <Scissors className="w-3 h-3 mr-1" />
+                    Clip
+                  </Button>
+                  <Button
+                    onClick={createMarker}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white text-xs"
+                    data-testid="btn-create-marker"
+                  >
+                    <Bookmark className="w-3 h-3 mr-1" />
+                    Marker
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Stream Health - Full Width */}
+          <Card className="glass">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm">
+                <Activity className="w-4 h-4 text-cyan-400" />
+                Stream Health
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* CPU & GPU Usage */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1">
+                      <Cpu className="w-3 h-3 text-purple-400" />
+                      CPU
+                    </span>
+                    <span className="font-semibold">{obsStats.cpu_usage.toFixed(1)}%</span>
+                  </div>
+                  <Progress value={obsStats.cpu_usage} className="h-1.5" />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="flex items-center gap-1">
+                      <Gauge className="w-3 h-3 text-pink-400" />
+                      GPU
+                    </span>
+                    <span className="font-semibold">{obsStats.gpu_usage.toFixed(1)}%</span>
+                  </div>
+                  <Progress value={obsStats.gpu_usage} className="h-1.5" />
+                </div>
+              </div>
+            </CardContent>
             </Card>
           </div>
           </div>
