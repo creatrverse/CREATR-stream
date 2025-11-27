@@ -148,7 +148,7 @@ const Dashboard = () => {
     current_scene: "Main Camera"
   });
   const [scenes, setScenes] = useState(['Starting Soon', 'Webcam', 'Gaming', 'BRB', 'Chatting', 'Desktop', 'Ending', 'Full Screen', 'Split Cam', 'Screen Share']);
-  const [sources, setSources] = useState({ 'Webcam': true, 'Mic/Aux': true, 'Desktop Audio': false });
+  const [sources, setSources] = useState({ 'Webcam': true, 'Mic/Aux': true, 'Desktop Audio': false, 'Camera 2': true, 'Mic 2': true });
 
   // Twitch State
   const [twitchStats, setTwitchStats] = useState({
