@@ -172,6 +172,9 @@ class StreamControl(BaseModel):
 class StreamTitleUpdate(BaseModel):
     title: str
 
+class StreamCategoryUpdate(BaseModel):
+    category: str
+
 # Music Queue Models
 class MusicSubmission(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
