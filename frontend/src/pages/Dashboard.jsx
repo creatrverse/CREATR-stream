@@ -878,37 +878,37 @@ const Dashboard = () => {
             <div className="lg:col-span-2">
               <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-sm">
                     <MessageCircle className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm">Live Chat</span>
+                    Live Chat
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ScrollArea className="h-[200px] pr-2">
+                  <ScrollArea className="h-[400px] pr-2">
                     <div className="space-y-2">
-                      {chatMessages.slice(0, 8).map((msg) => (
+                      {chatMessages.map((msg) => (
                         <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
-                          <div className="flex items-start gap-1.5">
+                          <div className="flex items-start gap-1">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1 mb-0.5 flex-wrap">
-                                <span className="font-semibold truncate text-xs" style={{ color: msg.color }}>
+                                <span className="font-semibold truncate text-[10px]" style={{ color: msg.color }}>
                                   {msg.username}
                                 </span>
                                 {msg.badges.map((badge, i) => (
-                                  <span key={i} className={`badge badge-${badge} text-[8px]`}>
+                                  <span key={i} className={`badge badge-${badge} text-[7px]`}>
                                     {badge === "moderator" ? "MOD" : badge === "subscriber" ? "SUB" : "VIP"}
                                   </span>
                                 ))}
                               </div>
-                              <p className="text-[11px] text-gray-200 break-words">{msg.message}</p>
+                              <p className="text-[10px] text-gray-200 break-words leading-tight">{msg.message}</p>
                             </div>
                           </div>
                         </div>
                       ))}
                       {chatMessages.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
-                          <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-xs">No messages yet</p>
+                          <MessageCircle className="w-6 h-6 mx-auto mb-2 opacity-50" />
+                          <p className="text-[10px]">No messages yet</p>
                         </div>
                       )}
                     </div>
@@ -916,6 +916,10 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
+
+          {/* MIDDLE ROW: OBS Control | Stream Info | Quick Actions */}
+          <div className="grid lg:grid-cols-12 gap-4">
 
             {/* OBS Control */}
             <Card className="glass">
