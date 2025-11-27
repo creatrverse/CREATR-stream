@@ -722,16 +722,17 @@ async def create_prediction(prediction_data: dict, session: Session = Depends(ge
             'Content-Type': 'application/json'
         }
         
-        response = await httpx_client.post(
-            "https://api.twitch.tv/helix/predictions",
-            headers=headers,
-            json={
-                "broadcaster_id": token_data.user_id,
-                "title": prediction_data.get('title', 'New Prediction'),
-                "outcomes": prediction_data.get('outcomes', [{"title": "Yes"}, {"title": "No"}]),
-                "prediction_window": prediction_data.get('duration', 120)
-            }
-        )
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.twitch.tv/helix/predictions",
+                headers=headers,
+                json={
+                    "broadcaster_id": token_data.user_id,
+                    "title": prediction_data.get('title', 'New Prediction'),
+                    "outcomes": prediction_data.get('outcomes', [{"title": "Yes"}, {"title": "No"}]),
+                    "prediction_window": prediction_data.get('duration', 120)
+                }
+            )
         
         if response.status_code == 200:
             return {"success": True, "message": "Prediction created"}
