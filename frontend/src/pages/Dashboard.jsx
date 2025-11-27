@@ -919,10 +919,10 @@ const Dashboard = () => {
           </div>
 
           {/* MIDDLE ROW: OBS Control | Stream Info | Quick Actions */}
-          <div className="grid lg:grid-cols-12 gap-4">
+          <div className="grid lg:grid-cols-3 gap-4">
 
-            {/* OBS Control (Left - 2 columns) */}
-            <div className="lg:col-span-2">
+            {/* OBS Control (Left - 1/3 width) */}
+            <div>
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
