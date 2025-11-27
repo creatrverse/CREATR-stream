@@ -155,8 +155,8 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`${API}/twitch/stats`);
       setTwitchStats(response.data);
-      // Only set newTitle if it's empty (initial load) to avoid overwriting user input
-      if (!newTitle) {
+      // Only update newTitle if user is NOT actively editing
+      if (!isEditingTitle.current) {
         setNewTitle(response.data.stream_title);
       }
     } catch (error) {
