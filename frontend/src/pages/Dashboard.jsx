@@ -976,10 +976,71 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-4 text-sm">
-                <span className="text-gray-400">Category:</span>
-                <Badge variant="secondary">{twitchStats.stream_category}</Badge>
-              </div>
+              
+              {/* Category Section */}
+              <div className="space-y-2">
+                <Label>Category</Label>
+                {isAuthenticated ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-sm">{twitchStats.stream_category}</Badge>
+                      <Button
+                        onClick={() => setShowCategoryInput(!showCategoryInput)}
+                        variant="outline"
+                        size="sm"
+                        className="text-xs"
+                      >
+                        Change
+                      </Button>
+                    </div>
+                    
+                    {showCategoryInput && (
+                      <div className="space-y-2 glass p-3 rounded-lg border border-cyan-400/30">
+                        <p className="text-xs text-gray-400">Select a category:</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {popularCategories.map((cat) => (
+                            <Button
+                              key={cat}
+                              onClick={() => updateStreamCategory(cat)}
+                              variant="outline"
+                              size="sm"
+                              className={`text-xs ${twitchStats.stream_category === cat ? 'border-cyan-400 bg-cyan-400/10' : ''}`}
+                            >
+                              {cat}
+                            </Button>
+                          ))}
+                        </div>
+                        
+                        <Separator className="my-2" />
+                        
+                        <div className="flex gap-2">
+                          <Input
+                            value={newCategory}
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            placeholder="Or type custom category..."
+                            className="glass text-xs"
+                          />
+                          <Button
+                            onClick={() => {
+                              if (newCategory) {
+                                updateStreamCategory(newCategory);
+                                setNewCategory("");
+                              }
+                            }}
+                            size="sm"
+                            className="bg-cyan-500 hover:bg-cyan-600"
+                          >
+                            Set
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">{twitchStats.stream_category}</Badge>
+                  </div>
+                )}
             </CardContent>
           </Card>
         </TabsContent>
