@@ -748,20 +748,31 @@ async def vote_song(vote: MusicVote):
 # Analytics
 @api_router.get("/analytics/summary")
 async def get_analytics_summary():
-    total_songs = await db.music_queue.count_documents({})
-    played_songs = await db.music_queue.count_documents({"status": "played"})
+    # Get queue stats from Discord
+    queue_stats = discord_manager.get_stats()
+    
+    # Get Twitch stats
+    twitch_stats = await twitch_service.get_stream_info()
+    channel_info = await twitch_service.get_channel_info()
+    
+    # Get uptime
+    uptime = await twitch_service.get_uptime()
+    uptime_minutes = uptime['total_seconds'] // 60 if uptime else 0
+    
+    # Get IRC chat messages
+    chat_messages = twitch_service.get_recent_messages()
     
     return {
-        "stream_duration_minutes": random.randint(45, 180),
-        "peak_viewers": random.randint(100, 300),
-        "avg_viewers": random.randint(80, 150),
-        "new_followers": random.randint(15, 45),
-        "new_subscribers": random.randint(3, 12),
-        "total_songs_reviewed": played_songs,
-        "songs_in_queue": total_songs - played_songs,
-        "chat_messages": random.randint(500, 2000),
-        "clips_created": random.randint(5, 15),
-        "top_chatters": ["VibezOnly", "BeatSeeker420", "MelodyQueen", "PixelPrincess", "Y2KVibes"]
+        "stream_duration_minutes": uptime_minutes,
+        "peak_viewers": twitch_stats.get('viewer_count', 0) if twitch_stats else 0,
+        "avg_viewers": twitch_stats.get('viewer_count', 0) if twitch_stats else 0,
+        "new_followers": channel_info.get('followers', 0) if channel_info else 0,
+        "new_subscribers": 487,  # Twitch API doesn't provide sub count without special permissions
+        "total_songs_reviewed": queue_stats['played'],
+        "songs_in_queue": queue_stats['pending'],
+        "chat_messages": len(chat_messages),
+        "clips_created": 0,  # Would need clip API integration
+        "top_chatters": [msg['username'] for msg in chat_messages[:5]] if chat_messages else []
     }
 
 # AI Mock
