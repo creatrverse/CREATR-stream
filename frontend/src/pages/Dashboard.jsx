@@ -924,100 +924,64 @@ const Dashboard = () => {
             {/* OBS Control (Left - 2 columns) */}
             <div className="lg:col-span-2">
               <Card className="glass h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Monitor className="w-5 h-5 text-purple-400" />
-                  OBS Control
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Stream Controls */}
-                <div className="space-y-2">
-                  <Label className="text-sm text-gray-400">Stream Control</Label>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => controlStream(obsStats.streaming ? "stop" : "start")}
-                      className={obsStats.streaming ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}
-                      data-testid="btn-toggle-stream"
-                    >
-                      {obsStats.streaming ? (
-                        <><Square className="w-4 h-4 mr-2" /> Stop Stream</>
-                      ) : (
-                        <><Play className="w-4 h-4 mr-2" /> Start Stream</>
-                      )}
-                    </Button>
-                    <Button
-                      onClick={() => controlRecording(obsStats.recording ? "stop" : "start")}
-                      variant="outline"
-                      className={obsStats.recording ? "border-red-400 text-red-400" : ""}
-                      data-testid="btn-toggle-recording"
-                    >
-                      {obsStats.recording ? (
-                        <><Square className="w-4 h-4 mr-2" /> Stop Rec</>
-                      ) : (
-                        <><Circle className="w-4 h-4 mr-2" /> Record</>
-                      )}
-                    </Button>
-                  </div>
-                  {obsStats.streaming && (
-                    <div className="flex items-center gap-2 text-sm text-green-400">
-                      <Radio className="w-4 h-4 pulse" />
-                      LIVE
-                    </div>
-                  )}
-                </div>
-
-                <Separator />
-
-                {/* Scene Switcher */}
-                <div className="space-y-2">
-                  <Label className="text-sm text-gray-400">Current Scene: <span className="text-purple-400 font-semibold">{obsStats.current_scene}</span></Label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {scenes.map((scene) => (
-                      <Button
-                        key={scene}
-                        onClick={() => switchScene(scene)}
-                        variant={obsStats.current_scene === scene ? "default" : "outline"}
-                        size="sm"
-                        className={obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}
-                        data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
-                      >
-                        {scene}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Sources Toggle */}
-                <div className="space-y-2">
-                  <Label className="text-sm text-gray-400">Sources</Label>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Monitor className="w-4 h-4 text-purple-400" />
+                    OBS Control
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Stream Controls */}
                   <div className="space-y-2">
-                    {Object.entries(sources).map(([name, visible]) => (
-                      <div key={name} className="flex items-center justify-between">
-                        <span className="text-sm">{name}</span>
-                        <Button
-                          onClick={() => toggleSource(name, !visible)}
-                          variant="ghost"
-                          size="sm"
-                          data-testid={`btn-toggle-source-${name.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
-                          {visible ? (
-                            <Eye className="w-4 h-4 text-green-400" />
-                          ) : (
-                            <EyeOff className="w-4 h-4 text-gray-500" />
-                          )}
-                        </Button>
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        onClick={() => controlStream(obsStats.streaming ? "stop" : "start")}
+                        className={`w-full text-xs ${obsStats.streaming ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+                        data-testid="btn-toggle-stream"
+                        size="sm"
+                      >
+                        {obsStats.streaming ? (
+                          <><Square className="w-3 h-3 mr-1" /> Stop</>
+                        ) : (
+                          <><Play className="w-3 h-3 mr-1" /> Start</>
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => controlRecording(obsStats.recording ? "stop" : "start")}
+                        variant="outline"
+                        className={`w-full text-xs ${obsStats.recording ? "border-red-400 text-red-400" : ""}`}
+                        data-testid="btn-toggle-recording"
+                        size="sm"
+                      >
+                        {obsStats.recording ? (
+                          <><Square className="w-3 h-3 mr-1" /> Stop Rec</>
+                        ) : (
+                          <><Circle className="w-3 h-3 mr-1" /> Record</>
+                        )}
+                      </Button>
+                    </div>
+                    {obsStats.streaming && (
+                      <div className="flex items-center justify-center gap-1 text-xs text-green-400">
+                        <Radio className="w-3 h-3 pulse" />
+                        LIVE
                       </div>
-                    ))}
+                    )}
                   </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            {/* Stream Stats */}
-            <Card className="glass">
+                  <Separator />
+
+                  {/* Current Scene */}
+                  <div className="space-y-1">
+                    <Label className="text-[10px] text-gray-400">Scene</Label>
+                    <p className="text-xs text-purple-400 font-semibold truncate">{obsStats.current_scene}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Stream Info (Center - 8 columns) */}
+            <div className="lg:col-span-8">
+              <Card className="glass h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Activity className="w-5 h-5 text-cyan-400" />
