@@ -848,12 +848,12 @@ async def start_raid(raid_data: dict, session: Session = Depends(get_session)):
                     headers=headers
                 )
             
-            if response.status_code == 200:
-                return {"success": True, "message": f"Raid started to {username}"}
+                if response.status_code == 200:
+                    return {"success": True, "message": f"Raid started to {username}"}
+                else:
+                    return {"success": False, "error": response.text}
             else:
-                return {"success": False, "error": response.text}
-        else:
-            return {"success": False, "error": "Failed to find user"}
+                return {"success": False, "error": "Failed to find user"}
     except Exception as e:
         logger.error(f"Failed to start raid: {e}")
         return {"success": False, "error": str(e)}
