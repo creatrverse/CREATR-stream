@@ -1840,6 +1840,26 @@ const Dashboard = () => {
                     <p className="text-xs text-gray-400">Actual file: {editingSound.name}</p>
                   </div>
 
+                  {/* Category Selector */}
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {soundCategories.filter(c => c.id !== 'all').map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => setEditForm({...editForm, category: cat.id})}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            editForm.category === cat.id
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                              : 'glass text-gray-400 hover:text-white'
+                          }`}
+                        >
+                          {cat.icon} {cat.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   {/* Color Picker */}
                   <div className="space-y-2">
                     <Label>Button Color</Label>
