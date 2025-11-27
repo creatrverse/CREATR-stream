@@ -1743,11 +1743,20 @@ const Dashboard = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {sounds.length === 0 ? (
+              {getFilteredSounds().length === 0 ? (
                 <div className="text-center py-12">
                   <Music className="w-16 h-16 mx-auto mb-4 text-gray-500 opacity-50" />
-                  <p className="text-gray-400">No sounds uploaded yet</p>
-                  <p className="text-sm text-gray-500 mt-2">Upload your first sound above!</p>
+                  {sounds.length === 0 ? (
+                    <>
+                      <p className="text-gray-400">No sounds uploaded yet</p>
+                      <p className="text-sm text-gray-500 mt-2">Upload your first sound above!</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-gray-400">No sounds in this category</p>
+                      <p className="text-sm text-gray-500 mt-2">Drag sounds here or edit a sound to add it to this category</p>
+                    </>
+                  )}
                 </div>
               ) : (
                 <DndContext
@@ -1756,11 +1765,11 @@ const Dashboard = () => {
                   onDragEnd={handleDragEnd}
                 >
                   <SortableContext
-                    items={sounds.map(s => s.name)}
+                    items={getFilteredSounds().map(s => s.name)}
                     strategy={rectSortingStrategy}
                   >
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-                      {sounds.map((sound) => (
+                      {getFilteredSounds().map((sound) => (
                         <SortableSound
                           key={sound.name}
                           sound={sound}
