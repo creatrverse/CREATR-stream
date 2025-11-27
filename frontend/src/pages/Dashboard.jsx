@@ -1690,7 +1690,11 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ScrollArea className={showModeration ? "h-[280px] pr-2" : "h-[400px] pr-2"}>
+                  <ScrollArea className={`pr-2 ${
+                    showQuickActions && showModeration ? "h-[180px]" : 
+                    showQuickActions || showModeration ? "h-[280px]" : 
+                    "h-[400px]"
+                  }`}>
                     <div className="space-y-2">
                       {chatMessages.map((msg) => (
                         <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
