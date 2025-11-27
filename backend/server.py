@@ -1145,6 +1145,86 @@ async def get_queue_stats():
         logger.error(f"Error getting queue stats: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ============================================
+# Sound Board Endpoints
+# ============================================
+
+import os
+from pathlib import Path
+from fastapi import UploadFile, File
+from fastapi.responses import FileResponse
+
+SOUNDS_DIR = Path("/app/backend/sounds")
+SOUNDS_DIR.mkdir(exist_ok=True)
+
+@api_router.get("/sounds")
+async def get_sounds():
+    """Get list of available sounds"""
+    try:
+        sounds = []
+        for sound_file in SOUNDS_DIR.glob("*"):
+            if sound_file.is_file() and sound_file.suffix.lower() in ['.mp3', '.wav', '.ogg', '.m4a']:
+                sounds.append({
+                    "name": sound_file.name,
+                    "size": sound_file.stat().st_size
+                })
+        return {"success": True, "sounds": sounds}
+    except Exception as e:
+        logger.error(f"Error getting sounds: {e}")
+        return {"success": False, "sounds": [], "error": str(e)}
+
+@api_router.post("/sounds/upload")
+async def upload_sound(sound: UploadFile = File(...)):
+    """Upload a sound file"""
+    try:
+        # Validate file type
+        if not sound.filename.lower().endswith(('.mp3', '.wav', '.ogg', '.m4a')):
+            raise HTTPException(status_code=400, detail="Invalid file type. Only MP3, WAV, OGG, M4A allowed")
+        
+        # Save file
+        file_path = SOUNDS_DIR / sound.filename
+        with open(file_path, "wb") as f:
+            content = await sound.read()
+            f.write(content)
+        
+        logger.info(f"Sound uploaded: {sound.filename}")
+        return {"success": True, "message": f"Sound {sound.filename} uploaded successfully"}
+    except Exception as e:
+        logger.error(f"Error uploading sound: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/sounds/play/{sound_name}")
+async def play_sound(sound_name: str):
+    """Serve sound file for playback"""
+    try:
+        file_path = SOUNDS_DIR / sound_name
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="Sound not found")
+        
+        return FileResponse(file_path, media_type="audio/mpeg")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error playing sound: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/sounds/{sound_name}")
+async def delete_sound(sound_name: str):
+    """Delete a sound file"""
+    try:
+        file_path = SOUNDS_DIR / sound_name
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="Sound not found")
+        
+        file_path.unlink()
+        logger.info(f"Sound deleted: {sound_name}")
+        return {"success": True, "message": f"Sound {sound_name} deleted"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting sound: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include router
 app.include_router(api_router)
 
