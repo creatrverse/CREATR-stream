@@ -422,6 +422,86 @@ async def update_stream_category(update: StreamCategoryUpdate, session: Session 
         logger.error(f"Failed to update stream category: {e}")
         return {"success": False, "error": str(e)}
 
+@api_router.get("/twitch/tags")
+async def get_stream_tags(session: Session = Depends(get_session)):
+    """Get current stream tags"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://api.twitch.tv/helix/channels?broadcaster_id={token_data.user_id}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID')
+                }
+            )
+            
+            if response.status_code == 200:
+                data = response.json().get('data', [])
+                if data:
+                    tags = data[0].get('tags', [])
+                    return {"success": True, "tags": tags}
+            
+            return {"success": False, "tags": []}
+    except Exception as e:
+        logger.error(f"Failed to get stream tags: {e}")
+        return {"success": False, "tags": [], "error": str(e)}
+
+@api_router.post("/twitch/tags")
+async def update_stream_tags(update: StreamTagsUpdate, session: Session = Depends(get_session)):
+    """Update stream tags using OAuth"""
+    from sqlmodel import select
+    token_data = session.exec(select(TokenData)).first()
+    
+    if not token_data:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # Refresh token if needed
+    expires_at = token_data.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    
+    if expires_at < datetime.now(timezone.utc):
+        try:
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.refresh_token = new_token_response['refresh_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(
+                seconds=new_token_response.get('expires_in', 3600)
+            )
+            session.add(token_data)
+            session.commit()
+        except:
+            raise HTTPException(status_code=401, detail="Token refresh failed")
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            # Twitch API allows up to 10 tags, each max 25 characters
+            tags = [tag[:25] for tag in update.tags[:10]]
+            
+            response = await client.patch(
+                f"https://api.twitch.tv/helix/channels?broadcaster_id={token_data.user_id}",
+                headers={
+                    'Authorization': f'Bearer {token_data.access_token}',
+                    'Client-ID': os.getenv('TWITCH_CLIENT_ID'),
+                    'Content-Type': 'application/json'
+                },
+                json={"tags": tags}
+            )
+            
+            if response.status_code == 204:
+                return {"success": True, "tags": tags}
+            else:
+                return {"success": False, "error": "Failed to update tags"}
+    except Exception as e:
+        logger.error(f"Failed to update stream tags: {e}")
+        return {"success": False, "error": str(e)}
+
 @api_router.post("/twitch/marker")
 async def create_marker(session: Session = Depends(get_session)):
     """Create stream marker using OAuth"""
