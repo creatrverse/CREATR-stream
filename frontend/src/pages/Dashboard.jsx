@@ -1585,8 +1585,8 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* Live Chat */}
-            <div>
+                {/* Live Chat (1/3) */}
+                <div className="lg:col-span-1">
               <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
