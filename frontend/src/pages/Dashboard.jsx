@@ -1394,7 +1394,7 @@ const Dashboard = () => {
                         </p>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-5 gap-2">
                         {getFilteredSounds().map((sound) => {
                           const colorClass = sound.color || 'purple-pink';
                           const gradients = {
@@ -1414,7 +1414,7 @@ const Dashboard = () => {
                               onClick={() => playSound(sound.name)}
                               className={`aspect-square rounded-lg p-2 flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg`}
                             >
-                              <span className="text-[9px] font-bold text-white text-center leading-tight line-clamp-2">
+                              <span className="text-[8px] font-bold text-white text-center leading-tight line-clamp-2">
                                 {sound.displayName || sound.name}
                               </span>
                             </button>
