@@ -394,6 +394,11 @@ const Dashboard = () => {
 
   // Update stream title
   const updateStreamTitle = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
     try {
       const response = await axios.post(`${API}/twitch/title`, { title: newTitle });
       if (response.data.success) {
@@ -404,7 +409,7 @@ const Dashboard = () => {
       }
     } catch (error) {
       if (error.response?.status === 401) {
-        toast.error("Please login to update title");
+        toast.error("Please login with Twitch to edit stream title");
       } else {
         toast.error("Failed to update title");
       }
