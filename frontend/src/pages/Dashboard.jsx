@@ -833,6 +833,167 @@ const Dashboard = () => {
     }
   };
 
+  // Run Ad
+  const runAd = async (duration) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/ad`, { duration });
+      if (response.data.success) {
+        toast.success(`Ad started (${duration}s)! 📺`);
+      } else {
+        toast.error(response.data.error || "Failed to run ad");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to run ads");
+      } else {
+        toast.error("Failed to run ad");
+      }
+    }
+  };
+
+  // Create Poll
+  const createPoll = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    // Simple poll with default options
+    const pollData = {
+      title: "What should we do next?",
+      choices: [{ title: "Yes" }, { title: "No" }],
+      duration: 60
+    };
+    
+    try {
+      const response = await axios.post(`${API}/twitch/poll`, pollData);
+      if (response.data.success) {
+        toast.success("Poll created! 📊");
+      } else {
+        toast.error(response.data.error || "Failed to create poll");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to create polls");
+      } else {
+        toast.error("Failed to create poll");
+      }
+    }
+  };
+
+  // Create Prediction
+  const createPrediction = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    // Simple prediction with default options
+    const predictionData = {
+      title: "Will we win?",
+      outcomes: [{ title: "Yes" }, { title: "No" }],
+      duration: 120
+    };
+    
+    try {
+      const response = await axios.post(`${API}/twitch/prediction`, predictionData);
+      if (response.data.success) {
+        toast.success("Prediction created! 🔮");
+      } else {
+        toast.error(response.data.error || "Failed to create prediction");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to create predictions");
+      } else {
+        toast.error("Failed to create prediction");
+      }
+    }
+  };
+
+  // Shoutout Streamer
+  const shoutoutStreamer = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const username = prompt("Enter streamer username to shoutout:");
+    if (!username) return;
+    
+    try {
+      const response = await axios.post(`${API}/twitch/shoutout`, { username });
+      if (response.data.success) {
+        toast.success(`Shoutout sent to ${username}! 📣`);
+      } else {
+        toast.error(response.data.error || "Failed to send shoutout");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to send shoutouts");
+      } else {
+        toast.error("Failed to send shoutout");
+      }
+    }
+  };
+
+  // Start Raid
+  const startRaid = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const username = prompt("Enter streamer username to raid:");
+    if (!username) return;
+    
+    try {
+      const response = await axios.post(`${API}/twitch/raid`, { username });
+      if (response.data.success) {
+        toast.success(`Raid started to ${username}! 🚀`);
+      } else {
+        toast.error(response.data.error || "Failed to start raid");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to start raids");
+      } else {
+        toast.error("Failed to start raid");
+      }
+    }
+  };
+
+  // Clear Chat
+  const clearChat = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const confirmed = window.confirm("Are you sure you want to clear the entire chat?");
+    if (!confirmed) return;
+    
+    try {
+      const response = await axios.post(`${API}/twitch/clear-chat`);
+      if (response.data.success) {
+        toast.success("Chat cleared! 🧹");
+      } else {
+        toast.error(response.data.error || "Failed to clear chat");
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Please login to clear chat");
+      } else {
+        toast.error("Failed to clear chat");
+      }
+    }
+  };
+
   // Create stream marker
   const createMarker = async () => {
     try {
