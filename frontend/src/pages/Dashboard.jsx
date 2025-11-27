@@ -1909,10 +1909,10 @@ const Dashboard = () => {
             
           </div>
 
-          {/* STREAM INFO ROW (Full Width) */}
-          <div className="grid lg:grid-cols-1 gap-4">
+          {/* STREAM INFO ROW (2 columns) */}
+          <div className="grid lg:grid-cols-2 gap-4">
 
-            {/* Stream Info (Full width) */}
+            {/* Stream Info */}
             <div>
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
