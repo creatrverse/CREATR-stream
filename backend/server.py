@@ -883,10 +883,11 @@ async def clear_chat(session: Session = Depends(get_session)):
             'Content-Type': 'application/json'
         }
         
-        response = await httpx_client.delete(
-            f"https://api.twitch.tv/helix/moderation/chat?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
-            headers=headers
-        )
+        async with httpx.AsyncClient() as client:
+            response = await client.delete(
+                f"https://api.twitch.tv/helix/moderation/chat?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+                headers=headers
+            )
         
         if response.status_code == 204:
             return {"success": True, "message": "Chat cleared"}
