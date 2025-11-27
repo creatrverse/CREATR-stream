@@ -982,12 +982,12 @@ const Dashboard = () => {
             {/* Stream Info (Center - 8 columns) */}
             <div className="lg:col-span-8">
               <Card className="glass h-full">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-cyan-400" />
-                  Stream Health
-                </CardTitle>
-              </CardHeader>
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Zap className="w-4 h-4 text-yellow-400" />
+                    Stream Info
+                  </CardTitle>
+                </CardHeader>
               <CardContent className="space-y-4">
                 {/* CPU Usage */}
                 <div className="space-y-2">
