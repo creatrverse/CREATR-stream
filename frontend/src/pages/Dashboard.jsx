@@ -344,6 +344,62 @@ const Dashboard = () => {
       console.error("Error removing username mapping:", error);
     }
   };
+  
+  // Fetch sounds
+  const fetchSounds = async () => {
+    try {
+      const response = await axios.get(`${API}/sounds`);
+      setSounds(response.data.sounds || []);
+    } catch (error) {
+      console.error("Error fetching sounds:", error);
+    }
+  };
+  
+  // Upload sound
+  const uploadSound = async (file) => {
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('sound', file);
+    
+    setUploadingSound(true);
+    try {
+      await axios.post(`${API}/sounds/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      toast.success(`Sound "${file.name}" uploaded! 🎵`);
+      fetchSounds();
+    } catch (error) {
+      toast.error("Failed to upload sound");
+      console.error("Error uploading sound:", error);
+    } finally {
+      setUploadingSound(false);
+    }
+  };
+  
+  // Play sound
+  const playSound = (soundName) => {
+    try {
+      const audio = new Audio(`${API}/sounds/play/${soundName}`);
+      audio.play();
+      toast.success(`Playing ${soundName}! 🔊`);
+    } catch (error) {
+      toast.error("Failed to play sound");
+      console.error("Error playing sound:", error);
+    }
+  };
+  
+  // Delete sound
+  const deleteSound = async (soundName) => {
+    try {
+      await axios.delete(`${API}/sounds/${soundName}`);
+      toast.success(`Sound "${soundName}" deleted!`);
+      fetchSounds();
+    } catch (error) {
+      toast.error("Failed to delete sound");
+      console.error("Error deleting sound:", error);
+    }
+  };
 
   // Control stream
   const controlStream = async (action) => {
