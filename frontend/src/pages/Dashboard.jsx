@@ -720,6 +720,7 @@ const Dashboard = () => {
         <TabsList className="glass p-1">
           <TabsTrigger value="control" data-testid="tab-control">🎥 Control</TabsTrigger>
           <TabsTrigger value="streamdeck" data-testid="tab-streamdeck">🎮 Stream Deck</TabsTrigger>
+          <TabsTrigger value="soundboard" data-testid="tab-soundboard">🔊 Sound Board</TabsTrigger>
           <TabsTrigger value="queue" data-testid="tab-queue">🎵 Feedback Queue</TabsTrigger>
           <TabsTrigger value="music" data-testid="tab-music">🎵 Music Queue</TabsTrigger>
           <TabsTrigger value="chat" data-testid="tab-chat">💬 Chat & Alerts</TabsTrigger>
