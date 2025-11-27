@@ -789,8 +789,8 @@ async def shoutout_streamer(shoutout_data: dict, session: Session = Depends(get_
                     f"https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id={token_data.user_id}&to_broadcaster_id={to_broadcaster_id}&moderator_id={token_data.user_id}",
                     headers=headers
                 )
-            
-            if response.status_code == 204:
+                
+                if response.status_code == 204:
                     return {"success": True, "message": f"Shoutout sent to {username}"}
                 else:
                     return {"success": False, "error": response.text}
