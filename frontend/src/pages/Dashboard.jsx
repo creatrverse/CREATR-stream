@@ -2305,56 +2305,57 @@ const Dashboard = () => {
 
                   <Separator />
 
-                  {/* Submission Queue Preview */}
-                  <div className="space-y-2">
-                    <Label className="text-xs">Submission Queue ({submissions.length})</Label>
-                    <ScrollArea className="h-[120px]">
-                      {submissions.length === 0 ? (
-                        <div className="text-center py-4">
-                          <Music className="w-6 h-6 mx-auto mb-1 text-gray-500 opacity-50" />
-                          <p className="text-[10px] text-gray-400">No submissions yet</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          {submissions.slice(0, 5).map((sub) => (
-                            <div key={sub.id} className="p-2 glass rounded border border-purple-400/20 text-[10px]">
-                              <div className="font-semibold text-white truncate">{sub.track_title}</div>
-                              <div className="text-gray-400 truncate">by {sub.discord_username}</div>
-                              <div className="text-gray-500 text-[9px] mt-0.5">
-                                {sub.status === 'played' && '✓ Played'}
-                                {sub.status === 'skipped' && '⊘ Skipped'}
-                                {sub.status === 'pending' && '⏳ Pending'}
+                  {/* Queue Previews - Side by Side */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Submission Queue Preview */}
+                    <div className="space-y-2">
+                      <Label className="text-xs">Submission Queue ({submissions.length})</Label>
+                      <ScrollArea className="h-[200px]">
+                        {submissions.length === 0 ? (
+                          <div className="text-center py-4">
+                            <Music className="w-6 h-6 mx-auto mb-1 text-gray-500 opacity-50" />
+                            <p className="text-[10px] text-gray-400">No submissions yet</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-1 pr-2">
+                            {submissions.slice(0, 5).map((sub) => (
+                              <div key={sub.id} className="p-2 glass rounded border border-purple-400/20 text-[10px]">
+                                <div className="font-semibold text-white truncate">{sub.track_title}</div>
+                                <div className="text-gray-400 truncate">by {sub.discord_username}</div>
+                                <div className="text-gray-500 text-[9px] mt-0.5">
+                                  {sub.status === 'played' && '✓ Played'}
+                                  {sub.status === 'skipped' && '⊘ Skipped'}
+                                  {sub.status === 'pending' && '⏳ Pending'}
+                                </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </ScrollArea>
-                  </div>
+                            ))}
+                          </div>
+                        )}
+                      </ScrollArea>
+                    </div>
 
-                  <Separator />
-
-                  {/* Skip Queue Preview */}
-                  <div className="space-y-2">
-                    <Label className="text-xs">Skip Queue ({queueStats.skip_queue_count})</Label>
-                    <ScrollArea className="h-[100px]">
-                      {skipQueue.length === 0 ? (
-                        <div className="text-center py-4">
-                          <SkipForward className="w-6 h-6 mx-auto mb-1 text-gray-500 opacity-50" />
-                          <p className="text-[10px] text-gray-400">No skips yet</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-1">
-                          {skipQueue.slice(0, 3).map((skip) => (
-                            <div key={skip.id} className="p-2 glass rounded border border-red-400/20 text-[10px]">
-                              <div className="font-semibold text-white truncate">{skip.track_title}</div>
-                              <div className="text-gray-400 truncate">by {skip.discord_username}</div>
-                              <div className="text-red-400 text-[9px] mt-0.5">⊘ Skipped</div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </ScrollArea>
+                    {/* Skip Queue Preview */}
+                    <div className="space-y-2">
+                      <Label className="text-xs">Skip Queue ({queueStats.skip_queue_count})</Label>
+                      <ScrollArea className="h-[200px]">
+                        {skipQueue.length === 0 ? (
+                          <div className="text-center py-4">
+                            <SkipForward className="w-6 h-6 mx-auto mb-1 text-gray-500 opacity-50" />
+                            <p className="text-[10px] text-gray-400">No skips yet</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-1 pr-2">
+                            {skipQueue.slice(0, 3).map((skip) => (
+                              <div key={skip.id} className="p-2 glass rounded border border-red-400/20 text-[10px]">
+                                <div className="font-semibold text-white truncate">{skip.track_title}</div>
+                                <div className="text-gray-400 truncate">by {skip.discord_username}</div>
+                                <div className="text-red-400 text-[9px] mt-0.5">⊘ Skipped</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </ScrollArea>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
