@@ -536,23 +536,36 @@ const Dashboard = () => {
             </div>
           </div>
           
-          {/* User info and logout */}
+          {/* User info and login/logout */}
           <div className="flex items-center gap-4">
-            {user && (
-              <div className="glass px-4 py-2 rounded-full flex items-center gap-3">
-                <User className="w-4 h-4 text-purple-400" />
-                <span className="text-sm font-semibold text-white">{user.username}</span>
-              </div>
+            {isAuthenticated ? (
+              <>
+                {user && (
+                  <div className="glass px-4 py-2 rounded-full flex items-center gap-3">
+                    <User className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm font-semibold text-white">{user.username}</span>
+                  </div>
+                )}
+                <Button
+                  onClick={logout}
+                  variant="outline"
+                  className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                  data-testid="btn-logout"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={login}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                data-testid="btn-login"
+              >
+                <User className="w-4 h-4 mr-2" />
+                Login with Twitch
+              </Button>
             )}
-            <Button
-              onClick={logout}
-              variant="outline"
-              className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
-              data-testid="btn-logout"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
           </div>
         </div>
       </div>
