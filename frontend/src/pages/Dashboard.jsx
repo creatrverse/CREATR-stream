@@ -46,7 +46,9 @@ import {
   Send,
   LogOut,
   User,
-  Trash2
+  Trash2,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
