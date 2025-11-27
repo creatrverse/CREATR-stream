@@ -1802,54 +1802,16 @@ const Dashboard = () => {
           {/* MIDDLE ROW: OBS Control | Stream Info */}
           <div className="grid lg:grid-cols-2 gap-4">
 
-            {/* OBS Control (Left - 1/3 width) */}
+            {/* Scenes (Left - 1/3 width) */}
             <div>
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
-                    <Monitor className="w-4 h-4 text-purple-400" />
-                    OBS Control
+                    <Video className="w-4 h-4 text-purple-400" />
+                    Scenes
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {/* Stream Controls */}
-                  <div className="space-y-2">
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        onClick={() => controlStream(obsStats.streaming ? "stop" : "start")}
-                        className={`w-full text-xs ${obsStats.streaming ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
-                        data-testid="btn-toggle-stream"
-                        size="sm"
-                      >
-                        {obsStats.streaming ? (
-                          <><Square className="w-3 h-3 mr-1" /> Stop</>
-                        ) : (
-                          <><Play className="w-3 h-3 mr-1" /> Start</>
-                        )}
-                      </Button>
-                      <Button
-                        onClick={() => controlRecording(obsStats.recording ? "stop" : "start")}
-                        variant="outline"
-                        className={`w-full text-xs ${obsStats.recording ? "border-red-400 text-red-400" : ""}`}
-                        data-testid="btn-toggle-recording"
-                        size="sm"
-                      >
-                        {obsStats.recording ? (
-                          <><Square className="w-3 h-3 mr-1" /> Stop Rec</>
-                        ) : (
-                          <><Circle className="w-3 h-3 mr-1" /> Record</>
-                        )}
-                      </Button>
-                    </div>
-                    {obsStats.streaming && (
-                      <div className="flex items-center justify-center gap-1 text-xs text-green-400">
-                        <Radio className="w-3 h-3 pulse" />
-                        LIVE
-                      </div>
-                    )}
-                  </div>
-
-                  <Separator />
                   
                   {/* Scene Switcher */}
                   <div className="space-y-2">
