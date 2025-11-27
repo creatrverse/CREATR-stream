@@ -231,7 +231,6 @@ const Dashboard = () => {
   // Sound categories
   const soundCategories = [
     { id: 'all', name: 'All Sounds', icon: '🎵' },
-    { id: 'alerts', name: 'Alerts', icon: '🔔' },
     { id: 'effects', name: 'Effects', icon: '✨' },
     { id: 'music', name: 'Music', icon: '🎶' },
     { id: 'memes', name: 'Memes', icon: '😂' },
