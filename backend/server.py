@@ -1375,7 +1375,7 @@ async def oauth_callback(code: str, session: Session = Depends(get_session)):
         session_token = oauth_service.create_session_token(user_id, timedelta(days=7))
         
         # Redirect to frontend with session token
-        frontend_url = os.getenv('FRONTEND_URL', 'https://streamhub-1222.preview.emergentagent.com')
+        frontend_url = os.getenv('FRONTEND_URL', 'https://stream-dashboard-6.preview.emergentagent.com')
         return RedirectResponse(url=f"{frontend_url}/?session_token={session_token}&auth=success")
         
     except Exception as e:
@@ -1613,7 +1613,7 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
         session.commit()
         
         # Redirect to frontend with success flag
-        frontend_url = os.getenv('FRONTEND_URL', 'https://streamhub-1222.preview.emergentagent.com')
+        frontend_url = os.getenv('FRONTEND_URL', 'https://stream-dashboard-6.preview.emergentagent.com')
         redirect_url = f"{frontend_url}/?auth=success"
         
         logger.info(f"Redirecting to: {redirect_url}")
@@ -1635,7 +1635,7 @@ async def root_oauth_callback(code: str, session: Session = Depends(get_session)
         import traceback
         logger.error(traceback.format_exc())
         # Redirect to frontend with error
-        frontend_url = os.getenv('FRONTEND_URL', 'https://streamhub-1222.preview.emergentagent.com')
+        frontend_url = os.getenv('FRONTEND_URL', 'https://stream-dashboard-6.preview.emergentagent.com')
         return RedirectResponse(url=f"{frontend_url}/?auth=error&message={str(e)}")
 
 # ============================================
