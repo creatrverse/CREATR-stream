@@ -1572,16 +1572,35 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
+                  {/* Preview/Stream Tabs */}
+                  <Tabs value={previewTab} onValueChange={setPreviewTab} className="mb-2">
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="stream" className="text-xs">Stream</TabsTrigger>
+                      <TabsTrigger value="preview" className="text-xs">Preview</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+
                   <div className="relative w-full aspect-video bg-gradient-to-br from-purple-900/40 to-pink-900/40 rounded-lg overflow-hidden border border-pink-400/30">
-                    {/* Twitch Embed Player */}
-                    {twitchPlayerUrl && (
-                      <iframe
-                        src={twitchPlayerUrl}
-                        className="w-full h-full"
-                        frameBorder="0"
-                        allowFullScreen={true}
-                        scrolling="no"
-                        title="Twitch Stream"
+                    {previewTab === 'stream' ? (
+                      /* Twitch Embed Player */
+                      twitchPlayerUrl && (
+                        <iframe
+                          src={twitchPlayerUrl}
+                          className="w-full h-full"
+                          frameBorder="0"
+                          allowFullScreen={true}
+                          scrolling="no"
+                          title="Twitch Stream"
+                        />
+                      )
+                    ) : (
+                      /* Camera Preview */
+                      <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        muted
+                        className="w-full h-full object-cover"
                       />
                     )}
                   </div>
