@@ -608,6 +608,283 @@ async def get_alerts():
     # Mock alerts for now
     return []
 
+@api_router.post("/twitch/ad")
+async def run_ad(duration: dict, session: Session = Depends(get_session)):
+    """Run a Twitch ad"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        # Run ad using Twitch API
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        response = await httpx_client.post(
+            f"https://api.twitch.tv/helix/channels/commercial",
+            headers=headers,
+            json={
+                "broadcaster_id": token_data.user_id,
+                "length": duration.get('duration', 30)
+            }
+        )
+        
+        if response.status_code == 200:
+            return {"success": True, "message": f"Ad started ({duration.get('duration')}s)"}
+        else:
+            return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to run ad: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/poll")
+async def create_poll(poll_data: dict, session: Session = Depends(get_session)):
+    """Create a Twitch poll"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        response = await httpx_client.post(
+            "https://api.twitch.tv/helix/polls",
+            headers=headers,
+            json={
+                "broadcaster_id": token_data.user_id,
+                "title": poll_data.get('title', 'New Poll'),
+                "choices": poll_data.get('choices', [{"title": "Yes"}, {"title": "No"}]),
+                "duration": poll_data.get('duration', 60)
+            }
+        )
+        
+        if response.status_code == 200:
+            return {"success": True, "message": "Poll created"}
+        else:
+            return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to create poll: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/prediction")
+async def create_prediction(prediction_data: dict, session: Session = Depends(get_session)):
+    """Create a Twitch prediction"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        response = await httpx_client.post(
+            "https://api.twitch.tv/helix/predictions",
+            headers=headers,
+            json={
+                "broadcaster_id": token_data.user_id,
+                "title": prediction_data.get('title', 'New Prediction'),
+                "outcomes": prediction_data.get('outcomes', [{"title": "Yes"}, {"title": "No"}]),
+                "prediction_window": prediction_data.get('duration', 120)
+            }
+        )
+        
+        if response.status_code == 200:
+            return {"success": True, "message": "Prediction created"}
+        else:
+            return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to create prediction: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/shoutout")
+async def shoutout_streamer(shoutout_data: dict, session: Session = Depends(get_session)):
+    """Send a shoutout to another streamer"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        # Get user ID for the username to shoutout
+        username = shoutout_data.get('username', '')
+        if not username:
+            return {"success": False, "error": "Username required"}
+        
+        user_response = await httpx_client.get(
+            f"https://api.twitch.tv/helix/users?login={username}",
+            headers=headers
+        )
+        
+        if user_response.status_code == 200:
+            users = user_response.json().get('data', [])
+            if not users:
+                return {"success": False, "error": "User not found"}
+            
+            to_broadcaster_id = users[0]['id']
+            
+            response = await httpx_client.post(
+                f"https://api.twitch.tv/helix/chat/shoutouts?from_broadcaster_id={token_data.user_id}&to_broadcaster_id={to_broadcaster_id}&moderator_id={token_data.user_id}",
+                headers=headers
+            )
+            
+            if response.status_code == 204:
+                return {"success": True, "message": f"Shoutout sent to {username}"}
+            else:
+                return {"success": False, "error": response.text}
+        else:
+            return {"success": False, "error": "Failed to find user"}
+    except Exception as e:
+        logger.error(f"Failed to send shoutout: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/raid")
+async def start_raid(raid_data: dict, session: Session = Depends(get_session)):
+    """Start a raid"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        # Get user ID for the username to raid
+        username = raid_data.get('username', '')
+        if not username:
+            return {"success": False, "error": "Username required"}
+        
+        user_response = await httpx_client.get(
+            f"https://api.twitch.tv/helix/users?login={username}",
+            headers=headers
+        )
+        
+        if user_response.status_code == 200:
+            users = user_response.json().get('data', [])
+            if not users:
+                return {"success": False, "error": "User not found"}
+            
+            to_broadcaster_id = users[0]['id']
+            
+            response = await httpx_client.post(
+                f"https://api.twitch.tv/helix/raids?from_broadcaster_id={token_data.user_id}&to_broadcaster_id={to_broadcaster_id}",
+                headers=headers
+            )
+            
+            if response.status_code == 200:
+                return {"success": True, "message": f"Raid started to {username}"}
+            else:
+                return {"success": False, "error": response.text}
+        else:
+            return {"success": False, "error": "Failed to find user"}
+    except Exception as e:
+        logger.error(f"Failed to start raid: {e}")
+        return {"success": False, "error": str(e)}
+
+@api_router.post("/twitch/clear-chat")
+async def clear_chat(session: Session = Depends(get_session)):
+    """Clear chat (delete all messages)"""
+    try:
+        from sqlmodel import select
+        token_data = session.exec(select(TokenData)).first()
+        
+        if not token_data:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+        
+        # Refresh token if needed
+        if token_data.expires_at < datetime.now(timezone.utc):
+            new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
+            token_data.access_token = new_token_response['access_token']
+            token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
+            session.add(token_data)
+            session.commit()
+        
+        headers = {
+            'Authorization': f'Bearer {token_data.access_token}',
+            'Client-Id': os.getenv('TWITCH_CLIENT_ID'),
+            'Content-Type': 'application/json'
+        }
+        
+        response = await httpx_client.delete(
+            f"https://api.twitch.tv/helix/moderation/chat?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
+            headers=headers
+        )
+        
+        if response.status_code == 204:
+            return {"success": True, "message": "Chat cleared"}
+        else:
+            return {"success": False, "error": response.text}
+    except Exception as e:
+        logger.error(f"Failed to clear chat: {e}")
+        return {"success": False, "error": str(e)}
+
 # Real OBS Endpoints
 @api_router.get("/obs/stats")
 async def get_obs_stats():
