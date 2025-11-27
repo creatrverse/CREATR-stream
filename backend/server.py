@@ -1277,6 +1277,8 @@ async def update_sound(sound_name: str, metadata: SoundMetadata):
             all_metadata[sound_name]['displayName'] = metadata.displayName
         if metadata.color is not None:
             all_metadata[sound_name]['color'] = metadata.color
+        if metadata.category is not None:
+            all_metadata[sound_name]['category'] = metadata.category
         
         # Save metadata
         save_sound_metadata(all_metadata)
