@@ -226,6 +226,7 @@ const Dashboard = () => {
   const [currentAudio, setCurrentAudio] = useState(null);
   const [playingSound, setPlayingSound] = useState(null);
   const [showModeration, setShowModeration] = useState(true);
+  const [showQuickActions, setShowQuickActions] = useState(true);
   
   // Sound categories
   const soundCategories = [
