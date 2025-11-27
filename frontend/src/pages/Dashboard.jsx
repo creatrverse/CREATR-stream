@@ -458,6 +458,78 @@ const Dashboard = () => {
     setNewTitle(e.target.value);
   };
   
+  // Fetch stream tags
+  const fetchStreamTags = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      const response = await axios.get(`${API}/twitch/tags`);
+      if (response.data.success) {
+        setStreamTags(response.data.tags || []);
+      }
+    } catch (error) {
+      console.error("Error fetching stream tags:", error);
+    }
+  };
+  
+  // Add tag
+  const addTag = async (tag) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    if (streamTags.includes(tag)) {
+      toast.error("Tag already added");
+      return;
+    }
+    
+    if (streamTags.length >= 10) {
+      toast.error("Maximum 10 tags allowed");
+      return;
+    }
+    
+    const newTags = [...streamTags, tag];
+    
+    try {
+      const response = await axios.post(`${API}/twitch/tags`, { tags: newTags });
+      if (response.data.success) {
+        setStreamTags(newTags);
+        setNewTag("");
+        setShowTagInput(false);
+        toast.success(`Tag "${tag}" added! 🏷️`);
+      } else {
+        toast.error(response.data.error || "Failed to add tag");
+      }
+    } catch (error) {
+      toast.error("Failed to add tag");
+      console.error("Error adding tag:", error);
+    }
+  };
+  
+  // Remove tag
+  const removeTag = async (tagToRemove) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    const newTags = streamTags.filter(tag => tag !== tagToRemove);
+    
+    try {
+      const response = await axios.post(`${API}/twitch/tags`, { tags: newTags });
+      if (response.data.success) {
+        setStreamTags(newTags);
+        toast.success(`Tag "${tagToRemove}" removed! 🗑️`);
+      } else {
+        toast.error(response.data.error || "Failed to remove tag");
+      }
+    } catch (error) {
+      toast.error("Failed to remove tag");
+      console.error("Error removing tag:", error);
+    }
+  };
+  
   // Update stream category
   const updateStreamCategory = async (category) => {
     if (!isAuthenticated) {
