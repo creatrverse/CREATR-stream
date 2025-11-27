@@ -727,7 +727,7 @@ const Dashboard = () => {
 
         {/* Control Tab */}
         <TabsContent value="control" className="space-y-6">
-          {/* Quick Stats */}
+          {/* Quick Stats - Always stays at top */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="glass stat-card" data-testid="stat-viewers">
               <CardContent className="pt-6">
