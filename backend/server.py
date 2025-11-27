@@ -1240,6 +1240,7 @@ async def play_sound(sound_name: str):
 class SoundMetadata(BaseModel):
     displayName: Optional[str] = None
     color: Optional[str] = None
+    category: Optional[str] = None
 
 class SoundOrder(BaseModel):
     order: List[str]
