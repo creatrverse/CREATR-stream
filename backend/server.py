@@ -1227,6 +1227,41 @@ async def play_sound(sound_name: str):
         logger.error(f"Error playing sound: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+class SoundMetadata(BaseModel):
+    displayName: Optional[str] = None
+    color: Optional[str] = None
+
+@api_router.patch("/sounds/{sound_name}")
+async def update_sound(sound_name: str, metadata: SoundMetadata):
+    """Update sound metadata (display name, color)"""
+    try:
+        file_path = SOUNDS_DIR / sound_name
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="Sound not found")
+        
+        # Load existing metadata
+        all_metadata = load_sound_metadata()
+        
+        # Update metadata for this sound
+        if sound_name not in all_metadata:
+            all_metadata[sound_name] = {}
+        
+        if metadata.displayName is not None:
+            all_metadata[sound_name]['displayName'] = metadata.displayName
+        if metadata.color is not None:
+            all_metadata[sound_name]['color'] = metadata.color
+        
+        # Save metadata
+        save_sound_metadata(all_metadata)
+        
+        logger.info(f"Sound metadata updated: {sound_name}")
+        return {"success": True, "message": f"Sound {sound_name} updated"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating sound: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.delete("/sounds/{sound_name}")
 async def delete_sound(sound_name: str):
     """Delete a sound file"""
@@ -1235,7 +1270,15 @@ async def delete_sound(sound_name: str):
         if not file_path.exists():
             raise HTTPException(status_code=404, detail="Sound not found")
         
+        # Delete file
         file_path.unlink()
+        
+        # Remove from metadata
+        metadata = load_sound_metadata()
+        if sound_name in metadata:
+            del metadata[sound_name]
+            save_sound_metadata(metadata)
+        
         logger.info(f"Sound deleted: {sound_name}")
         return {"success": True, "message": f"Sound {sound_name} deleted"}
     except HTTPException:
