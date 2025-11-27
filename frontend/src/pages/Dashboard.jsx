@@ -1405,7 +1405,6 @@ const Dashboard = () => {
               
               {/* Stream Deck Card */}
               <Card className="glass">
-              <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
                     <Monitor className="w-4 h-4 text-purple-400" />
