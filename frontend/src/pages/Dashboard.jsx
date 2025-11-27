@@ -483,12 +483,40 @@ const Dashboard = () => {
   // Play sound
   const playSound = (soundName) => {
     try {
+      // If the same sound is currently playing, stop it
+      if (playingSound === soundName && currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        setCurrentAudio(null);
+        setPlayingSound(null);
+        toast.success(`Stopped ${soundName}! 🔇`);
+        return;
+      }
+      
+      // Stop any currently playing sound
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+      
+      // Play the new sound
       const audio = new Audio(`${API}/sounds/play/${soundName}`);
+      
+      // Add event listener for when sound ends
+      audio.addEventListener('ended', () => {
+        setCurrentAudio(null);
+        setPlayingSound(null);
+      });
+      
       audio.play();
+      setCurrentAudio(audio);
+      setPlayingSound(soundName);
       toast.success(`Playing ${soundName}! 🔊`);
     } catch (error) {
       toast.error("Failed to play sound");
       console.error("Error playing sound:", error);
+      setCurrentAudio(null);
+      setPlayingSound(null);
     }
   };
   
