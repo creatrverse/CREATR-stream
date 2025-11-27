@@ -1041,6 +1041,7 @@ const Dashboard = () => {
                     <Badge variant="secondary">{twitchStats.stream_category}</Badge>
                   </div>
                 )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
