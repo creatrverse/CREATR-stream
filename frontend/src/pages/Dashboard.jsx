@@ -1493,6 +1493,114 @@ const Dashboard = () => {
           </Card>
         </TabsContent>
 
+        {/* Sound Board Tab */}
+        <TabsContent value="soundboard" className="space-y-6">
+          <div className="text-center mb-4">
+            <h2 className="text-2xl font-bold text-cyan-400 mb-2">🔊 Sound Board</h2>
+            <p className="text-sm text-gray-400">Upload and play sounds for your stream</p>
+          </div>
+
+          {/* Upload Section */}
+          <Card className="glass">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Music className="w-5 h-5 text-pink-400" />
+                Upload Sounds
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4">
+                <Input
+                  type="file"
+                  accept="audio/*"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      uploadSound(e.target.files[0]);
+                      e.target.value = '';
+                    }
+                  }}
+                  className="glass"
+                  disabled={uploadingSound}
+                />
+                {uploadingSound && (
+                  <div className="flex items-center gap-2 text-cyan-400">
+                    <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm">Uploading...</span>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Supported formats: MP3, WAV, OGG, M4A</p>
+            </CardContent>
+          </Card>
+
+          {/* Sound Buttons Grid */}
+          <Card className="glass">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  Your Sounds ({sounds.length})
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {sounds.length === 0 ? (
+                <div className="text-center py-12">
+                  <Music className="w-16 h-16 mx-auto mb-4 text-gray-500 opacity-50" />
+                  <p className="text-gray-400">No sounds uploaded yet</p>
+                  <p className="text-sm text-gray-500 mt-2">Upload your first sound above!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                  {sounds.map((sound) => (
+                    <div key={sound.name} className="relative group">
+                      <button
+                        onClick={() => playSound(sound.name)}
+                        className="w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg"
+                      >
+                        <Music className="w-8 h-8 text-white" />
+                        <span className="text-white font-bold text-xs text-center leading-tight break-words">
+                          {sound.name.replace(/\.[^/.]+$/, '')}
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => deleteSound(sound.name)}
+                        className="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Delete sound"
+                      >
+                        <Trash2 className="w-3 h-3 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Instructions */}
+          <Card className="glass border-cyan-400/30">
+            <CardHeader>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-cyan-400" />
+                Stream Deck Integration
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2 text-sm text-gray-300">
+                <p className="font-semibold text-cyan-400">How to use with Stream Deck:</p>
+                <ol className="list-decimal list-inside space-y-1 text-xs">
+                  <li>Open Stream Deck software</li>
+                  <li>Add "System" → "Open Website" action</li>
+                  <li>Set URL to: <code className="bg-black/40 px-2 py-0.5 rounded text-pink-400">http://localhost:8001/api/sounds/play/SOUNDNAME</code></li>
+                  <li>Replace SOUNDNAME with your sound file name</li>
+                  <li>Press button to play sound!</li>
+                </ol>
+                <p className="text-[10px] text-gray-500 mt-2">Sounds play through your browser, so make sure this page is open!</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Feedback Queue Tab */}
         <TabsContent value="queue" className="space-y-6">
           <QueueManager
