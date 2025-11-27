@@ -2212,22 +2212,22 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Queue Stats */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between p-2 glass rounded border border-purple-400/30">
-                      <span className="text-xs text-gray-400">Total Submissions</span>
-                      <span className="text-sm font-bold text-purple-400">{queueStats.total_submissions}</span>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="flex flex-col items-center justify-center p-2 glass rounded border border-purple-400/30">
+                      <span className="text-[10px] text-gray-400 text-center">Total</span>
+                      <span className="text-lg font-bold text-purple-400">{queueStats.total_submissions}</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 glass rounded border border-green-400/30">
-                      <span className="text-xs text-gray-400">Played</span>
-                      <span className="text-sm font-bold text-green-400">{queueStats.played}</span>
+                    <div className="flex flex-col items-center justify-center p-2 glass rounded border border-green-400/30">
+                      <span className="text-[10px] text-gray-400 text-center">Played</span>
+                      <span className="text-lg font-bold text-green-400">{queueStats.played}</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 glass rounded border border-red-400/30">
-                      <span className="text-xs text-gray-400">Skipped</span>
-                      <span className="text-sm font-bold text-red-400">{queueStats.skipped}</span>
+                    <div className="flex flex-col items-center justify-center p-2 glass rounded border border-red-400/30">
+                      <span className="text-[10px] text-gray-400 text-center">Skipped</span>
+                      <span className="text-lg font-bold text-red-400">{queueStats.skipped}</span>
                     </div>
-                    <div className="flex items-center justify-between p-2 glass rounded border border-cyan-400/30">
-                      <span className="text-xs text-gray-400">Pending</span>
-                      <span className="text-sm font-bold text-cyan-400">{queueStats.pending}</span>
+                    <div className="flex flex-col items-center justify-center p-2 glass rounded border border-cyan-400/30">
+                      <span className="text-[10px] text-gray-400 text-center">Pending</span>
+                      <span className="text-lg font-bold text-cyan-400">{queueStats.pending}</span>
                     </div>
                   </div>
 
