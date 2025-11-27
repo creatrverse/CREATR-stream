@@ -1528,6 +1528,42 @@ const Dashboard = () => {
                       </div>
                     )}
                   </div>
+                  <Separator />
+
+                  {/* Stream Presets */}
+                  <div className="space-y-1">
+                    <Label className="text-xs">Quick Presets</Label>
+                    {isAuthenticated ? (
+                      <div className="grid grid-cols-3 gap-1">
+                        <Button
+                          onClick={() => applyPreset('grwm')}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-2 text-[10px] border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white"
+                        >
+                          💄 GRWM
+                        </Button>
+                        <Button
+                          onClick={() => applyPreset('coworking')}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-2 text-[10px] border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white"
+                        >
+                          💻 Work
+                        </Button>
+                        <Button
+                          onClick={() => applyPreset('musicfeedback')}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 px-2 text-[10px] border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
+                        >
+                          🎵 Music
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-[10px] text-gray-400">Login to use presets</div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
