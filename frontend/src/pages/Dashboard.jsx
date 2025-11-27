@@ -979,8 +979,8 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* Stream Info (Center - 8 columns) */}
-            <div className="lg:col-span-8">
+            {/* Stream Info (Center - 1/3 width) */}
+            <div>
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
@@ -988,31 +988,61 @@ const Dashboard = () => {
                     Stream Info
                   </CardTitle>
                 </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="grid grid-cols-4 gap-4 text-center">
-                  <div>
-                    <p className="text-xs text-gray-400">FPS</p>
-                    <p className="text-xl font-bold text-green-400">{obsStats.fps}</p>
+                <CardContent className="space-y-3">
+                  {/* Stream Title */}
+                  <div className="space-y-1">
+                    <Label htmlFor="stream-title-mid" className="text-xs">Title</Label>
+                    {isAuthenticated ? (
+                      <div className="flex gap-1">
+                        <Input
+                          id="stream-title-mid"
+                          value={newTitle}
+                          onChange={handleTitleChange}
+                          onFocus={() => isEditingTitle.current = true}
+                          placeholder="Stream title..."
+                          className="glass text-xs h-8"
+                        />
+                        <Button
+                          onClick={updateStreamTitle}
+                          className="bg-gradient-to-r from-pink-500 to-purple-500 h-8 px-3 text-xs"
+                        >
+                          ✓
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="glass p-2 rounded border border-pink-400/30">
+                        <p className="text-xs text-white truncate">{twitchStats.stream_title || "No title"}</p>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Bitrate</p>
-                    <p className="text-xl font-bold text-blue-400">{(obsStats.bitrate / 1000).toFixed(1)}k</p>
+
+                  <Separator />
+
+                  {/* Category */}
+                  <div className="space-y-1">
+                    <Label className="text-xs">Category</Label>
+                    {isAuthenticated ? (
+                      <div className="flex items-center gap-1">
+                        <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                        <Button
+                          onClick={() => setShowCategoryInput(!showCategoryInput)}
+                          variant="outline"
+                          size="sm"
+                          className="h-6 px-2 text-[10px]"
+                        >
+                          Edit
+                        </Button>
+                      </div>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Dropped</p>
-                    <p className="text-xl font-bold text-yellow-400">{obsStats.dropped_frames}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">Status</p>
-                    <p className="text-xl font-bold text-purple-400">{obsStats.streaming ? "LIVE" : "OFF"}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Quick Actions (Right - 2 columns) */}
-            <div className="lg:col-span-2">
+            {/* Quick Actions (Right - 1/3 width) */}
+            <div>
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-sm">
