@@ -1647,6 +1647,112 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Edit Sound Modal */}
+          {editingSound && (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <Card className="glass w-full max-w-md border-cyan-400/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-cyan-400" />
+                      Edit Sound
+                    </span>
+                    <button
+                      onClick={() => setEditingSound(null)}
+                      className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
+                    >
+                      <span className="text-2xl text-gray-400">×</span>
+                    </button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Display Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-name">Display Name</Label>
+                    <Input
+                      id="edit-name"
+                      value={editForm.displayName}
+                      onChange={(e) => setEditForm({...editForm, displayName: e.target.value})}
+                      placeholder="Enter display name..."
+                      className="glass"
+                    />
+                    <p className="text-xs text-gray-400">Actual file: {editingSound.name}</p>
+                  </div>
+
+                  {/* Color Picker */}
+                  <div className="space-y-2">
+                    <Label>Button Color</Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[
+                        { name: 'purple-pink', from: 'from-purple-600', to: 'to-pink-600', label: 'Purple' },
+                        { name: 'blue-cyan', from: 'from-blue-600', to: 'to-cyan-600', label: 'Blue' },
+                        { name: 'green-emerald', from: 'from-green-600', to: 'to-emerald-600', label: 'Green' },
+                        { name: 'red-orange', from: 'from-red-600', to: 'to-orange-600', label: 'Red' },
+                        { name: 'yellow-amber', from: 'from-yellow-600', to: 'to-amber-600', label: 'Yellow' },
+                        { name: 'pink-rose', from: 'from-pink-600', to: 'to-rose-600', label: 'Pink' },
+                        { name: 'indigo-purple', from: 'from-indigo-600', to: 'to-purple-600', label: 'Indigo' },
+                        { name: 'gray-slate', from: 'from-gray-600', to: 'to-slate-600', label: 'Gray' }
+                      ].map((color) => (
+                        <button
+                          key={color.name}
+                          onClick={() => setEditForm({...editForm, color: color.name})}
+                          className={`aspect-square rounded-xl bg-gradient-to-br ${color.from} ${color.to} transition-all ${
+                            editForm.color === color.name ? 'ring-4 ring-white scale-110' : 'hover:scale-105'
+                          }`}
+                          title={color.label}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Preview */}
+                  <div className="space-y-2">
+                    <Label>Preview</Label>
+                    <div className="flex justify-center">
+                      <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${
+                        {
+                          'purple-pink': 'from-purple-600 to-pink-600',
+                          'blue-cyan': 'from-blue-600 to-cyan-600',
+                          'green-emerald': 'from-green-600 to-emerald-600',
+                          'red-orange': 'from-red-600 to-orange-600',
+                          'yellow-amber': 'from-yellow-600 to-amber-600',
+                          'pink-rose': 'from-pink-600 to-rose-600',
+                          'indigo-purple': 'from-indigo-600 to-purple-600',
+                          'gray-slate': 'from-gray-600 to-slate-600'
+                        }[editForm.color]
+                      } flex flex-col items-center justify-center gap-1 shadow-lg`}>
+                        <Music className="w-6 h-6 text-white" />
+                        <span className="text-white font-bold text-[10px] text-center px-2 leading-tight break-words">
+                          {editForm.displayName}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={() => setEditingSound(null)}
+                      variant="outline"
+                      className="flex-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => updateSound(editingSound.name, {
+                        displayName: editForm.displayName,
+                        color: editForm.color
+                      })}
+                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </TabsContent>
 
         {/* Feedback Queue Tab */}
