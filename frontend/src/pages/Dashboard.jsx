@@ -1016,7 +1016,7 @@ const Dashboard = () => {
 
           {/* TOP ROW: Stream Deck | Live Preview | Live Chat */}
           <div className="grid lg:grid-cols-12 gap-4">
-            {/* Stream Deck (Left - 2 columns) */}
+            {/* Stream Deck (Left - 2 columns) - Now with Sound Board */}
             <div className="lg:col-span-2">
               <Card className="glass h-full">
                 <CardHeader className="pb-3">
@@ -1025,52 +1025,63 @@ const Dashboard = () => {
                     Stream Deck
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  {/* Scene Switcher */}
-                  <div className="space-y-2">
-                    <Label className="text-xs text-gray-400">Scenes</Label>
-                    <div className="space-y-1">
-                      {scenes.slice(0, 4).map((scene) => (
-                        <Button
-                          key={scene}
-                          onClick={() => switchScene(scene)}
-                          variant={obsStats.current_scene === scene ? "default" : "outline"}
-                          size="sm"
-                          className={`w-full text-xs ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
-                          data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
-                        >
-                          {scene}
-                        </Button>
-                      ))}
-                    </div>
+                <CardContent>
+                  {/* Category Tabs */}
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {soundCategories.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={`px-2 py-1 rounded-lg font-semibold text-[10px] whitespace-nowrap transition-all ${
+                          selectedCategory === cat.id
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                            : 'glass text-gray-400 hover:text-white'
+                        }`}
+                      >
+                        {cat.icon}
+                      </button>
+                    ))}
                   </div>
                   
-                  <Separator />
-                  
-                  {/* Sources Toggle */}
-                  <div className="space-y-2">
-                    <Label className="text-xs text-gray-400">Sources</Label>
-                    <div className="space-y-1">
-                      {Object.entries(sources).slice(0, 3).map(([name, visible]) => (
-                        <div key={name} className="flex items-center justify-between">
-                          <span className="text-xs truncate">{name}</span>
-                          <Button
-                            onClick={() => toggleSource(name, !visible)}
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 w-6 p-0"
-                            data-testid={`btn-toggle-source-${name.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            {visible ? (
-                              <Eye className="w-3 h-3 text-green-400" />
-                            ) : (
-                              <EyeOff className="w-3 h-3 text-gray-500" />
-                            )}
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  {/* Sound Board - Smaller Version */}
+                  <ScrollArea className="h-[350px]">
+                    {getFilteredSounds().length === 0 ? (
+                      <div className="text-center py-8">
+                        <Music className="w-8 h-8 mx-auto mb-2 text-gray-500 opacity-50" />
+                        <p className="text-[10px] text-gray-400">
+                          {sounds.length === 0 ? 'No sounds yet' : 'No sounds in category'}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        {getFilteredSounds().map((sound) => {
+                          const colorClass = sound.color || 'purple-pink';
+                          const gradients = {
+                            'purple-pink': 'from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700',
+                            'blue-cyan': 'from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700',
+                            'green-emerald': 'from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700',
+                            'red-orange': 'from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700',
+                            'yellow-amber': 'from-yellow-600 to-amber-600 hover:from-yellow-700 hover:to-amber-700',
+                            'pink-rose': 'from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700',
+                            'indigo-purple': 'from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700',
+                            'gray-slate': 'from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700'
+                          };
+                          
+                          return (
+                            <button
+                              key={sound.name}
+                              onClick={() => playSound(sound.name)}
+                              className={`aspect-square rounded-lg p-2 flex items-center justify-center transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg`}
+                            >
+                              <span className="text-[9px] font-bold text-white text-center leading-tight line-clamp-2">
+                                {sound.displayName || sound.name}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </ScrollArea>
                 </CardContent>
               </Card>
             </div>
