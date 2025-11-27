@@ -1672,13 +1672,23 @@ const Dashboard = () => {
             <div className="lg:col-span-3">
               <Card className="glass h-full" data-testid="mini-chat">
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <MessageCircle className="w-4 h-4 text-cyan-400" />
-                    Live Chat
+                  <CardTitle className="flex items-center justify-between text-sm">
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="w-4 h-4 text-cyan-400" />
+                      Live Chat
+                    </div>
+                    <Button
+                      onClick={() => setShowModeration(!showModeration)}
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-white"
+                    >
+                      {showModeration ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                    </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ScrollArea className="h-[280px] pr-2">
+                  <ScrollArea className={showModeration ? "h-[280px] pr-2" : "h-[400px] pr-2"}>
                     <div className="space-y-2">
                       {chatMessages.map((msg) => (
                         <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
@@ -1708,10 +1718,11 @@ const Dashboard = () => {
                     </div>
                   </ScrollArea>
                   
-                  {/* Chat Moderation */}
-                  <div className="mt-3 pt-3 border-t border-white/10">
-                    <Label className="text-[10px] text-gray-400 mb-2 block">Moderation</Label>
-                    <div className="grid grid-cols-3 gap-1">
+                  {/* Chat Moderation - Collapsible */}
+                  {showModeration && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <Label className="text-[10px] text-gray-400 mb-2 block">Moderation</Label>
+                      <div className="grid grid-cols-3 gap-1">
                       <Button
                         onClick={() => toggleSlowMode(true)}
                         variant="outline"
