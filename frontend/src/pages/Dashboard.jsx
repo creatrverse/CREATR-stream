@@ -128,6 +128,10 @@ const Dashboard = () => {
   });
   const [usernameMappings, setUsernameMappings] = useState({});
   const [mappingForm, setMappingForm] = useState({ discord_username: '', twitch_username: '' });
+  
+  // Sound Board State
+  const [sounds, setSounds] = useState([]);
+  const [uploadingSo, setUploadingSound] = useState(false);
 
   // Fetch OBS stats
   const fetchOBSStats = async () => {
