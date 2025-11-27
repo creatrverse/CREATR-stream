@@ -1191,6 +1191,12 @@ async def get_sounds():
                 if sound_file.name in metadata:
                     sound_data.update(metadata[sound_file.name])
                 sounds.append(sound_data)
+        
+        # Sort by saved order if exists
+        if '_order' in metadata:
+            order = metadata['_order']
+            sounds.sort(key=lambda s: order.index(s['name']) if s['name'] in order else 999)
+        
         return {"success": True, "sounds": sounds}
     except Exception as e:
         logger.error(f"Error getting sounds: {e}")
