@@ -619,7 +619,8 @@ async def run_ad(duration: dict, session: Session = Depends(get_session)):
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
@@ -661,7 +662,8 @@ async def create_poll(poll_data: dict, session: Session = Depends(get_session)):
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
@@ -704,7 +706,8 @@ async def create_prediction(prediction_data: dict, session: Session = Depends(ge
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
@@ -747,7 +750,8 @@ async def shoutout_streamer(shoutout_data: dict, session: Session = Depends(get_
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
@@ -803,7 +807,8 @@ async def start_raid(raid_data: dict, session: Session = Depends(get_session)):
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
@@ -859,7 +864,8 @@ async def clear_chat(session: Session = Depends(get_session)):
             raise HTTPException(status_code=401, detail="Not authenticated")
         
         # Refresh token if needed
-        if token_data.expires_at < datetime.now(timezone.utc):
+        expires_at = token_data.expires_at.replace(tzinfo=timezone.utc) if token_data.expires_at.tzinfo is None else token_data.expires_at
+        if expires_at < datetime.now(timezone.utc):
             new_token_response = await oauth_service.refresh_access_token(token_data.refresh_token)
             token_data.access_token = new_token_response['access_token']
             token_data.expires_at = datetime.now(timezone.utc) + timedelta(seconds=new_token_response['expires_in'])
