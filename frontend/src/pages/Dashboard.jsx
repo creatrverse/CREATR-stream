@@ -921,8 +921,9 @@ const Dashboard = () => {
           {/* MIDDLE ROW: OBS Control | Stream Info | Quick Actions */}
           <div className="grid lg:grid-cols-12 gap-4">
 
-            {/* OBS Control */}
-            <Card className="glass">
+            {/* OBS Control (Left - 2 columns) */}
+            <div className="lg:col-span-2">
+              <Card className="glass h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Monitor className="w-5 h-5 text-purple-400" />
