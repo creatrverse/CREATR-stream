@@ -888,11 +888,11 @@ async def clear_chat(session: Session = Depends(get_session)):
                 f"https://api.twitch.tv/helix/moderation/chat?broadcaster_id={token_data.user_id}&moderator_id={token_data.user_id}",
                 headers=headers
             )
-        
-        if response.status_code == 204:
-            return {"success": True, "message": "Chat cleared"}
-        else:
-            return {"success": False, "error": response.text}
+            
+            if response.status_code == 204:
+                return {"success": True, "message": "Chat cleared"}
+            else:
+                return {"success": False, "error": response.text}
     except Exception as e:
         logger.error(f"Failed to clear chat: {e}")
         return {"success": False, "error": str(e)}
