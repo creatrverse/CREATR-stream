@@ -77,9 +77,18 @@ const Dashboard = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [showCategoryInput, setShowCategoryInput] = useState(false);
+  const [streamTags, setStreamTags] = useState([]);
+  const [newTag, setNewTag] = useState("");
+  const [showTagInput, setShowTagInput] = useState(false);
   
   // Track if user is actively editing title (prevents auto-refresh from overwriting)
   const isEditingTitle = useRef(false);
+  
+  // Popular stream tags
+  const popularTags = [
+    "English", "Music", "Educational", "Tutorial", "Chill", 
+    "Interactive", "Beginner Friendly", "Pro", "Speedrun"
+  ];
   
   // Popular Twitch categories for music feedback
   const popularCategories = [
