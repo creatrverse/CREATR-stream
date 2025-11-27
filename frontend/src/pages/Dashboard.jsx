@@ -1464,16 +1464,20 @@ const Dashboard = () => {
                     <Label className="text-[10px] text-gray-400 mb-2 block">Quick Actions</Label>
                     <div className="grid grid-cols-4 gap-1">
                       {/* Run Ad with dropdown */}
-                      <div className="relative">
+                      <div className="relative group">
                         <Button
                           onClick={() => setShowAdMenu(!showAdMenu)}
                           variant="outline"
                           size="sm"
-                          className="w-full h-8 text-[9px] border-red-400/50 text-red-400 hover:bg-red-400/20"
+                          className="w-full h-8 text-[9px] border-red-400/50 text-red-400 hover:bg-red-400/20 relative"
                           disabled={!isAuthenticated}
+                          title="Run Ad"
                         >
                           <Radio className="w-3 h-3" />
                         </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Run Ad
+                        </div>
                         {showAdMenu && isAuthenticated && (
                           <div className="absolute top-full left-0 right-0 mt-1 glass rounded border border-red-400/30 p-1 space-y-1 z-10">
                             <Button
@@ -1512,77 +1516,119 @@ const Dashboard = () => {
                         )}
                       </div>
 
-                      <Button
-                        onClick={createPoll}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
-                        disabled={!isAuthenticated}
-                      >
-                        <BarChart3 className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={createPoll}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                          disabled={!isAuthenticated}
+                          title="Create Poll"
+                        >
+                          <BarChart3 className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Create Poll
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={createPrediction}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
-                        disabled={!isAuthenticated}
-                      >
-                        <Brain className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={createPrediction}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                          disabled={!isAuthenticated}
+                          title="Prediction"
+                        >
+                          <Brain className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Prediction
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={shoutoutStreamer}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
-                        disabled={!isAuthenticated}
-                      >
-                        <Send className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={shoutoutStreamer}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
+                          disabled={!isAuthenticated}
+                          title="Shoutout"
+                        >
+                          <Send className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Shoutout
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={createMarker}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
-                        data-testid="btn-create-marker"
-                        disabled={!isAuthenticated}
-                      >
-                        <Bookmark className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={createMarker}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                          data-testid="btn-create-marker"
+                          disabled={!isAuthenticated}
+                          title="Marker"
+                        >
+                          <Bookmark className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Marker
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={startRaid}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
-                        disabled={!isAuthenticated}
-                      >
-                        <Users className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={startRaid}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                          disabled={!isAuthenticated}
+                          title="Start Raid"
+                        >
+                          <Users className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Start Raid
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={clearChat}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-orange-400/50 text-orange-400 hover:bg-orange-400/20"
-                        disabled={!isAuthenticated}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={clearChat}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-orange-400/50 text-orange-400 hover:bg-orange-400/20"
+                          disabled={!isAuthenticated}
+                          title="Clear Chat"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Clear Chat
+                        </div>
+                      </div>
 
-                      <Button
-                        onClick={createTwitchClip}
-                        variant="outline"
-                        size="sm"
-                        className="h-8 text-[9px] border-green-400/50 text-green-400 hover:bg-green-400/20"
-                        data-testid="btn-twitch-clip"
-                        disabled={!isAuthenticated}
-                      >
-                        <Scissors className="w-3 h-3" />
-                      </Button>
+                      <div className="relative group">
+                        <Button
+                          onClick={createTwitchClip}
+                          variant="outline"
+                          size="sm"
+                          className="h-8 text-[9px] border-green-400/50 text-green-400 hover:bg-green-400/20"
+                          data-testid="btn-twitch-clip"
+                          disabled={!isAuthenticated}
+                          title="Create Clip"
+                        >
+                          <Scissors className="w-3 h-3" />
+                        </Button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
+                          Create Clip
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
