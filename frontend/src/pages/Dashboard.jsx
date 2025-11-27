@@ -1022,19 +1022,171 @@ const Dashboard = () => {
                   <div className="space-y-1">
                     <Label className="text-xs">Category</Label>
                     {isAuthenticated ? (
-                      <div className="flex items-center gap-1">
-                        <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1">
+                          <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                          <Button
+                            onClick={() => setShowCategoryInput(!showCategoryInput)}
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-[10px]"
+                          >
+                            {showCategoryInput ? "Cancel" : "Edit"}
+                          </Button>
+                        </div>
+                        
+                        {showCategoryInput && (
+                          <div className="space-y-2 glass p-2 rounded border border-cyan-400/30">
+                            <p className="text-[10px] text-gray-400">Select category:</p>
+                            <div className="grid grid-cols-2 gap-1">
+                              {popularCategories.map((cat) => (
+                                <Button
+                                  key={cat}
+                                  onClick={() => updateStreamCategory(cat)}
+                                  variant="outline"
+                                  size="sm"
+                                  className={`text-[10px] h-7 ${twitchStats.stream_category === cat ? 'border-cyan-400 bg-cyan-400/10' : ''}`}
+                                >
+                                  {cat}
+                                </Button>
+                              ))}
+                            </div>
+                            
+                            <Separator className="my-1" />
+                            
+                            <div className="flex gap-1">
+                              <Input
+                                value={newCategory}
+                                onChange={(e) => setNewCategory(e.target.value)}
+                                placeholder="Custom category..."
+                                className="glass text-[10px] h-7"
+                              />
+                              <Button
+                                onClick={() => {
+                                  if (newCategory) {
+                                    updateStreamCategory(newCategory);
+                                    setNewCategory("");
+                                  }
+                                }}
+                                size="sm"
+                                className="bg-cyan-500 hover:bg-cyan-600 h-7 px-2 text-[10px]"
+                              >
+                                Set
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                    )}
+                  </div>
+
+                  <Separator />
+
+                  {/* Tags */}
+                  <div className="space-y-1">
+                    <Label className="text-xs">Tags</Label>
+                    {isAuthenticated ? (
+                      <div className="space-y-2">
+                        {/* Current Tags */}
+                        <div className="flex flex-wrap gap-1 min-h-[24px]">
+                          {streamTags.length === 0 ? (
+                            <span className="text-[10px] text-gray-400">No tags</span>
+                          ) : (
+                            streamTags.slice(0, 3).map((tag) => (
+                              <Badge 
+                                key={tag} 
+                                className="bg-cyan-500/20 border-cyan-400 text-cyan-400 pr-1 text-[9px] h-5"
+                              >
+                                {tag}
+                                <button
+                                  onClick={() => removeTag(tag)}
+                                  className="ml-1 hover:text-red-400 transition-colors"
+                                >
+                                  ×
+                                </button>
+                              </Badge>
+                            ))
+                          )}
+                          {streamTags.length > 3 && (
+                            <Badge variant="secondary" className="text-[9px] h-5">
+                              +{streamTags.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                        
                         <Button
-                          onClick={() => setShowCategoryInput(!showCategoryInput)}
+                          onClick={() => setShowTagInput(!showTagInput)}
                           variant="outline"
                           size="sm"
                           className="h-6 px-2 text-[10px]"
                         >
-                          Edit
+                          {showTagInput ? "Cancel" : "Edit Tags"}
                         </Button>
+                        
+                        {showTagInput && (
+                          <div className="space-y-2 glass p-2 rounded border border-cyan-400/30">
+                            <p className="text-[10px] text-gray-400">Tags ({streamTags.length}/10):</p>
+                            <div className="grid grid-cols-3 gap-1">
+                              {popularTags.map((tag) => (
+                                <Button
+                                  key={tag}
+                                  onClick={() => addTag(tag)}
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={streamTags.includes(tag) || streamTags.length >= 10}
+                                  className={`text-[9px] h-6 ${streamTags.includes(tag) ? 'opacity-50' : ''}`}
+                                >
+                                  {tag}
+                                </Button>
+                              ))}
+                            </div>
+                            
+                            <Separator className="my-1" />
+                            
+                            <div className="flex gap-1">
+                              <Input
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                                placeholder="Custom tag..."
+                                maxLength={25}
+                                className="glass text-[10px] h-7"
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter' && newTag.trim()) {
+                                    addTag(newTag.trim());
+                                  }
+                                }}
+                              />
+                              <Button
+                                onClick={() => {
+                                  if (newTag.trim()) {
+                                    addTag(newTag.trim());
+                                  }
+                                }}
+                                size="sm"
+                                disabled={!newTag.trim() || streamTags.length >= 10}
+                                className="bg-cyan-500 hover:bg-cyan-600 h-7 px-2 text-[10px]"
+                              >
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ) : (
-                      <Badge variant="secondary" className="text-xs">{twitchStats.stream_category}</Badge>
+                      <div className="flex flex-wrap gap-1">
+                        {streamTags.length === 0 ? (
+                          <span className="text-[10px] text-gray-400">No tags</span>
+                        ) : (
+                          streamTags.slice(0, 3).map((tag) => (
+                            <Badge key={tag} variant="secondary" className="text-[9px]">{tag}</Badge>
+                          ))
+                        )}
+                        {streamTags.length > 3 && (
+                          <Badge variant="secondary" className="text-[9px]">+{streamTags.length - 3}</Badge>
+                        )}
+                      </div>
                     )}
                   </div>
                 </CardContent>
