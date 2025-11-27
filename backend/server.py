@@ -1235,6 +1235,22 @@ class SoundMetadata(BaseModel):
     displayName: Optional[str] = None
     color: Optional[str] = None
 
+class SoundOrder(BaseModel):
+    order: List[str]
+
+@api_router.post("/sounds/reorder")
+async def reorder_sounds(order_data: SoundOrder):
+    """Save sound order"""
+    try:
+        metadata = load_sound_metadata()
+        metadata['_order'] = order_data.order
+        save_sound_metadata(metadata)
+        logger.info(f"Sound order updated: {len(order_data.order)} sounds")
+        return {"success": True, "message": "Sound order saved"}
+    except Exception as e:
+        logger.error(f"Error saving sound order: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.patch("/sounds/{sound_name}")
 async def update_sound(sound_name: str, metadata: SoundMetadata):
     """Update sound metadata (display name, color)"""
