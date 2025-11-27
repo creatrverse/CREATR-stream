@@ -972,6 +972,10 @@ const Dashboard = () => {
                       value={newTitle}
                       onChange={handleTitleChange}
                       onFocus={() => isEditingTitle.current = true}
+                      onBlur={() => {
+                        // Don't stop editing on blur - only when Update is clicked
+                        // This allows users to clear and retype without auto-refresh interfering
+                      }}
                       placeholder="Enter stream title..."
                       className="glass"
                       data-testid="input-stream-title"
