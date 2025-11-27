@@ -1740,25 +1740,133 @@ const Dashboard = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
+                  {/* Run Ad with dropdown */}
+                  <div className="relative">
+                    <Button
+                      onClick={() => setShowAdMenu(!showAdMenu)}
+                      variant="outline"
+                      size="sm"
+                      className="w-full border-red-400 text-red-400 hover:bg-red-400 hover:text-white text-xs"
+                      disabled={!isAuthenticated}
+                    >
+                      <Radio className="w-3 h-3 mr-1" />
+                      Run Ad
+                    </Button>
+                    {showAdMenu && isAuthenticated && (
+                      <div className="absolute top-full left-0 right-0 mt-1 glass rounded border border-red-400/30 p-1 space-y-1 z-10">
+                        <Button
+                          onClick={() => { runAd(30); setShowAdMenu(false); }}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-[10px] hover:bg-red-400/20"
+                        >
+                          30 seconds
+                        </Button>
+                        <Button
+                          onClick={() => { runAd(60); setShowAdMenu(false); }}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-[10px] hover:bg-red-400/20"
+                        >
+                          60 seconds
+                        </Button>
+                        <Button
+                          onClick={() => { runAd(90); setShowAdMenu(false); }}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-[10px] hover:bg-red-400/20"
+                        >
+                          90 seconds
+                        </Button>
+                        <Button
+                          onClick={() => { runAd(180); setShowAdMenu(false); }}
+                          variant="ghost"
+                          size="sm"
+                          className="w-full text-[10px] hover:bg-red-400/20"
+                        >
+                          180 seconds
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
                   <Button
-                    onClick={createTwitchClip}
+                    onClick={createPoll}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white text-xs"
+                    disabled={!isAuthenticated}
+                  >
+                    <BarChart3 className="w-3 h-3 mr-1" />
+                    Create Poll
+                  </Button>
+
+                  <Button
+                    onClick={createPrediction}
                     variant="outline"
                     size="sm"
                     className="w-full border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white text-xs"
-                    data-testid="btn-twitch-clip"
+                    disabled={!isAuthenticated}
                   >
-                    <Scissors className="w-3 h-3 mr-1" />
-                    Clip
+                    <Brain className="w-3 h-3 mr-1" />
+                    Prediction
                   </Button>
+
+                  <Button
+                    onClick={shoutoutStreamer}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-pink-400 text-pink-400 hover:bg-pink-400 hover:text-white text-xs"
+                    disabled={!isAuthenticated}
+                  >
+                    <Send className="w-3 h-3 mr-1" />
+                    Shoutout
+                  </Button>
+
                   <Button
                     onClick={createMarker}
                     variant="outline"
                     size="sm"
                     className="w-full border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white text-xs"
                     data-testid="btn-create-marker"
+                    disabled={!isAuthenticated}
                   >
                     <Bookmark className="w-3 h-3 mr-1" />
                     Marker
+                  </Button>
+
+                  <Button
+                    onClick={startRaid}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-white text-xs"
+                    disabled={!isAuthenticated}
+                  >
+                    <Users className="w-3 h-3 mr-1" />
+                    Start Raid
+                  </Button>
+
+                  <Button
+                    onClick={clearChat}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white text-xs"
+                    disabled={!isAuthenticated}
+                  >
+                    <Trash2 className="w-3 h-3 mr-1" />
+                    Clear Chat
+                  </Button>
+
+                  <Button
+                    onClick={createTwitchClip}
+                    variant="outline"
+                    size="sm"
+                    className="w-full border-green-400 text-green-400 hover:bg-green-400 hover:text-white text-xs"
+                    data-testid="btn-twitch-clip"
+                    disabled={!isAuthenticated}
+                  >
+                    <Scissors className="w-3 h-3 mr-1" />
+                    Clip
                   </Button>
                 </CardContent>
               </Card>
