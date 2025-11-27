@@ -1427,8 +1427,8 @@ const Dashboard = () => {
               </Card>
             </div>
 
-            {/* Live Preview (Center - 8 columns) */}
-            <div className="lg:col-span-8">
+            {/* Live Preview (Center - 6 columns) */}
+            <div className="lg:col-span-6">
               <Card className="glass h-full" data-testid="stream-preview">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center justify-between">
