@@ -1516,12 +1516,12 @@ const Dashboard = () => {
                         )}
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={createPoll}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                          className="w-full h-8 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
                           disabled={!isAuthenticated}
                           title="Create Poll"
                         >
@@ -1532,12 +1532,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={createPrediction}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                          className="w-full h-8 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
                           disabled={!isAuthenticated}
                           title="Prediction"
                         >
@@ -1548,12 +1548,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={shoutoutStreamer}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
+                          className="w-full h-8 text-[9px] border-pink-400/50 text-pink-400 hover:bg-pink-400/20"
                           disabled={!isAuthenticated}
                           title="Shoutout"
                         >
@@ -1564,12 +1564,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={createMarker}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                          className="w-full h-8 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
                           data-testid="btn-create-marker"
                           disabled={!isAuthenticated}
                           title="Marker"
@@ -1581,12 +1581,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={startRaid}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                          className="w-full h-8 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
                           disabled={!isAuthenticated}
                           title="Start Raid"
                         >
@@ -1597,12 +1597,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={clearChat}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-orange-400/50 text-orange-400 hover:bg-orange-400/20"
+                          className="w-full h-8 text-[9px] border-orange-400/50 text-orange-400 hover:bg-orange-400/20"
                           disabled={!isAuthenticated}
                           title="Clear Chat"
                         >
@@ -1613,12 +1613,12 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <div className="relative group">
+                      <div className="relative group w-full">
                         <Button
                           onClick={createTwitchClip}
                           variant="outline"
                           size="sm"
-                          className="h-8 text-[9px] border-green-400/50 text-green-400 hover:bg-green-400/20"
+                          className="w-full h-8 text-[9px] border-green-400/50 text-green-400 hover:bg-green-400/20"
                           data-testid="btn-twitch-clip"
                           disabled={!isAuthenticated}
                           title="Create Clip"
