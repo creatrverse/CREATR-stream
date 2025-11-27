@@ -1574,9 +1574,19 @@ const Dashboard = () => {
                 <CardContent>
                   {/* Preview/Stream Tabs */}
                   <Tabs value={previewTab} onValueChange={setPreviewTab} className="mb-2">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="stream" className="text-xs">Stream</TabsTrigger>
-                      <TabsTrigger value="preview" className="text-xs">Preview</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2 glass border border-pink-400/30">
+                      <TabsTrigger 
+                        value="stream" 
+                        className="text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-500 data-[state=active]:text-white"
+                      >
+                        Stream
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="preview" 
+                        className="text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-500 data-[state=active]:text-white"
+                      >
+                        Preview
+                      </TabsTrigger>
                     </TabsList>
                   </Tabs>
 
