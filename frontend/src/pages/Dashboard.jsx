@@ -970,7 +970,8 @@ const Dashboard = () => {
                     <Input
                       id="stream-title"
                       value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
+                      onChange={handleTitleChange}
+                      onFocus={() => isEditingTitle.current = true}
                       placeholder="Enter stream title..."
                       className="glass"
                       data-testid="input-stream-title"
