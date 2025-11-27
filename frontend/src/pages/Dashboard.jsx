@@ -1080,9 +1080,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </CardContent>
-            </Card>
-          </div>
-          </div>
+          </Card>
 
           {/* Stream Info - Full Width */}
           <Card className="glass">
