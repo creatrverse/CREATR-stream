@@ -29,5 +29,10 @@
     "displayName": "Sound - awk among us",
     "color": "green-emerald",
     "category": "alerts"
+  },
+  "KIM CRYING.mp3": {
+    "displayName": "KIM CRYIN",
+    "color": "purple-pink",
+    "category": "other"
   }
 }
