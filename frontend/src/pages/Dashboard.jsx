@@ -1152,6 +1152,104 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
+              
+              {/* Tags Section */}
+              <div className="space-y-2">
+                <Label>Stream Tags</Label>
+                {isAuthenticated ? (
+                  <div className="space-y-2">
+                    {/* Current Tags */}
+                    <div className="flex flex-wrap gap-2 min-h-[32px]">
+                      {streamTags.length === 0 ? (
+                        <span className="text-sm text-gray-400">No tags added</span>
+                      ) : (
+                        streamTags.map((tag) => (
+                          <Badge 
+                            key={tag} 
+                            className="bg-cyan-500/20 border-cyan-400 text-cyan-400 pr-1"
+                          >
+                            {tag}
+                            <button
+                              onClick={() => removeTag(tag)}
+                              className="ml-1 hover:text-red-400 transition-colors"
+                            >
+                              ×
+                            </button>
+                          </Badge>
+                        ))
+                      )}
+                    </div>
+                    
+                    <Button
+                      onClick={() => setShowTagInput(!showTagInput)}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs"
+                    >
+                      {showTagInput ? "Cancel" : "Add Tags"}
+                    </Button>
+                    
+                    {showTagInput && (
+                      <div className="space-y-2 glass p-3 rounded-lg border border-cyan-400/30">
+                        <p className="text-xs text-gray-400">Popular tags ({streamTags.length}/10):</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {popularTags.map((tag) => (
+                            <Button
+                              key={tag}
+                              onClick={() => addTag(tag)}
+                              variant="outline"
+                              size="sm"
+                              disabled={streamTags.includes(tag) || streamTags.length >= 10}
+                              className={`text-xs ${streamTags.includes(tag) ? 'opacity-50' : ''}`}
+                            >
+                              {tag}
+                            </Button>
+                          ))}
+                        </div>
+                        
+                        <Separator className="my-2" />
+                        
+                        <div className="flex gap-2">
+                          <Input
+                            value={newTag}
+                            onChange={(e) => setNewTag(e.target.value)}
+                            placeholder="Custom tag (max 25 chars)..."
+                            maxLength={25}
+                            className="glass text-xs"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter' && newTag.trim()) {
+                                addTag(newTag.trim());
+                              }
+                            }}
+                          />
+                          <Button
+                            onClick={() => {
+                              if (newTag.trim()) {
+                                addTag(newTag.trim());
+                              }
+                            }}
+                            size="sm"
+                            disabled={!newTag.trim() || streamTags.length >= 10}
+                            className="bg-cyan-500 hover:bg-cyan-600"
+                          >
+                            Add
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {streamTags.length === 0 ? (
+                      <span className="text-sm text-gray-400">No tags</span>
+                    ) : (
+                      streamTags.map((tag) => (
+                        <Badge key={tag} variant="secondary">{tag}</Badge>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
