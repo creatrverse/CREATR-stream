@@ -1694,8 +1694,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* MIDDLE ROW: OBS Control | Stream Info | Quick Actions */}
-          <div className="grid lg:grid-cols-3 gap-4">
+          {/* MIDDLE ROW: OBS Control | Stream Info */}
+          <div className="grid lg:grid-cols-2 gap-4">
 
             {/* OBS Control (Left - 1/3 width) */}
             <div>
