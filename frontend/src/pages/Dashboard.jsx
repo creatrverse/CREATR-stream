@@ -1427,7 +1427,7 @@ const Dashboard = () => {
                   </div>
                   
                   {/* Sound Board - Smaller Version */}
-                  <ScrollArea className="h-[350px]">
+                  <ScrollArea className="h-[180px]">
                     {getFilteredSounds().length === 0 ? (
                       <div className="text-center py-8">
                         <Music className="w-8 h-8 mx-auto mb-2 text-gray-500 opacity-50" />
