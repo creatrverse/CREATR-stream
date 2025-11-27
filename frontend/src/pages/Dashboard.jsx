@@ -1542,6 +1542,38 @@ const Dashboard = () => {
                       />
                     )}
                   </div>
+                  
+                  {/* Scenes Section - Below Live Preview */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <Label className="text-sm text-gray-400 mb-2 block">Scenes</Label>
+                    <div>
+                      {scenes.length > 0 ? (
+                        <div className="grid grid-cols-5 gap-1">
+                          {scenes.map((scene) => (
+                            <Button
+                              key={scene}
+                              onClick={() => switchScene(scene)}
+                              variant={obsStats.current_scene === scene ? "default" : "outline"}
+                              size="sm"
+                              className={`text-[10px] px-1 py-1 h-7 ${obsStats.current_scene === scene ? "bg-gradient-to-r from-pink-500 to-purple-500" : ""}`}
+                              data-testid={`btn-scene-${scene.toLowerCase().replace(/\s+/g, '-')}`}
+                            >
+                              {scene}
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full text-xs"
+                          disabled
+                        >
+                          OBS Not Connected
+                        </Button>
+                      )}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
