@@ -2550,59 +2550,59 @@ const Dashboard = () => {
           {/* Edit Sound Modal */}
           {editingSound && (
             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-              <Card className="glass w-full max-w-md border-cyan-400/30">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+              <Card className="glass w-full max-w-sm border-cyan-400/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center justify-between text-base">
                     <span className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-cyan-400" />
+                      <Sparkles className="w-4 h-4 text-cyan-400" />
                       Edit Sound
                     </span>
                     <button
                       onClick={() => setEditingSound(null)}
-                      className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
+                      className="w-6 h-6 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
                     >
-                      <span className="text-2xl text-gray-400">×</span>
+                      <span className="text-xl text-gray-400">×</span>
                     </button>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-3">
                   {/* Display Name */}
-                  <div className="space-y-2">
-                    <Label htmlFor="edit-name">Display Name</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="edit-name" className="text-xs">Display Name</Label>
                     <Input
                       id="edit-name"
                       value={editForm.displayName}
                       onChange={(e) => setEditForm({...editForm, displayName: e.target.value})}
                       placeholder="Enter display name..."
-                      className="glass"
+                      className="glass h-8 text-sm"
                     />
-                    <p className="text-xs text-gray-400">Actual file: {editingSound.name}</p>
+                    <p className="text-[10px] text-gray-400">File: {editingSound.name}</p>
                   </div>
 
                   {/* Category Selector */}
-                  <div className="space-y-2">
-                    <Label>Category</Label>
-                    <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Category</Label>
+                    <div className="grid grid-cols-3 gap-1">
                       {soundCategories.filter(c => c.id !== 'all').map((cat) => (
                         <button
                           key={cat.id}
                           onClick={() => setEditForm({...editForm, category: cat.id})}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                          className={`px-2 py-1 rounded-lg text-[10px] font-medium transition-all ${
                             editForm.category === cat.id
                               ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                               : 'glass text-gray-400 hover:text-white'
                           }`}
                         >
-                          {cat.icon} {cat.name}
+                          {cat.icon}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   {/* Color Picker */}
-                  <div className="space-y-2">
-                    <Label>Button Color</Label>
-                    <div className="grid grid-cols-4 gap-2">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Button Color</Label>
+                    <div className="grid grid-cols-4 gap-1.5">
                       {[
                         { name: 'purple-pink', from: 'from-purple-600', to: 'to-pink-600', label: 'Purple' },
                         { name: 'blue-cyan', from: 'from-blue-600', to: 'to-cyan-600', label: 'Blue' },
@@ -2616,8 +2616,8 @@ const Dashboard = () => {
                         <button
                           key={color.name}
                           onClick={() => setEditForm({...editForm, color: color.name})}
-                          className={`aspect-square rounded-xl bg-gradient-to-br ${color.from} ${color.to} transition-all ${
-                            editForm.color === color.name ? 'ring-4 ring-white scale-110' : 'hover:scale-105'
+                          className={`aspect-square rounded-lg bg-gradient-to-br ${color.from} ${color.to} transition-all ${
+                            editForm.color === color.name ? 'ring-2 ring-white scale-110' : 'hover:scale-105'
                           }`}
                           title={color.label}
                         />
@@ -2626,10 +2626,10 @@ const Dashboard = () => {
                   </div>
 
                   {/* Preview */}
-                  <div className="space-y-2">
-                    <Label>Preview</Label>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Preview</Label>
                     <div className="flex justify-center">
-                      <div className={`w-24 h-24 rounded-2xl bg-gradient-to-br ${
+                      <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${
                         {
                           'purple-pink': 'from-purple-600 to-pink-600',
                           'blue-cyan': 'from-blue-600 to-cyan-600',
@@ -2640,9 +2640,9 @@ const Dashboard = () => {
                           'indigo-purple': 'from-indigo-600 to-purple-600',
                           'gray-slate': 'from-gray-600 to-slate-600'
                         }[editForm.color]
-                      } flex flex-col items-center justify-center gap-1 shadow-lg`}>
-                        <Music className="w-6 h-6 text-white" />
-                        <span className="text-white font-bold text-[10px] text-center px-2 leading-tight break-words">
+                      } flex flex-col items-center justify-center gap-0.5 shadow-lg`}>
+                        <Music className="w-4 h-4 text-white" />
+                        <span className="text-white font-bold text-[8px] text-center px-1 leading-tight break-words">
                           {editForm.displayName}
                         </span>
                       </div>
@@ -2650,11 +2650,11 @@ const Dashboard = () => {
                   </div>
 
                   {/* Buttons */}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-1">
                     <Button
                       onClick={() => setEditingSound(null)}
                       variant="outline"
-                      className="flex-1"
+                      className="flex-1 h-8 text-xs"
                     >
                       Cancel
                     </Button>
@@ -2664,9 +2664,9 @@ const Dashboard = () => {
                         color: editForm.color,
                         category: editForm.category
                       })}
-                      className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                      className="flex-1 h-8 text-xs bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
                     >
-                      Save Changes
+                      Save
                     </Button>
                   </div>
                 </CardContent>
