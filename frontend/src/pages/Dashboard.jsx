@@ -2560,9 +2560,13 @@ const Dashboard = () => {
                                       by {sub.discord_display_name || sub.discord_username}
                                       {sub.twitch_username && ` (@${sub.twitch_username})`}
                                     </span>
-                                    {/* Discord/Non-Sub Badge */}
-                                    <span className="text-[7px] px-1.5 py-0.5 rounded border bg-indigo-600 border-indigo-400 font-bold whitespace-nowrap">
-                                      Discord
+                                    {/* Sub Tier Badge */}
+                                    <span className={`text-[7px] px-1.5 py-0.5 rounded border font-bold whitespace-nowrap ${
+                                      sub.twitch_username 
+                                        ? getSubTierBadgeClass(getSubmissionSubTier(sub.twitch_username))
+                                        : 'bg-indigo-600 border-indigo-400'
+                                    }`}>
+                                      {sub.twitch_username ? getSubmissionSubTier(sub.twitch_username) : 'Discord'}
                                     </span>
                                   </div>
                                   <div className="text-gray-500 text-[9px] mt-0.5">
