@@ -200,26 +200,24 @@ class TwitchService:
             
             # Check if user is subscribed to the channel
             try:
-                subscription = await first(
-                    self.twitch.get_user_subscriptions(
-                        broadcaster_id=self.user_id,
-                        user_id=[user.id]
-                    )
+                is_subscribed = await self.twitch.check_user_subscription(
+                    broadcaster_id=self.user_id,
+                    user_id=user.id
                 )
                 
-                if subscription:
+                if is_subscribed:
                     # Tier mapping: 1000 = T1, 2000 = T2, 3000 = T3
                     tier_map = {
                         '1000': 'T1',
                         '2000': 'T2',
                         '3000': 'T3'
                     }
-                    tier = tier_map.get(subscription.tier, 'T1')
+                    tier = tier_map.get(is_subscribed.tier, 'T1')
                     
                     return {
                         'is_subscribed': True,
                         'tier': tier,
-                        'is_gift': subscription.is_gift
+                        'is_gift': is_subscribed.is_gift if hasattr(is_subscribed, 'is_gift') else False
                     }
                 else:
                     return {'is_subscribed': False, 'tier': None}
