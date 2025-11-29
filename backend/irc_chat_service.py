@@ -230,6 +230,7 @@ class TwitchIRCChat:
                 'message': message_text,
                 'timestamp': datetime.now(timezone.utc).isoformat(),
                 'badges': badges,
+                'badge_info': badge_info,
                 'color': color,
                 'emotes': emotes_list
             }
