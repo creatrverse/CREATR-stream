@@ -234,6 +234,7 @@ const Dashboard = () => {
   });
   const [usernameMappings, setUsernameMappings] = useState({});
   const [mappingForm, setMappingForm] = useState({ discord_username: '', twitch_username: '' });
+  const [subTierCache, setSubTierCache] = useState({});
   
   // Sound Board State
   const [sounds, setSounds] = useState([]);
