@@ -308,6 +308,12 @@ async def get_chat_messages():
     messages = irc_chat.get_recent_messages()
     return messages
 
+@api_router.get("/twitch/emotes")
+async def get_emotes():
+    """Get channel and global emote cache"""
+    emotes = twitch_service.get_emotes()
+    return emotes
+
 @api_router.post("/twitch/title")
 async def update_stream_title(update: StreamTitleUpdate, session: Session = Depends(get_session)):
     """Update stream title using OAuth"""
