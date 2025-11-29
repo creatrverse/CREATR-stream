@@ -1790,9 +1790,9 @@ const Dashboard = () => {
                                 <span className="font-semibold truncate text-[10px]" style={{ color: msg.color }}>
                                   {msg.username}
                                 </span>
-                                {msg.badges.map((badge, i) => (
+                                {msg.badges && msg.badges.map((badge, i) => (
                                   <span key={i} className={`badge badge-${badge} text-[7px]`}>
-                                    {badge === "moderator" ? "MOD" : badge === "subscriber" ? "SUB" : "VIP"}
+                                    {getBadgeName(badge)}
                                   </span>
                                 ))}
                               </div>
