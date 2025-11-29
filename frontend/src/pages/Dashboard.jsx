@@ -48,7 +48,9 @@ import {
   User,
   Trash2,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  Check,
+  X
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
