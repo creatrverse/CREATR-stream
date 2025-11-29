@@ -2,7 +2,7 @@ import os
 import asyncio
 import logging
 import re
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from pathlib import Path
