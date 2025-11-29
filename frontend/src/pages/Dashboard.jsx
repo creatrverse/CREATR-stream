@@ -1353,6 +1353,37 @@ const Dashboard = () => {
     return badge.charAt(0).toUpperCase() + badge.slice(1);
   };
 
+  // Get sub tier from badge info
+  const getSubTier = (badgeInfo) => {
+    if (!badgeInfo) return "Non Sub";
+    
+    // Check if user has subscriber badge
+    if (badgeInfo.subscriber) {
+      const tier = badgeInfo.subscriber;
+      // Twitch sub tiers: 0=Prime/T1, 1=T1, 2=T2, 3=T3
+      if (tier === "0" || tier === "1") return "T1";
+      if (tier === "2000" || tier === "2") return "T2";
+      if (tier === "3000" || tier === "3") return "T3";
+      return "T1"; // Default to T1 if unclear
+    }
+    
+    // Check if user is founder (legacy sub)
+    if (badgeInfo.founder) {
+      return "Founder";
+    }
+    
+    return "Non Sub";
+  };
+
+  // Get sub tier badge styling
+  const getSubTierBadgeClass = (tier) => {
+    if (tier === "T3") return "bg-purple-600 border-purple-400";
+    if (tier === "T2") return "bg-pink-600 border-pink-400";
+    if (tier === "T1") return "bg-blue-600 border-blue-400";
+    if (tier === "Founder") return "bg-orange-600 border-orange-400";
+    return "bg-gray-600 border-gray-400"; // Non Sub
+  };
+
   // Extract song name from URL or return shortened version
   const getSongDisplayName = (songLink) => {
     try {
