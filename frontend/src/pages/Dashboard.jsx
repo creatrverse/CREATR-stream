@@ -1335,6 +1335,47 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Render message with emotes
+  const renderMessageWithEmotes = (message, emotes) => {
+    if (!emotes || emotes.length === 0) {
+      return message;
+    }
+
+    // Sort emotes by position (from end to start to avoid offset issues)
+    const sortedEmotes = [...emotes].sort((a, b) => b.positions[0][0] - a.positions[0][0]);
+    
+    let messageText = message;
+    const parts = [];
+    let lastIndex = message.length;
+
+    sortedEmotes.forEach(emote => {
+      emote.positions.forEach(([start, end]) => {
+        // Add text after this emote
+        parts.unshift(messageText.substring(end + 1, lastIndex));
+        
+        // Add emote image
+        parts.unshift(
+          <img 
+            key={`${emote.id}-${start}`}
+            src={`https://static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0`}
+            alt={messageText.substring(start, end + 1)}
+            className="inline h-5 align-middle mx-0.5"
+            title={messageText.substring(start, end + 1)}
+          />
+        );
+        
+        lastIndex = start;
+      });
+    });
+
+    // Add any remaining text at the start
+    if (lastIndex > 0) {
+      parts.unshift(messageText.substring(0, lastIndex));
+    }
+
+    return parts;
+  };
+
   const formatUptime = (minutes) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
