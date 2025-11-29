@@ -2431,7 +2431,9 @@ const Dashboard = () => {
                           <div className="space-y-1 pr-2">
                             {submissions.slice(0, 5).map((sub) => (
                               <div key={sub.id} className="p-2 glass rounded border border-purple-400/20 text-[10px]">
-                                <div className="font-semibold text-white truncate">{sub.song_link}</div>
+                                <div className="font-semibold text-white truncate" title={sub.song_link}>
+                                  {getSongDisplayName(sub.song_link)}
+                                </div>
                                 <div className="text-gray-400 truncate">
                                   by {sub.discord_display_name || sub.discord_username}
                                   {sub.twitch_username && ` (@${sub.twitch_username})`}
