@@ -312,7 +312,13 @@ const Dashboard = () => {
   const fetchChatMessages = async () => {
     try {
       const response = await axios.get(`${API}/twitch/chat`);
-      setChatMessages(prev => [...response.data, ...prev].slice(0, 50));
+      // Remove duplicates by keeping only unique message IDs
+      setChatMessages(prev => {
+        const newMessages = response.data;
+        const existingIds = new Set(prev.map(m => m.id));
+        const uniqueNew = newMessages.filter(m => !existingIds.has(m.id));
+        return [...uniqueNew, ...prev].slice(0, 50);
+      });
     } catch (error) {
       console.error("Error fetching chat:", error);
     }
