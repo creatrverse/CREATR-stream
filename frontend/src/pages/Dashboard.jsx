@@ -2942,7 +2942,9 @@ const Dashboard = () => {
                                 </span>
                               ))}
                             </div>
-                            <p className="text-sm text-gray-200">{msg.message}</p>
+                            <div className="text-sm text-gray-200">
+                              {renderMessageWithEmotes(msg.message, msg.emotes)}
+                            </div>
                           </div>
                         </div>
                       </div>
