@@ -67,16 +67,34 @@ class TwitchService:
         """Called when a new chat message arrives"""
         # Parse emotes from the message
         emotes_list = []
-        if msg.emotes:
-            logger.info(f"Emotes found in message: {msg.emotes}")
+        if hasattr(msg, 'emotes') and msg.emotes:
             for emote in msg.emotes:
                 emotes_list.append({
                     'id': emote.emote_id,
-                    'name': emote.emote_set_id,
+                    'name': getattr(emote, 'emote_set_id', ''),
                     'positions': [[pos.start, pos.end] for pos in emote.positions]
                 })
-        else:
-            logger.info(f"No emotes in message: {msg.text}")
+        
+        # Also try to get emote data from tags if available
+        if hasattr(msg, 'tags') and msg.tags and 'emotes' in msg.tags:
+            raw_emotes = msg.tags['emotes']
+            if raw_emotes:
+                # Parse emotes from IRC tags format: emote_id:start-end,start-end/emote_id:start-end
+                for emote_data in raw_emotes.split('/'):
+                    if ':' in emote_data:
+                        emote_id, positions_str = emote_data.split(':', 1)
+                        positions = []
+                        for pos_str in positions_str.split(','):
+                            if '-' in pos_str:
+                                start, end = pos_str.split('-')
+                                positions.append([int(start), int(end)])
+                        
+                        if positions:
+                            emotes_list.append({
+                                'id': emote_id,
+                                'name': '',
+                                'positions': positions
+                            })
         
         message_data = {
             'id': msg.id,
