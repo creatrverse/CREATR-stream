@@ -65,13 +65,24 @@ class TwitchService:
     
     async def _on_message(self, msg: ChatMessage):
         """Called when a new chat message arrives"""
+        # Parse emotes from the message
+        emotes_list = []
+        if msg.emotes:
+            for emote in msg.emotes:
+                emotes_list.append({
+                    'id': emote.emote_id,
+                    'name': emote.emote_set_id,
+                    'positions': [[pos.start, pos.end] for pos in emote.positions]
+                })
+        
         message_data = {
             'id': msg.id,
             'username': msg.user.name,
             'message': msg.text,
             'timestamp': datetime.now(timezone.utc).isoformat(),
             'badges': [badge.set_id for badge in msg.badges] if msg.badges else [],
-            'color': msg.color or '#9147FF'
+            'color': msg.color or '#9147FF',
+            'emotes': emotes_list
         }
         
         self.chat_messages.insert(0, message_data)
