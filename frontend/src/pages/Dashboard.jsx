@@ -1786,7 +1786,9 @@ const Dashboard = () => {
                                   </span>
                                 ))}
                               </div>
-                              <p className="text-[10px] text-gray-200 break-words leading-tight">{msg.message}</p>
+                              <div className="text-[10px] text-gray-200 break-words leading-tight">
+                                {renderMessageWithEmotes(msg.message, msg.emotes)}
+                              </div>
                             </div>
                           </div>
                         </div>
