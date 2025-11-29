@@ -2637,11 +2637,6 @@ const Dashboard = () => {
                                       return null;
                                     })()}
                                   </div>
-                                  <div className="text-gray-500 text-[9px] mt-0.5">
-                                    {sub.status === 'played' && '✓ Played'}
-                                    {sub.status === 'skipped' && '⊘ Not Played'}
-                                    {sub.status === 'pending' && '⏳ Pending'}
-                                  </div>
                                 </div>
                               </div>
                             ))}
