@@ -341,7 +341,15 @@ const Dashboard = () => {
   const fetchSubmissions = async () => {
     try {
       const response = await axios.get(`${API}/queue/submissions`);
-      setSubmissions(response.data.submissions);
+      const subs = response.data.submissions;
+      setSubmissions(subs);
+      
+      // Fetch sub tier for users with mapped Twitch usernames
+      subs.forEach(sub => {
+        if (sub.twitch_username) {
+          fetchSubTier(sub.twitch_username);
+        }
+      });
     } catch (error) {
       console.error("Error fetching submissions:", error);
     }
@@ -351,7 +359,15 @@ const Dashboard = () => {
   const fetchSkipQueue = async () => {
     try {
       const response = await axios.get(`${API}/queue/skips`);
-      setSkipQueue(response.data.submissions);
+      const skips = response.data.submissions;
+      setSkipQueue(skips);
+      
+      // Fetch sub tier for users with mapped Twitch usernames
+      skips.forEach(skip => {
+        if (skip.twitch_username) {
+          fetchSubTier(skip.twitch_username);
+        }
+      });
     } catch (error) {
       console.error("Error fetching skip queue:", error);
     }
