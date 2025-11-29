@@ -2570,29 +2570,34 @@ const Dashboard = () => {
                           <div className="space-y-1 pr-2">
                             {submissions.slice(0, 5).map((sub) => (
                               <div key={sub.id} className="p-2 glass rounded border border-purple-400/20 text-[10px] flex gap-2">
-                                {/* Status Checkbox - Single box */}
-                                <div className="flex items-center justify-center">
+                                {/* Status Checkboxes - Two boxes */}
+                                <div className="flex flex-col gap-1 items-center justify-center">
+                                  {/* Check box for Played */}
                                   <button
-                                    onClick={() => {
-                                      // Toggle between played and pending
-                                      if (sub.status === 'played') {
-                                        markSubmission(sub.id, 'pending');
-                                      } else {
-                                        markSubmission(sub.id, 'played');
-                                      }
-                                    }}
+                                    onClick={() => markSubmission(sub.id, 'played')}
                                     className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                                       sub.status === 'played' 
                                         ? 'bg-green-500 border-green-500' 
-                                        : sub.status === 'pending'
-                                        ? 'bg-gray-600 border-gray-500'
-                                        : 'bg-red-500 border-red-500'
+                                        : 'border-gray-500 hover:border-green-400'
                                     }`}
-                                    title={sub.status === 'played' ? 'Played - Click to unmark' : 'Not Played - Click to mark as played'}
+                                    title="Mark as Played"
                                   >
-                                    {sub.status === 'played' ? (
+                                    {sub.status === 'played' && (
                                       <Check className="w-3 h-3 text-white" />
-                                    ) : (
+                                    )}
+                                  </button>
+                                  
+                                  {/* X box for Not Played */}
+                                  <button
+                                    onClick={() => markSubmission(sub.id, 'skipped')}
+                                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                      sub.status === 'skipped' 
+                                        ? 'bg-red-500 border-red-500' 
+                                        : 'border-gray-500 hover:border-red-400'
+                                    }`}
+                                    title="Mark as Not Played"
+                                  >
+                                    {sub.status === 'skipped' && (
                                       <X className="w-3 h-3 text-white" />
                                     )}
                                   </button>
