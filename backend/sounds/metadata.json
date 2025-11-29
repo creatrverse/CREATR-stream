@@ -1,61 +1,256 @@
 {
   "Dramatic Boom - Sound Effect.mp3": {
     "displayName": "Dramatic Boom - Sound Effect",
-    "color": "yellow-amber"
+    "color": "yellow-amber",
+    "category": "effects"
   },
   "_order": [
-    "Wait till I get my money right .mp3",
-    "Sound - awk among us.mp3",
-    "IM VERY SERIOUS.mp3",
-    "Rainbow star.mp3",
-    "kanyek.wav",
-    "Broke people should never laugh.mp3",
+    "96c4a22c-f139-4d46-83d8-2333c8710a54.mp3",
     "paris.wav",
-    "Crowd laughing .mp3",
+    "2-chainz-says-true.mp3",
+    "Wait till I get my money right .mp3",
+    "IM VERY SERIOUS.mp3",
+    "drake-embarrassing_Ts9wkE9.mp3",
+    "kanyek.wav",
     "KIM CRYING.mp3",
-    "aww sound effect ( 4K ).mp3",
-    "You\u2019ve reached ur limit on talking stfu.mp3",
-    "CROWD CHEER SOUND EFFECT.mp3",
-    "Dramatic Boom - Sound Effect.mp3",
-    "Dj Air Horn Sound Effects.mp3",
     "that part.wav",
     "kanye.wav",
-    "Um chile anyways.mp3",
-    "We are the champions.mp3",
-    "Fire in the booth.mp3",
-    "SpongeBob fail.mp3",
-    "damn-lil-uzi.mp3",
-    "ozzy-osbourne-crazytrain-lyrics_2.mp3",
-    "talented.mp3",
     "best-cut.mp3",
-    "drake-trophies.mp3",
-    "spongebob-fail.mp3",
-    "2-chainz-says-true.mp3",
-    "thats-wassup.mp3",
-    "wiz-khalifa-reacts-to-fan-laugh-impressions-1-mp3cut.mp3",
-    "drake-embarrassing_Ts9wkE9.mp3",
-    "girls-on-fire.mp3",
-    "yeat-bellz.mp3",
+    "Um chile anyways.mp3",
+    "damn-lil-uzi.mp3",
+    "talented.mp3",
     "straight-up-travis-scott.mp3",
     "loots.mp3",
-    "96c4a22c-f139-4d46-83d8-2333c8710a54.mp3",
     "im-on-that-good-kush-high-quality.mp3",
-    "all-abord-crazy-train.mp3",
-    "drake-family-matters-gun.mp3",
     "whatever-future.mp3",
     "yt1s-mp3cut_EKww0Hr.mp3",
     "10 Best I Ever Had.mp3",
-    "rocky-theme-tune-mp3cut.mp3",
-    "no-sleep-bus-club.mp3"
+    "Broke people should never laugh.mp3",
+    "thats-wassup.mp3",
+    "You\u2019ve reached ur limit on talking stfu.mp3",
+    "no-sleep-bus-club.mp3",
+    "yeat-bellz.mp3",
+    "Sound - awk among us.mp3",
+    "Rainbow star.mp3",
+    "Crowd laughing .mp3",
+    "aww sound effect ( 4K ).mp3",
+    "CROWD CHEER SOUND EFFECT.mp3",
+    "Dramatic Boom - Sound Effect.mp3",
+    "Dj Air Horn Sound Effects.mp3",
+    "We are the champions.mp3",
+    "Fire in the booth.mp3",
+    "SpongeBob fail.mp3",
+    "ozzy-osbourne-crazytrain-lyrics_2.mp3",
+    "drake-trophies.mp3",
+    "spongebob-fail.mp3",
+    "wiz-khalifa-reacts-to-fan-laugh-impressions-1-mp3cut.mp3",
+    "girls-on-fire.mp3",
+    "all-abord-crazy-train.mp3",
+    "rocky-theme-tune-mp3cut.mp3"
   ],
   "Sound - awk among us.mp3": {
     "displayName": "Sound - awk among us",
     "color": "green-emerald",
-    "category": "celebrations"
+    "category": "reactions"
   },
   "KIM CRYING.mp3": {
     "displayName": "KIM CRYIN",
     "color": "purple-pink",
-    "category": "other"
+    "category": "memes"
+  },
+  "Crowd laughing .mp3": {
+    "displayName": "Crowd laughing ",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "CROWD CHEER SOUND EFFECT.mp3": {
+    "displayName": "CROWD CHEER SOUND EFFECT",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "aww sound effect ( 4K ).mp3": {
+    "displayName": "aww sound effect ( 4K )",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "SpongeBob fail.mp3": {
+    "displayName": "SpongeBob fail",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "spongebob-fail.mp3": {
+    "displayName": "spongebob-fail",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "IM VERY SERIOUS.mp3": {
+    "displayName": "IM VERY SERIOUS",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "kanyek.wav": {
+    "displayName": "kanyek",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "Broke people should never laugh.mp3": {
+    "displayName": "Broke people should never laugh",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "paris.wav": {
+    "displayName": "paris",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "that part.wav": {
+    "displayName": "that part",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "Um chile anyways.mp3": {
+    "displayName": "Um chile anyways",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "kanye.wav": {
+    "displayName": "kanye",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "talented.mp3": {
+    "displayName": "talented",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "2-chainz-says-true.mp3": {
+    "displayName": "2-chainz-says-true",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "thats-wassup.mp3": {
+    "displayName": "thats-wassup",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "drake-embarrassing_Ts9wkE9.mp3": {
+    "displayName": "drake-embarrassing_Ts9wkE9",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "straight-up-travis-scott.mp3": {
+    "displayName": "straight-up-travis-scott",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "96c4a22c-f139-4d46-83d8-2333c8710a54.mp3": {
+    "displayName": "96c4a22c-f139-4d46-83d8-2333c8710a54",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "no-sleep-bus-club.mp3": {
+    "displayName": "no-sleep-bus-club",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "whatever-future.mp3": {
+    "displayName": "whatever-future",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "best-cut.mp3": {
+    "displayName": "best-cut",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "wiz-khalifa-reacts-to-fan-laugh-impressions-1-mp3cut.mp3": {
+    "displayName": "wiz-khalifa-reacts-to-fan-laugh-impressions-1-mp3cut",
+    "color": "purple-pink",
+    "category": "reactions"
+  },
+  "damn-lil-uzi.mp3": {
+    "displayName": "damn-lil-uzi",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "Fire in the booth.mp3": {
+    "displayName": "Fire in the booth",
+    "color": "purple-pink",
+    "category": "effects"
+  },
+  "You\u2019ve reached ur limit on talking stfu.mp3": {
+    "displayName": "You\u2019ve reached ur limit on talking stfu",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "loots.mp3": {
+    "displayName": "loots",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "yeat-bellz.mp3": {
+    "displayName": "yeat-bellz",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "Wait till I get my money right .mp3": {
+    "displayName": "Wait till I get my money right ",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "im-on-that-good-kush-high-quality.mp3": {
+    "displayName": "im-on-that-good-kush-high-quality",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "Dj Air Horn Sound Effects.mp3": {
+    "displayName": "Dj Air Horn Sound Effects",
+    "color": "purple-pink",
+    "category": "effects"
+  },
+  "Rainbow star.mp3": {
+    "displayName": "Rainbow star",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "We are the champions.mp3": {
+    "displayName": "We are the champions",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "rocky-theme-tune-mp3cut.mp3": {
+    "displayName": "rocky-theme-tune-mp3cut",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "10 Best I Ever Had.mp3": {
+    "displayName": "10 Best I Ever Had",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "yt1s-mp3cut_EKww0Hr.mp3": {
+    "displayName": "yt1s-mp3cut_EKww0Hr",
+    "color": "purple-pink",
+    "category": "memes"
+  },
+  "drake-trophies.mp3": {
+    "displayName": "drake-trophies",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "ozzy-osbourne-crazytrain-lyrics_2.mp3": {
+    "displayName": "ozzy-osbourne-crazytrain-lyrics_2",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "all-abord-crazy-train.mp3": {
+    "displayName": "all-abord-crazy-train",
+    "color": "purple-pink",
+    "category": "celebrations"
+  },
+  "girls-on-fire.mp3": {
+    "displayName": "girls-on-fire",
+    "color": "purple-pink",
+    "category": "celebrations"
   }
 }
