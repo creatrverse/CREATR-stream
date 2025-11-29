@@ -5,8 +5,8 @@
   },
   "_order": [
     "Wait till I get my money right .mp3",
-    "IM VERY SERIOUS.mp3",
     "Sound - awk among us.mp3",
+    "IM VERY SERIOUS.mp3",
     "Rainbow star.mp3",
     "kanyek.wav",
     "Broke people should never laugh.mp3",
@@ -51,7 +51,7 @@
   "Sound - awk among us.mp3": {
     "displayName": "Sound - awk among us",
     "color": "green-emerald",
-    "category": "alerts"
+    "category": "celebrations"
   },
   "KIM CRYING.mp3": {
     "displayName": "KIM CRYIN",
