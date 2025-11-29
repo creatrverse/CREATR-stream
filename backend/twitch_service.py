@@ -44,6 +44,9 @@ class TwitchService:
             if user:
                 self.user_id = user.id
                 logger.info(f"Successfully connected to Twitch. User ID: {self.user_id}")
+                
+                # Fetch channel and global emotes
+                await self.fetch_channel_emotes()
             else:
                 logger.error(f"Channel {self.channel_name} not found")
                 
