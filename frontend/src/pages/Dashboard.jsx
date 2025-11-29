@@ -2365,7 +2365,7 @@ const Dashboard = () => {
                       <span className="text-lg font-bold text-green-400">{queueStats.played}</span>
                     </div>
                     <div className="flex flex-col items-center justify-center p-2 glass rounded border border-red-400/30">
-                      <span className="text-[10px] text-gray-400 text-center">Skipped</span>
+                      <span className="text-[10px] text-gray-400 text-center">Not Played</span>
                       <span className="text-lg font-bold text-red-400">{queueStats.skipped}</span>
                     </div>
                     <div className="flex flex-col items-center justify-center p-2 glass rounded border border-cyan-400/30">
