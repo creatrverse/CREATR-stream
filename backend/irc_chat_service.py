@@ -52,8 +52,17 @@ class TwitchIRCChat:
                 self.server, self.port
             )
             
-            # Send authentication (anonymous)
-            self.writer.write(f"NICK {self.nickname}\r\n".encode('utf-8'))
+            # Send authentication
+            if self.authenticated and self.oauth_token:
+                # Authenticated connection (can send messages)
+                self.writer.write(f"PASS oauth:{self.oauth_token}\r\n".encode('utf-8'))
+                self.writer.write(f"NICK {self.nickname}\r\n".encode('utf-8'))
+                logger.info(f"Using authenticated IRC connection as {self.nickname}")
+            else:
+                # Anonymous connection (read-only)
+                self.writer.write(f"NICK justinfan12345\r\n".encode('utf-8'))
+                logger.info("Using anonymous IRC connection (read-only)")
+            
             self.writer.write(f"CAP REQ :twitch.tv/tags twitch.tv/commands\r\n".encode('utf-8'))
             self.writer.write(f"JOIN #{self.channel_name}\r\n".encode('utf-8'))
             await self.writer.drain()
