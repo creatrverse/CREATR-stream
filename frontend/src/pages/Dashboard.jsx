@@ -1402,6 +1402,37 @@ const Dashboard = () => {
     return "bg-gray-600 border-gray-400"; // Non Sub
   };
 
+  // Auto-match Discord username to Twitch
+  const autoMatchTwitchUser = async (discordUsername) => {
+    if (!discordUsername || autoMatchCache[discordUsername]) {
+      return autoMatchCache[discordUsername];
+    }
+
+    try {
+      const response = await axios.get(`${API}/twitch/find-user/${discordUsername}`);
+      const result = {
+        matched: response.data.matched,
+        twitchUsername: response.data.twitch_username,
+        tier: response.data.subscription?.is_subscribed ? response.data.subscription.tier : 'Non Sub'
+      };
+      
+      // Cache the result
+      setAutoMatchCache(prev => ({ ...prev, [discordUsername]: result }));
+      
+      // Also cache the tier if matched
+      if (result.matched && result.twitchUsername) {
+        setSubTierCache(prev => ({ ...prev, [result.twitchUsername]: result.tier }));
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`Error auto-matching ${discordUsername}:`, error);
+      const result = { matched: false, twitchUsername: null, tier: null };
+      setAutoMatchCache(prev => ({ ...prev, [discordUsername]: result }));
+      return result;
+    }
+  };
+
   // Fetch Twitch sub tier for a username
   const fetchSubTier = async (twitchUsername) => {
     if (!twitchUsername || subTierCache[twitchUsername]) {
@@ -1422,10 +1453,23 @@ const Dashboard = () => {
     }
   };
 
-  // Get sub tier for a submission (with Twitch username mapping)
-  const getSubmissionSubTier = (twitchUsername) => {
-    if (!twitchUsername) return 'Non Sub';
-    return subTierCache[twitchUsername] || 'Non Sub';
+  // Get sub tier for a submission (with auto-matching)
+  const getSubmissionSubTier = (discordUsername, twitchUsername) => {
+    // If explicitly mapped, use that
+    if (twitchUsername) {
+      return subTierCache[twitchUsername] || 'Non Sub';
+    }
+    
+    // Check auto-match cache
+    const autoMatch = autoMatchCache[discordUsername];
+    if (autoMatch) {
+      if (autoMatch.matched) {
+        return autoMatch.tier || 'Non Sub';
+      }
+      return 'NO_MATCH'; // Special flag for red dot
+    }
+    
+    return 'PENDING'; // Still loading
   };
 
   // Extract song name from URL or return shortened version
