@@ -53,6 +53,36 @@ class TwitchService:
             logger.error(f"Traceback: {traceback.format_exc()}")
             raise
     
+    async def fetch_channel_emotes(self):
+        """Fetch channel-specific emotes and global emotes"""
+        try:
+            if not self.twitch or not self.user_id:
+                logger.warning("Cannot fetch emotes - Twitch not initialized")
+                return
+            
+            # Fetch channel emotes
+            logger.info(f"Fetching channel emotes for broadcaster ID: {self.user_id}")
+            channel_emotes_response = await self.twitch.get_channel_emotes(self.user_id)
+            
+            for emote in channel_emotes_response:
+                # Store emote name -> ID mapping
+                self.channel_emotes[emote.name] = emote.id
+                logger.info(f"Loaded channel emote: {emote.name} -> {emote.id}")
+            
+            # Fetch global emotes
+            logger.info("Fetching global Twitch emotes")
+            global_emotes_response = await self.twitch.get_global_emotes()
+            
+            for emote in global_emotes_response:
+                self.global_emotes[emote.name] = emote.id
+            
+            logger.info(f"Loaded {len(self.channel_emotes)} channel emotes and {len(self.global_emotes)} global emotes")
+            
+        except Exception as e:
+            logger.error(f"Error fetching emotes: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+    
     async def start_chat(self):
         """Start listening to chat messages"""
         # Chat requires user authentication with chat:read scope
