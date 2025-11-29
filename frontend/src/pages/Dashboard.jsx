@@ -2638,9 +2638,13 @@ const Dashboard = () => {
                                       by {skip.discord_display_name || skip.discord_username}
                                       {skip.twitch_username && ` (@${skip.twitch_username})`}
                                     </span>
-                                    {/* Discord/Non-Sub Badge */}
-                                    <span className="text-[7px] px-1.5 py-0.5 rounded border bg-indigo-600 border-indigo-400 font-bold whitespace-nowrap">
-                                      Discord
+                                    {/* Sub Tier Badge */}
+                                    <span className={`text-[7px] px-1.5 py-0.5 rounded border font-bold whitespace-nowrap ${
+                                      skip.twitch_username 
+                                        ? getSubTierBadgeClass(getSubmissionSubTier(skip.twitch_username))
+                                        : 'bg-indigo-600 border-indigo-400'
+                                    }`}>
+                                      {skip.twitch_username ? getSubmissionSubTier(skip.twitch_username) : 'Discord'}
                                     </span>
                                   </div>
                                   <div className="text-red-400 text-[9px] mt-0.5">⊘ Not Played</div>
