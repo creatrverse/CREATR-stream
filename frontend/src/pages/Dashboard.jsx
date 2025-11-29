@@ -2463,7 +2463,9 @@ const Dashboard = () => {
                           <div className="space-y-1 pr-2">
                             {skipQueue.slice(0, 3).map((skip) => (
                               <div key={skip.id} className="p-2 glass rounded border border-red-400/20 text-[10px]">
-                                <div className="font-semibold text-white truncate">{skip.song_link}</div>
+                                <div className="font-semibold text-white truncate" title={skip.song_link}>
+                                  {getSongDisplayName(skip.song_link)}
+                                </div>
                                 <div className="text-gray-400 truncate">
                                   by {skip.discord_display_name || skip.discord_username}
                                   {skip.twitch_username && ` (@${skip.twitch_username})`}
