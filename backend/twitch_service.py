@@ -179,6 +179,13 @@ class TwitchService:
         """Get recent chat messages"""
         return self.chat_messages
     
+    def get_emotes(self) -> Dict:
+        """Get cached emote data"""
+        return {
+            'channel_emotes': self.channel_emotes,
+            'global_emotes': self.global_emotes
+        }
+    
     async def get_stream_info(self) -> Optional[Dict]:
         """Get current stream information"""
         if not self.twitch or not self.user_id:
