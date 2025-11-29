@@ -2517,6 +2517,7 @@ const Dashboard = () => {
                           playSound={playSound}
                           openEditModal={openEditModal}
                           deleteSound={deleteSound}
+                          playingSound={playingSound}
                         />
                       ))}
                     </div>
