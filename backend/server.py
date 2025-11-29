@@ -344,7 +344,21 @@ async def get_emotes():
 async def get_user_subscription(username: str):
     """Get user's subscription status and tier"""
     sub_info = await twitch_service.get_user_subscription(username)
-    return sub_info or {'is_subscribed': False, 'tier': None}
+    return sub_info or {'is_subscribed': False, 'tier': None, 'found': False}
+
+@api_router.get("/twitch/find-user/{discord_username}")
+async def find_matching_twitch_user(discord_username: str):
+    """Try to auto-match a Discord username to a Twitch username"""
+    twitch_username = await twitch_service.find_matching_twitch_user(discord_username)
+    if twitch_username:
+        # Also get their sub status
+        sub_info = await twitch_service.get_user_subscription(twitch_username)
+        return {
+            'matched': True,
+            'twitch_username': twitch_username,
+            'subscription': sub_info
+        }
+    return {'matched': False, 'twitch_username': None}
 
 @api_router.post("/twitch/title")
 async def update_stream_title(update: StreamTitleUpdate, session: Session = Depends(get_session)):
