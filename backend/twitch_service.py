@@ -186,6 +186,49 @@ class TwitchService:
             'global_emotes': self.global_emotes
         }
     
+    async def find_matching_twitch_user(self, discord_username: str) -> Optional[str]:
+        """Try to find a matching Twitch username for a Discord username"""
+        if not self.twitch:
+            return None
+        
+        try:
+            # Clean up username - remove special chars, numbers at end, etc.
+            clean_name = discord_username.lower()
+            # Remove common suffixes
+            clean_name = clean_name.replace('ttv', '').replace('twitch', '').replace('_', '').replace('-', '')
+            # Remove trailing numbers (common in Discord)
+            import re
+            clean_name = re.sub(r'\d+$', '', clean_name)
+            
+            if len(clean_name) < 3:
+                return None
+            
+            # Try exact match first
+            try:
+                user = await first(self.twitch.get_users(logins=[discord_username.lower()]))
+                if user:
+                    logger.info(f"Found exact match: {discord_username} → {user.login}")
+                    return user.login
+            except:
+                pass
+            
+            # Try cleaned name
+            if clean_name != discord_username.lower():
+                try:
+                    user = await first(self.twitch.get_users(logins=[clean_name]))
+                    if user:
+                        logger.info(f"Found cleaned match: {discord_username} → {user.login}")
+                        return user.login
+                except:
+                    pass
+            
+            # No match found
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error finding matching Twitch user for {discord_username}: {e}")
+            return None
+    
     async def get_user_subscription(self, username: str) -> Optional[Dict]:
         """Get user's subscription status and tier for the channel"""
         if not self.twitch or not self.user_id:
@@ -196,7 +239,7 @@ class TwitchService:
             user = await first(self.twitch.get_users(logins=[username]))
             if not user:
                 logger.warning(f"User {username} not found on Twitch")
-                return {'is_subscribed': False, 'tier': None}
+                return {'is_subscribed': False, 'tier': None, 'found': False}
             
             # Check if user is subscribed to the channel
             try:
@@ -217,14 +260,15 @@ class TwitchService:
                     return {
                         'is_subscribed': True,
                         'tier': tier,
-                        'is_gift': is_subscribed.is_gift if hasattr(is_subscribed, 'is_gift') else False
+                        'is_gift': is_subscribed.is_gift if hasattr(is_subscribed, 'is_gift') else False,
+                        'found': True
                     }
                 else:
-                    return {'is_subscribed': False, 'tier': None}
+                    return {'is_subscribed': False, 'tier': None, 'found': True}
                     
             except Exception as e:
                 logger.error(f"Error checking subscription for {username}: {e}")
-                return {'is_subscribed': False, 'tier': None}
+                return {'is_subscribed': False, 'tier': None, 'found': True}
                 
         except Exception as e:
             logger.error(f"Error getting user subscription: {e}")
