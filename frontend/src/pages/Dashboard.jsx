@@ -2431,10 +2431,19 @@ const Dashboard = () => {
                           <div className="space-y-1 pr-2">
                             {submissions.slice(0, 5).map((sub) => (
                               <div key={sub.id} className="p-2 glass rounded border border-purple-400/20 text-[10px]">
-                                <div className="font-semibold text-white truncate" title={sub.song_link}>
+                                <div className="font-semibold text-white truncate">
                                   {getSongDisplayName(sub.song_link)}
                                 </div>
-                                <div className="text-gray-400 truncate">
+                                <a 
+                                  href={sub.song_link} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-[9px] text-cyan-400 hover:underline truncate block"
+                                  title={sub.song_link}
+                                >
+                                  {sub.song_link}
+                                </a>
+                                <div className="text-gray-400 truncate mt-0.5">
                                   by {sub.discord_display_name || sub.discord_username}
                                   {sub.twitch_username && ` (@${sub.twitch_username})`}
                                 </div>
