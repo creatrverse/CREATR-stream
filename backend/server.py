@@ -108,6 +108,9 @@ async def lifespan(app: FastAPI):
         
         irc_chat.set_message_callback(on_irc_message)
         
+        # Pass twitch_service reference for emote data
+        irc_chat.set_emote_service(twitch_service)
+        
         # Start IRC in background
         asyncio.create_task(irc_chat.connect())
         
