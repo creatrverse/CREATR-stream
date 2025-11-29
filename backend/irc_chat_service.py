@@ -150,14 +150,16 @@ class TwitchIRCChat:
             username = username_match.group(1)
             message_text = message_match.group(1)
             
-            # Extract badges
+            # Extract badges and tiers
             badges = []
+            badge_info = {}
             if 'badges' in tags and tags['badges']:
                 badge_list = tags['badges'].split(',')
                 for badge in badge_list:
                     if '/' in badge:
-                        badge_name = badge.split('/')[0]
+                        badge_name, badge_version = badge.split('/', 1)
                         badges.append(badge_name)
+                        badge_info[badge_name] = badge_version
             
             # Get color
             color = tags.get('color', '#9147FF')
