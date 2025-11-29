@@ -18,7 +18,8 @@ class TwitchIRCChat:
         self.channel_name = os.getenv('TWITCH_CHANNEL_NAME', '').lower()
         self.server = 'irc.chat.twitch.tv'
         self.port = 6667
-        self.nickname = 'justinfan12345'  # Anonymous viewer
+        self.nickname = self.channel_name  # Use channel name as bot nickname
+        self.oauth_token = None  # Will be set from oauth service
         self.reader: Optional[asyncio.StreamReader] = None
         self.writer: Optional[asyncio.StreamWriter] = None
         self.running = False
@@ -26,6 +27,7 @@ class TwitchIRCChat:
         self.recent_messages = []
         self.max_messages = 50
         self.emote_service = None  # Will be set from server.py
+        self.authenticated = False
         
     def set_message_callback(self, callback: Callable):
         """Register callback for new messages"""
