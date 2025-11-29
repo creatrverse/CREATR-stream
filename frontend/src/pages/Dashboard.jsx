@@ -2620,13 +2620,30 @@ const Dashboard = () => {
                                       {sub.twitch_username && ` (@${sub.twitch_username})`}
                                     </span>
                                     {/* Sub Tier Badge */}
-                                    <span className={`text-[7px] px-1.5 py-0.5 rounded border font-bold whitespace-nowrap ${
-                                      sub.twitch_username 
-                                        ? getSubTierBadgeClass(getSubmissionSubTier(sub.twitch_username))
-                                        : 'bg-indigo-600 border-indigo-400'
-                                    }`}>
-                                      {sub.twitch_username ? getSubmissionSubTier(sub.twitch_username) : 'Discord'}
-                                    </span>
+                                    {(() => {
+                                      const discordUser = sub.discord_username || sub.discord_display_name;
+                                      const tier = getSubmissionSubTier(discordUser, sub.twitch_username);
+                                      
+                                      if (tier === 'NO_MATCH') {
+                                        return (
+                                          <span className="w-2 h-2 rounded-full bg-red-500 border border-red-400" title="No Twitch match found"></span>
+                                        );
+                                      }
+                                      
+                                      if (tier === 'PENDING') {
+                                        return (
+                                          <span className="text-[7px] px-1.5 py-0.5 rounded border bg-gray-600 border-gray-400 font-bold whitespace-nowrap">
+                                            ...
+                                          </span>
+                                        );
+                                      }
+                                      
+                                      return (
+                                        <span className={`text-[7px] px-1.5 py-0.5 rounded border font-bold whitespace-nowrap ${getSubTierBadgeClass(tier)}`}>
+                                          {tier}
+                                        </span>
+                                      );
+                                    })()}
                                   </div>
                                   <div className="text-gray-500 text-[9px] mt-0.5">
                                     {sub.status === 'played' && '✓ Played'}
