@@ -1335,6 +1335,16 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Get badge display name
+  const getBadgeName = (badge) => {
+    if (badge === "moderator") return "Mod";
+    if (badge === "subscriber") return "Sub";
+    if (badge === "vip") return "VIP";
+    if (badge === "broadcaster") return "Broadcaster";
+    if (badge === "sub-gifter") return "Gifter";
+    return badge.charAt(0).toUpperCase() + badge.slice(1);
+  };
+
   // Render message with emotes
   const renderMessageWithEmotes = (message, emotes) => {
     if (!emotes || emotes.length === 0) {
