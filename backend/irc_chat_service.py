@@ -148,13 +148,72 @@ class TwitchIRCChat:
             if not color:
                 color = '#9147FF'
             
+            # Parse emotes from message text
+            emotes_list = []
+            if self.emote_service:
+                emote_data = self.emote_service.get_emotes()
+                channel_emotes = emote_data.get('channel_emotes', {})
+                global_emotes = emote_data.get('global_emotes', {})
+                
+                # Split message into words and check each against emote cache
+                words = message_text.split()
+                current_pos = 0
+                
+                for word in words:
+                    # Find position of this word in the original text
+                    word_start = message_text.find(word, current_pos)
+                    if word_start == -1:
+                        continue
+                    word_end = word_start + len(word) - 1
+                    
+                    # Check if word is a channel emote
+                    if word in channel_emotes:
+                        emotes_list.append({
+                            'id': channel_emotes[word],
+                            'name': word,
+                            'positions': [[word_start, word_end]]
+                        })
+                    # Check if word is a global emote
+                    elif word in global_emotes:
+                        emotes_list.append({
+                            'id': global_emotes[word],
+                            'name': word,
+                            'positions': [[word_start, word_end]]
+                        })
+                    
+                    current_pos = word_end + 1
+            
+            # Also check IRC tags for emote data
+            if 'emotes' in tags and tags['emotes']:
+                raw_emotes = tags['emotes']
+                # Parse emotes from IRC tags format: emote_id:start-end,start-end/emote_id:start-end
+                for emote_data in raw_emotes.split('/'):
+                    if ':' in emote_data:
+                        emote_id, positions_str = emote_data.split(':', 1)
+                        positions = []
+                        for pos_str in positions_str.split(','):
+                            if '-' in pos_str:
+                                start, end = pos_str.split('-')
+                                positions.append([int(start), int(end)])
+                        
+                        if positions:
+                            # Check if we already have this emote
+                            already_exists = any(e['id'] == emote_id for e in emotes_list)
+                            if not already_exists:
+                                emotes_list.append({
+                                    'id': emote_id,
+                                    'name': '',
+                                    'positions': positions
+                                })
+            
             return {
                 'id': tags.get('id', f"{username}_{datetime.now().timestamp()}"),
                 'username': username,
                 'message': message_text,
                 'timestamp': datetime.now(timezone.utc).isoformat(),
                 'badges': badges,
-                'color': color
+                'color': color,
+                'emotes': emotes_list
             }
             
         except Exception as e:
