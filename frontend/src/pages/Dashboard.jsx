@@ -2504,24 +2504,51 @@ const Dashboard = () => {
                         ) : (
                           <div className="space-y-1 pr-2">
                             {skipQueue.slice(0, 3).map((skip) => (
-                              <div key={skip.id} className="p-2 glass rounded border border-red-400/20 text-[10px]">
-                                <div className="font-semibold text-white truncate">
-                                  {getSongDisplayName(skip.song_link)}
+                              <div key={skip.id} className="p-2 glass rounded border border-red-400/20 text-[10px] flex gap-2">
+                                {/* Status Checkboxes */}
+                                <div className="flex flex-col gap-1 items-center justify-center">
+                                  <button
+                                    onClick={() => markSkipSubmission(skip.id, 'played')}
+                                    className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+                                      skip.status === 'played' 
+                                        ? 'bg-green-500 border-green-500' 
+                                        : 'border-gray-500 hover:border-green-400'
+                                    }`}
+                                    title="Mark as Played"
+                                  >
+                                    {skip.status === 'played' && (
+                                      <Check className="w-3 h-3 text-white" />
+                                    )}
+                                  </button>
+                                  <button
+                                    className="w-5 h-5 rounded border-2 bg-red-500 border-red-500 flex items-center justify-center"
+                                    title="Not Played"
+                                    disabled
+                                  >
+                                    <X className="w-3 h-3 text-white" />
+                                  </button>
                                 </div>
-                                <a 
-                                  href={skip.song_link} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-[9px] text-cyan-400 hover:underline truncate block"
-                                  title={skip.song_link}
-                                >
-                                  {skip.song_link}
-                                </a>
-                                <div className="text-gray-400 truncate mt-0.5">
-                                  by {skip.discord_display_name || skip.discord_username}
-                                  {skip.twitch_username && ` (@${skip.twitch_username})`}
+                                
+                                {/* Song Info */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-semibold text-white truncate">
+                                    {getSongDisplayName(skip.song_link)}
+                                  </div>
+                                  <a 
+                                    href={skip.song_link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-[9px] text-cyan-400 hover:underline truncate block"
+                                    title={skip.song_link}
+                                  >
+                                    {skip.song_link}
+                                  </a>
+                                  <div className="text-gray-400 truncate mt-0.5">
+                                    by {skip.discord_display_name || skip.discord_username}
+                                    {skip.twitch_username && ` (@${skip.twitch_username})`}
+                                  </div>
+                                  <div className="text-red-400 text-[9px] mt-0.5">⊘ Not Played</div>
                                 </div>
-                                <div className="text-red-400 text-[9px] mt-0.5">⊘ Skipped</div>
                               </div>
                             ))}
                           </div>
