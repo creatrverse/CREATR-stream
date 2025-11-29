@@ -99,16 +99,27 @@ const SortableSound = ({ sound, playSound, openEditModal, deleteSound, playingSo
   return (
     <div ref={setNodeRef} style={style} className="relative group">
       <button
-        onClick={() => playSound(sound.name)}
-        className={`w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg ${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} ${isPlaying ? 'ring-4 ring-white animate-pulse' : ''}`}
-        {...attributes}
-        {...listeners}
+        onClick={(e) => {
+          e.stopPropagation();
+          playSound(sound.name);
+        }}
+        className={`w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg cursor-pointer ${isPlaying ? 'ring-4 ring-white animate-pulse' : ''}`}
       >
         <Music className={`w-8 h-8 text-white ${isPlaying ? 'animate-bounce' : ''}`} />
         <span className="text-white font-bold text-xs text-center leading-tight break-words">
           {sound.displayName || sound.name.replace(/\.[^/.]+$/, '')}
         </span>
       </button>
+      {/* Drag handle - only visible on hover */}
+      <div 
+        className="absolute top-2 left-2 w-6 h-6 rounded-full bg-gray-700/80 hover:bg-gray-600 flex items-center justify-center cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity z-10"
+        {...attributes}
+        {...listeners}
+      >
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
+        </svg>
+      </div>
       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <button
           onClick={(e) => {
