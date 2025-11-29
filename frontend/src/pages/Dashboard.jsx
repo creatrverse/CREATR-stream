@@ -1868,6 +1868,10 @@ const Dashboard = () => {
                                 <span className="font-semibold truncate text-[10px]" style={{ color: msg.color }}>
                                   {msg.username}
                                 </span>
+                                {/* Sub Tier Badge */}
+                                <span className={`text-[7px] px-1.5 py-0.5 rounded border ${getSubTierBadgeClass(getSubTier(msg.badge_info))} font-bold`}>
+                                  {getSubTier(msg.badge_info)}
+                                </span>
                                 {msg.badges && msg.badges.map((badge, i) => (
                                   <span key={i} className={`badge badge-${badge} text-[7px]`}>
                                     {getBadgeName(badge)}
