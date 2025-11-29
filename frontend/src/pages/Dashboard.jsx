@@ -2782,21 +2782,6 @@ const Dashboard = () => {
         </TabsContent>
 
         {/* Feedback Queue Tab */}
-        <TabsContent value="queue" className="space-y-6">
-          <QueueManager
-            submissions={submissions}
-            skipQueue={skipQueue}
-            queueStats={queueStats}
-            usernameMappings={usernameMappings}
-            mappingForm={mappingForm}
-            setMappingForm={setMappingForm}
-            markSubmission={markSubmission}
-            markSkipSubmission={markSkipSubmission}
-            addUsernameMapping={addUsernameMapping}
-            removeUsernameMapping={removeUsernameMapping}
-          />
-        </TabsContent>
-
         {/* Music Queue Tab */}
         <TabsContent value="music" className="space-y-6">
           <div className="grid lg:grid-cols-2 gap-6">
