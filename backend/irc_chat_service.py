@@ -25,6 +25,7 @@ class TwitchIRCChat:
         self.message_callback: Optional[Callable] = None
         self.recent_messages = []
         self.max_messages = 50
+        self.emote_service = None  # Will be set from server.py
         
     def set_message_callback(self, callback: Callable):
         """Register callback for new messages"""
