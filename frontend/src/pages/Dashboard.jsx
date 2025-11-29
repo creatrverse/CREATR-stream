@@ -2586,9 +2586,15 @@ const Dashboard = () => {
                                   >
                                     {skip.song_link}
                                   </a>
-                                  <div className="text-gray-400 truncate mt-0.5">
-                                    by {skip.discord_display_name || skip.discord_username}
-                                    {skip.twitch_username && ` (@${skip.twitch_username})`}
+                                  <div className="flex items-center gap-1 mt-0.5">
+                                    <span className="text-gray-400 truncate">
+                                      by {skip.discord_display_name || skip.discord_username}
+                                      {skip.twitch_username && ` (@${skip.twitch_username})`}
+                                    </span>
+                                    {/* Discord/Non-Sub Badge */}
+                                    <span className="text-[7px] px-1.5 py-0.5 rounded border bg-indigo-600 border-indigo-400 font-bold whitespace-nowrap">
+                                      Discord
+                                    </span>
                                   </div>
                                   <div className="text-red-400 text-[9px] mt-0.5">⊘ Not Played</div>
                                 </div>
