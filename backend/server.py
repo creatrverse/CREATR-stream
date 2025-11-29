@@ -119,10 +119,14 @@ async def lifespan(app: FastAPI):
         
         # Try to get OAuth token for authenticated IRC (to send messages)
         try:
-            token_data = await oauth_service.get_token()
-            if token_data and token_data.access_token:
-                irc_chat.set_oauth_token(token_data.access_token)
-                logger.info("IRC chat configured with authenticated access")
+            from sqlmodel import select
+            with next(get_session()) as session:
+                token_data = session.exec(select(TokenData)).first()
+                if token_data and token_data.access_token:
+                    irc_chat.set_oauth_token(token_data.access_token)
+                    logger.info("IRC chat configured with authenticated access")
+                else:
+                    logger.warning("No OAuth token found. Bot will run in read-only mode.")
         except Exception as e:
             logger.warning(f"Could not get OAuth token for IRC: {e}. Bot will run in read-only mode.")
         
