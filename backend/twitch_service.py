@@ -186,6 +186,52 @@ class TwitchService:
             'global_emotes': self.global_emotes
         }
     
+    async def get_user_subscription(self, username: str) -> Optional[Dict]:
+        """Get user's subscription status and tier for the channel"""
+        if not self.twitch or not self.user_id:
+            return None
+        
+        try:
+            # Get user ID from username
+            user = await first(self.twitch.get_users(logins=[username]))
+            if not user:
+                logger.warning(f"User {username} not found on Twitch")
+                return {'is_subscribed': False, 'tier': None}
+            
+            # Check if user is subscribed to the channel
+            try:
+                subscription = await first(
+                    self.twitch.get_user_subscriptions(
+                        broadcaster_id=self.user_id,
+                        user_id=[user.id]
+                    )
+                )
+                
+                if subscription:
+                    # Tier mapping: 1000 = T1, 2000 = T2, 3000 = T3
+                    tier_map = {
+                        '1000': 'T1',
+                        '2000': 'T2',
+                        '3000': 'T3'
+                    }
+                    tier = tier_map.get(subscription.tier, 'T1')
+                    
+                    return {
+                        'is_subscribed': True,
+                        'tier': tier,
+                        'is_gift': subscription.is_gift
+                    }
+                else:
+                    return {'is_subscribed': False, 'tier': None}
+                    
+            except Exception as e:
+                logger.error(f"Error checking subscription for {username}: {e}")
+                return {'is_subscribed': False, 'tier': None}
+                
+        except Exception as e:
+            logger.error(f"Error getting user subscription: {e}")
+            return None
+    
     async def get_stream_info(self) -> Optional[Dict]:
         """Get current stream information"""
         if not self.twitch or not self.user_id:
