@@ -1351,6 +1351,46 @@ const Dashboard = () => {
     return badge.charAt(0).toUpperCase() + badge.slice(1);
   };
 
+  // Extract song name from URL or return shortened version
+  const getSongDisplayName = (songLink) => {
+    try {
+      const url = new URL(songLink);
+      
+      // Handle YouTube
+      if (url.hostname.includes('youtube.com') || url.hostname.includes('youtu.be')) {
+        // Try to get video title from URL params if available
+        const params = new URLSearchParams(url.search);
+        const videoId = params.get('v') || url.pathname.split('/').pop();
+        return `YouTube: ${videoId}`;
+      }
+      
+      // Handle SoundCloud
+      if (url.hostname.includes('soundcloud.com')) {
+        const parts = url.pathname.split('/').filter(p => p);
+        return parts[parts.length - 1].replace(/-/g, ' ').substring(0, 40);
+      }
+      
+      // Handle BandLab
+      if (url.hostname.includes('bandlab.com')) {
+        return 'BandLab Track';
+      }
+      
+      // Handle Spotify
+      if (url.hostname.includes('spotify.com')) {
+        const parts = url.pathname.split('/').filter(p => p);
+        return `Spotify: ${parts[parts.length - 1]}`;
+      }
+      
+      // Generic: show domain + last path segment
+      const pathParts = url.pathname.split('/').filter(p => p);
+      const lastPart = pathParts[pathParts.length - 1] || url.hostname;
+      return lastPart.substring(0, 40);
+    } catch (e) {
+      // If URL parsing fails, return truncated link
+      return songLink.substring(0, 40) + '...';
+    }
+  };
+
   // Render message with emotes
   const renderMessageWithEmotes = (message, emotes) => {
     if (!emotes || emotes.length === 0) {
