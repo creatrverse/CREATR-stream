@@ -370,10 +370,17 @@ const Dashboard = () => {
       const skips = response.data.submissions;
       setSkipQueue(skips);
       
-      // Fetch sub tier for users with mapped Twitch usernames
+      // Process each skip
       skips.forEach(skip => {
         if (skip.twitch_username) {
+          // Has explicit mapping - fetch tier
           fetchSubTier(skip.twitch_username);
+        } else {
+          // No mapping - try auto-match
+          const discordUsername = skip.discord_username || skip.discord_display_name;
+          if (discordUsername) {
+            autoMatchTwitchUser(discordUsername);
+          }
         }
       });
     } catch (error) {
