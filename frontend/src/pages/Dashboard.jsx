@@ -345,10 +345,17 @@ const Dashboard = () => {
       const subs = response.data.submissions;
       setSubmissions(subs);
       
-      // Fetch sub tier for users with mapped Twitch usernames
+      // Process each submission
       subs.forEach(sub => {
         if (sub.twitch_username) {
+          // Has explicit mapping - fetch tier
           fetchSubTier(sub.twitch_username);
+        } else {
+          // No mapping - try auto-match
+          const discordUsername = sub.discord_username || sub.discord_display_name;
+          if (discordUsername) {
+            autoMatchTwitchUser(discordUsername);
+          }
         }
       });
     } catch (error) {
