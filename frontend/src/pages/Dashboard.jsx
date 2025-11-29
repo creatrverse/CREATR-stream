@@ -1385,6 +1385,32 @@ const Dashboard = () => {
     return "bg-gray-600 border-gray-400"; // Non Sub
   };
 
+  // Fetch Twitch sub tier for a username
+  const fetchSubTier = async (twitchUsername) => {
+    if (!twitchUsername || subTierCache[twitchUsername]) {
+      return subTierCache[twitchUsername] || 'Non Sub';
+    }
+
+    try {
+      const response = await axios.get(`${API}/twitch/subscription/${twitchUsername}`);
+      const tier = response.data.is_subscribed ? response.data.tier : 'Non Sub';
+      
+      // Cache the result
+      setSubTierCache(prev => ({ ...prev, [twitchUsername]: tier }));
+      
+      return tier;
+    } catch (error) {
+      console.error(`Error fetching sub tier for ${twitchUsername}:`, error);
+      return 'Non Sub';
+    }
+  };
+
+  // Get sub tier for a submission (with Twitch username mapping)
+  const getSubmissionSubTier = (twitchUsername) => {
+    if (!twitchUsername) return 'Non Sub';
+    return subTierCache[twitchUsername] || 'Non Sub';
+  };
+
   // Extract song name from URL or return shortened version
   const getSongDisplayName = (songLink) => {
     try {
