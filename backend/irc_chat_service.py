@@ -37,6 +37,11 @@ class TwitchIRCChat:
         """Set reference to twitch_service for emote data"""
         self.emote_service = emote_service
     
+    def set_oauth_token(self, token: str):
+        """Set OAuth token for authenticated connection"""
+        self.oauth_token = token
+        self.authenticated = True
+    
     async def connect(self):
         """Connect to Twitch IRC server"""
         try:
