@@ -23,6 +23,7 @@ from oauth_database import TokenData, create_db_and_tables, get_session
 from sqlmodel import Session
 from oauth_service import oauth_service
 from discord_service import discord_manager
+from chat_bot_service import chat_bot
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
