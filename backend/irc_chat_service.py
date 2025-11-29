@@ -31,6 +31,10 @@ class TwitchIRCChat:
         """Register callback for new messages"""
         self.message_callback = callback
     
+    def set_emote_service(self, emote_service):
+        """Set reference to twitch_service for emote data"""
+        self.emote_service = emote_service
+    
     async def connect(self):
         """Connect to Twitch IRC server"""
         try:
