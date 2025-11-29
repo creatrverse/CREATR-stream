@@ -340,6 +340,12 @@ async def get_emotes():
     emotes = twitch_service.get_emotes()
     return emotes
 
+@api_router.get("/twitch/subscription/{username}")
+async def get_user_subscription(username: str):
+    """Get user's subscription status and tier"""
+    sub_info = await twitch_service.get_user_subscription(username)
+    return sub_info or {'is_subscribed': False, 'tier': None}
+
 @api_router.post("/twitch/title")
 async def update_stream_title(update: StreamTitleUpdate, session: Session = Depends(get_session)):
     """Update stream title using OAuth"""
