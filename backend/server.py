@@ -117,6 +117,15 @@ async def lifespan(app: FastAPI):
         # Pass twitch_service reference for emote data
         irc_chat.set_emote_service(twitch_service)
         
+        # Try to get OAuth token for authenticated IRC (to send messages)
+        try:
+            token_data = await oauth_service.get_token()
+            if token_data and token_data.access_token:
+                irc_chat.set_oauth_token(token_data.access_token)
+                logger.info("IRC chat configured with authenticated access")
+        except Exception as e:
+            logger.warning(f"Could not get OAuth token for IRC: {e}. Bot will run in read-only mode.")
+        
         # Configure chat bot
         chat_bot.set_discord_manager(discord_manager)
         chat_bot.set_irc_chat(irc_chat)
