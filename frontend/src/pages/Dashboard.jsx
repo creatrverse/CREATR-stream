@@ -2483,32 +2483,49 @@ const Dashboard = () => {
 
                   {/* Now Playing */}
                   <div className="space-y-2">
-                    <Label className="text-xs">Now Playing</Label>
-                    {nowPlaying ? (
-                      <div className="p-3 rounded-lg bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-400/30">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-white truncate">{nowPlaying.title}</p>
-                            <p className="text-xs text-gray-300 truncate">{nowPlaying.artist}</p>
-                            <p className="text-[10px] text-gray-400 mt-1">by {nowPlaying.submitted_by}</p>
+                    <Label className="text-xs">Up Next in Queue</Label>
+                    {submissions.length > 0 && submissions.filter(s => s.status === 'pending').length > 0 ? (
+                      (() => {
+                        const nextSong = submissions.filter(s => s.status === 'pending')[0];
+                        return (
+                          <div className="p-3 rounded-lg bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-pink-400/30">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-white truncate" title={nextSong.song_link}>
+                                  {getSongDisplayName(nextSong.song_link)}
+                                </p>
+                                <p className="text-[10px] text-gray-400 mt-1">
+                                  by {nextSong.discord_display_name || nextSong.discord_username}
+                                  {nextSong.twitch_username && ` (@${nextSong.twitch_username})`}
+                                </p>
+                                <a 
+                                  href={nextSong.song_link} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-[9px] text-cyan-400 hover:underline truncate block mt-1"
+                                >
+                                  🔗 Open Link
+                                </a>
+                              </div>
+                              <div className="flex flex-col items-end gap-1">
+                                <Badge className="badge-vip text-[9px] px-1.5 py-0">⏳ Next</Badge>
+                                <Button
+                                  onClick={() => markSkipSubmission(nextSong.id)}
+                                  variant="outline"
+                                  size="sm"
+                                  className="h-6 px-2 text-[9px] border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
+                                >
+                                  <SkipForward className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end gap-1">
-                            <Badge className="badge-vip text-[9px] px-1.5 py-0">⭐ {nowPlaying.votes}</Badge>
-                            <Button
-                              onClick={() => skipSong(nowPlaying.id)}
-                              variant="outline"
-                              size="sm"
-                              className="h-6 px-2 text-[9px] border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
-                            >
-                              <SkipForward className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
+                        );
+                      })()
                     ) : (
                       <div className="text-center py-4 text-gray-400">
                         <Music className="w-8 h-8 mx-auto mb-1 opacity-50" />
-                        <p className="text-[10px]">No song playing</p>
+                        <p className="text-[10px]">No songs in queue</p>
                       </div>
                     )}
                   </div>
