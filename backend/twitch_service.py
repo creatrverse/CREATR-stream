@@ -100,26 +100,39 @@ class TwitchService:
     
     async def _on_message(self, msg: ChatMessage):
         """Called when a new chat message arrives"""
-        # Log raw message data for debugging
-        logger.info(f"Message received - Text: {msg.text}")
-        logger.info(f"Has emotes attr: {hasattr(msg, 'emotes')}, Value: {getattr(msg, 'emotes', None)}")
-        logger.info(f"Has tags attr: {hasattr(msg, 'tags')}, Value: {getattr(msg, 'tags', None)}")
-        
-        # Parse emotes from the message
+        # Parse emotes from the message text using our cached emote data
         emotes_list = []
-        if hasattr(msg, 'emotes') and msg.emotes:
-            for emote in msg.emotes:
-                emotes_list.append({
-                    'id': emote.emote_id,
-                    'name': getattr(emote, 'emote_set_id', ''),
-                    'positions': [[pos.start, pos.end] for pos in emote.positions]
-                })
         
-        # Also try to get emote data from tags if available
+        # Split message into words and check each against our emote cache
+        words = msg.text.split()
+        current_pos = 0
+        
+        for word in words:
+            # Find position of this word in the original text
+            word_start = msg.text.find(word, current_pos)
+            word_end = word_start + len(word) - 1
+            
+            # Check if word is a channel emote
+            if word in self.channel_emotes:
+                emotes_list.append({
+                    'id': self.channel_emotes[word],
+                    'name': word,
+                    'positions': [[word_start, word_end]]
+                })
+            # Check if word is a global emote
+            elif word in self.global_emotes:
+                emotes_list.append({
+                    'id': self.global_emotes[word],
+                    'name': word,
+                    'positions': [[word_start, word_end]]
+                })
+            
+            current_pos = word_end + 1
+        
+        # Also try to get emote data from IRC tags if available (fallback)
         if hasattr(msg, 'tags') and msg.tags and 'emotes' in msg.tags:
             raw_emotes = msg.tags['emotes']
             if raw_emotes:
-                logger.info(f"Found emotes in tags: {raw_emotes}")
                 # Parse emotes from IRC tags format: emote_id:start-end,start-end/emote_id:start-end
                 for emote_data in raw_emotes.split('/'):
                     if ':' in emote_data:
@@ -131,11 +144,14 @@ class TwitchService:
                                 positions.append([int(start), int(end)])
                         
                         if positions:
-                            emotes_list.append({
-                                'id': emote_id,
-                                'name': '',
-                                'positions': positions
-                            })
+                            # Check if we already have this emote from our cache
+                            already_exists = any(e['id'] == emote_id for e in emotes_list)
+                            if not already_exists:
+                                emotes_list.append({
+                                    'id': emote_id,
+                                    'name': '',
+                                    'positions': positions
+                                })
         
         message_data = {
             'id': msg.id,
