@@ -2512,9 +2512,15 @@ const Dashboard = () => {
                                   >
                                     {sub.song_link}
                                   </a>
-                                  <div className="text-gray-400 truncate mt-0.5">
-                                    by {sub.discord_display_name || sub.discord_username}
-                                    {sub.twitch_username && ` (@${sub.twitch_username})`}
+                                  <div className="flex items-center gap-1 mt-0.5">
+                                    <span className="text-gray-400 truncate">
+                                      by {sub.discord_display_name || sub.discord_username}
+                                      {sub.twitch_username && ` (@${sub.twitch_username})`}
+                                    </span>
+                                    {/* Discord/Non-Sub Badge */}
+                                    <span className="text-[7px] px-1.5 py-0.5 rounded border bg-indigo-600 border-indigo-400 font-bold whitespace-nowrap">
+                                      Discord
+                                    </span>
                                   </div>
                                   <div className="text-gray-500 text-[9px] mt-0.5">
                                     {sub.status === 'played' && '✓ Played'}
