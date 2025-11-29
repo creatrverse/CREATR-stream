@@ -68,12 +68,15 @@ class TwitchService:
         # Parse emotes from the message
         emotes_list = []
         if msg.emotes:
+            logger.info(f"Emotes found in message: {msg.emotes}")
             for emote in msg.emotes:
                 emotes_list.append({
                     'id': emote.emote_id,
                     'name': emote.emote_set_id,
                     'positions': [[pos.start, pos.end] for pos in emote.positions]
                 })
+        else:
+            logger.info(f"No emotes in message: {msg.text}")
         
         message_data = {
             'id': msg.id,
