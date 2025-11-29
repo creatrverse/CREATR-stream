@@ -106,11 +106,20 @@ async def lifespan(app: FastAPI):
         # Set callback for chat messages
         async def on_irc_message(msg):
             await manager.broadcast({'type': 'chat_message', 'data': msg})
+            
+            # Process message for bot commands
+            response = await chat_bot.process_message(msg)
+            if response:
+                await chat_bot.send_message(response)
         
         irc_chat.set_message_callback(on_irc_message)
         
         # Pass twitch_service reference for emote data
         irc_chat.set_emote_service(twitch_service)
+        
+        # Configure chat bot
+        chat_bot.set_discord_manager(discord_manager)
+        chat_bot.set_irc_chat(irc_chat)
         
         # Start IRC in background
         asyncio.create_task(irc_chat.connect())
