@@ -28,6 +28,8 @@ class TwitchService:
         self.max_messages = 50
         self.recent_alerts: List[Dict] = []
         self.message_callback = None
+        self.channel_emotes: Dict[str, str] = {}  # name -> id mapping
+        self.global_emotes: Dict[str, str] = {}   # name -> id mapping
         
     async def initialize(self):
         """Initialize Twitch API connection"""
