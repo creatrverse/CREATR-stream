@@ -66,7 +66,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 // Sortable Sound Component
-const SortableSound = ({ sound, playSound, openEditModal, deleteSound }) => {
+const SortableSound = ({ sound, playSound, openEditModal, deleteSound, playingSound }) => {
   const {
     attributes,
     listeners,
@@ -94,15 +94,17 @@ const SortableSound = ({ sound, playSound, openEditModal, deleteSound }) => {
     'gray-slate': 'from-gray-600 to-slate-600 hover:from-gray-700 hover:to-slate-700'
   };
 
+  const isPlaying = playingSound === sound.name;
+
   return (
     <div ref={setNodeRef} style={style} className="relative group">
       <button
         onClick={() => playSound(sound.name)}
-        className={`w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg ${isDragging ? 'cursor-grabbing' : 'cursor-pointer'}`}
+        className={`w-full aspect-square rounded-2xl p-4 flex flex-col items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 bg-gradient-to-br ${gradients[colorClass]} shadow-lg ${isDragging ? 'cursor-grabbing' : 'cursor-pointer'} ${isPlaying ? 'ring-4 ring-white animate-pulse' : ''}`}
         {...attributes}
         {...listeners}
       >
-        <Music className="w-8 h-8 text-white" />
+        <Music className={`w-8 h-8 text-white ${isPlaying ? 'animate-bounce' : ''}`} />
         <span className="text-white font-bold text-xs text-center leading-tight break-words">
           {sound.displayName || sound.name.replace(/\.[^/.]+$/, '')}
         </span>
