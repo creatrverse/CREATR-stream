@@ -2254,40 +2254,56 @@ const Dashboard = () => {
                     {showModeration && (
                       <div className="grid grid-cols-3 gap-1">
                       <Button
-                        onClick={() => toggleSlowMode(true)}
-                        variant="outline"
+                        onClick={toggleSlowMode}
+                        variant={slowModeEnabled ? "default" : "outline"}
                         size="sm"
-                        className="h-7 px-1 text-[9px] border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                        className={`h-7 px-1 text-[9px] ${
+                          slowModeEnabled 
+                            ? "bg-cyan-500 text-white border-cyan-500 hover:bg-cyan-600" 
+                            : "border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/20"
+                        }`}
                         disabled={!isAuthenticated}
                       >
-                        ⏱️ Slow
+                        ⏱️ Slow {slowModeEnabled ? "ON" : "OFF"}
                       </Button>
                       <Button
-                        onClick={() => toggleFollowerOnly(true)}
-                        variant="outline"
+                        onClick={toggleFollowerOnly}
+                        variant={followerOnlyEnabled ? "default" : "outline"}
                         size="sm"
-                        className="h-7 px-1 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                        className={`h-7 px-1 text-[9px] ${
+                          followerOnlyEnabled 
+                            ? "bg-blue-500 text-white border-blue-500 hover:bg-blue-600" 
+                            : "border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                        }`}
                         disabled={!isAuthenticated}
                       >
-                        👥 F-Only
+                        👥 F-Only {followerOnlyEnabled ? "ON" : "OFF"}
                       </Button>
                       <Button
-                        onClick={() => toggleSubscriberOnly(true)}
-                        variant="outline"
+                        onClick={toggleSubscriberOnly}
+                        variant={subscriberOnlyEnabled ? "default" : "outline"}
                         size="sm"
-                        className="h-7 px-1 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                        className={`h-7 px-1 text-[9px] ${
+                          subscriberOnlyEnabled 
+                            ? "bg-purple-500 text-white border-purple-500 hover:bg-purple-600" 
+                            : "border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                        }`}
                         disabled={!isAuthenticated}
                       >
-                        👑 S-Only
+                        👑 S-Only {subscriberOnlyEnabled ? "ON" : "OFF"}
                       </Button>
                       <Button
-                        onClick={() => toggleEmoteOnly(true)}
-                        variant="outline"
+                        onClick={toggleEmoteOnly}
+                        variant={emoteOnlyEnabled ? "default" : "outline"}
                         size="sm"
-                        className="h-7 px-1 text-[9px] border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                        className={`h-7 px-1 text-[9px] ${
+                          emoteOnlyEnabled 
+                            ? "bg-yellow-500 text-white border-yellow-500 hover:bg-yellow-600" 
+                            : "border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20"
+                        }`}
                         disabled={!isAuthenticated}
                       >
-                        😀 Emote
+                        😀 Emote {emoteOnlyEnabled ? "ON" : "OFF"}
                       </Button>
                       <Button
                         onClick={timeoutUser}
