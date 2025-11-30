@@ -1293,6 +1293,25 @@ const Dashboard = () => {
     }
   };
 
+  // Pin/Unpin Message
+  const togglePinMessage = (messageId) => {
+    const isPinned = pinnedMessages.some(msg => msg.id === messageId);
+    
+    if (isPinned) {
+      // Unpin message
+      setPinnedMessages(pinnedMessages.filter(msg => msg.id !== messageId));
+      toast.success("Message unpinned 📌");
+    } else {
+      // Pin message
+      const messageToPijn = chatMessages.find(msg => msg.id === messageId);
+      if (messageToPijn) {
+        setPinnedMessages([...pinnedMessages, messageToPijn]);
+        toast.success("Message pinned to top 📌");
+      }
+    }
+  };
+
+
   // Create stream marker
   const createMarker = async () => {
     try {
