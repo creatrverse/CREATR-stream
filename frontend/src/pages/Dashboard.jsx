@@ -3759,7 +3759,7 @@ const PollModal = ({ onClose, onSubmit }) => {
     
     onSubmit({
       title: question,
-      choices: validChoices,
+      choices: validChoices.map(choice => ({ title: choice })),
       duration: parseInt(duration),
       channel_points_per_vote: parseInt(pointsPerVote)
     });
