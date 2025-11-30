@@ -248,6 +248,19 @@ const Dashboard = () => {
   const [showModeration, setShowModeration] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
   
+  // Moderation state tracking
+  const [slowModeEnabled, setSlowModeEnabled] = useState(false);
+  const [followerOnlyEnabled, setFollowerOnlyEnabled] = useState(false);
+  const [subscriberOnlyEnabled, setSubscriberOnlyEnabled] = useState(false);
+  const [emoteOnlyEnabled, setEmoteOnlyEnabled] = useState(false);
+  
+  // Pinned messages
+  const [pinnedMessages, setPinnedMessages] = useState([]);
+  
+  // Poll/Prediction modals
+  const [showPollModal, setShowPollModal] = useState(false);
+  const [showPredictionModal, setShowPredictionModal] = useState(false);
+  
   // Sound categories
   const soundCategories = [
     { id: 'all', name: 'All Sounds', icon: '🎵' },
