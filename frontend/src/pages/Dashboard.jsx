@@ -3358,6 +3358,268 @@ const Dashboard = () => {
           </Card>
         </TabsContent>
 
+        {/* Feedback Queue Tab */}
+        <TabsContent value="feedbackqueue" className="space-y-6">
+          <div className="grid gap-6">
+            {/* Queue Stats */}
+            <Card className="glass gradient-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-cyan-400" />
+                  Queue Statistics
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="text-center p-4 rounded-lg glass">
+                    <div className="text-3xl font-bold gradient-text">{queueStats.total_submissions}</div>
+                    <div className="text-sm text-gray-400 mt-1">Total Submissions</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg glass">
+                    <div className="text-3xl font-bold text-green-400">{queueStats.played_count}</div>
+                    <div className="text-sm text-gray-400 mt-1">Played</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg glass">
+                    <div className="text-3xl font-bold text-yellow-400">{queueStats.pending_count}</div>
+                    <div className="text-sm text-gray-400 mt-1">Pending</div>
+                  </div>
+                  <div className="text-center p-4 rounded-lg glass">
+                    <div className="text-3xl font-bold text-red-400">{queueStats.skip_count}</div>
+                    <div className="text-sm text-gray-400 mt-1">Skipped</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Submission Queue */}
+            <Card className="glass">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Music className="w-5 h-5 text-pink-400" />
+                  Submission Queue
+                </CardTitle>
+                <CardDescription>Music feedback submissions from Discord</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[400px] pr-4">
+                  {submissions.length > 0 ? (
+                    <div className="space-y-3">
+                      {submissions.map((submission, index) => (
+                        <div key={submission.id} className="p-4 rounded-lg glass border border-pink-400/30">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm font-bold text-pink-400">#{index + 1}</span>
+                                <span className="font-semibold">{submission.discord_username}</span>
+                                {autoMatchCache[submission.discord_username] && (
+                                  <Badge className={`text-[7px] px-1.5 py-0.5 ${getSubTierBadgeClass(subTierCache[autoMatchCache[submission.discord_username]])}`}>
+                                    {subTierCache[autoMatchCache[submission.discord_username]] || 'Non-Sub'}
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm font-medium text-cyan-400">{submission.parsed_song_name}</p>
+                              {submission.song_link && (
+                                <a 
+                                  href={submission.song_link} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-blue-400 hover:text-blue-300 underline mt-1 inline-block"
+                                >
+                                  🔗 Listen
+                                </a>
+                              )}
+                              <p className="text-xs text-gray-400 mt-1">{new Date(submission.timestamp).toLocaleString()}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={submission.played}
+                                onChange={(e) => updateSubmissionStatus(submission.id, e.target.checked)}
+                                className="w-4 h-4 rounded border-gray-600 text-pink-500 focus:ring-pink-500"
+                                title={submission.played ? "Mark as Not Played" : "Mark as Played"}
+                              />
+                              <span className="text-xs text-gray-400">{submission.played ? "Played" : "Not Played"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-gray-400">
+                      <Music className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p>No submissions yet</p>
+                    </div>
+                  )}
+                </ScrollArea>
+              </CardContent>
+            </Card>
+
+            {/* Skip Queue */}
+            <Card className="glass">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <SkipForward className="w-5 h-5 text-red-400" />
+                  Skip Queue
+                </CardTitle>
+                <CardDescription>Songs requested to be skipped</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[400px] pr-4">
+                  {skipQueue.length > 0 ? (
+                    <div className="space-y-3">
+                      {skipQueue.map((skip, index) => (
+                        <div key={skip.id} className="p-4 rounded-lg glass border border-red-400/30">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm font-bold text-red-400">#{index + 1}</span>
+                                <span className="font-semibold">{skip.discord_username}</span>
+                                {autoMatchCache[skip.discord_username] && (
+                                  <Badge className={`text-[7px] px-1.5 py-0.5 ${getSubTierBadgeClass(subTierCache[autoMatchCache[skip.discord_username]])}`}>
+                                    {subTierCache[autoMatchCache[skip.discord_username]] || 'Non-Sub'}
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm font-medium text-red-400">{skip.parsed_song_name}</p>
+                              {skip.song_link && (
+                                <a 
+                                  href={skip.song_link} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-blue-400 hover:text-blue-300 underline mt-1 inline-block"
+                                >
+                                  🔗 Listen
+                                </a>
+                              )}
+                              <p className="text-xs text-gray-400 mt-1">{new Date(skip.timestamp).toLocaleString()}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={skip.played}
+                                onChange={(e) => updateSkipStatus(skip.id, e.target.checked)}
+                                className="w-4 h-4 rounded border-gray-600 text-red-500 focus:ring-red-500"
+                                title={skip.played ? "Mark as Not Played" : "Mark as Played"}
+                              />
+                              <span className="text-xs text-gray-400">{skip.played ? "Played" : "Not Played"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-gray-400">
+                      <SkipForward className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                      <p>No skip requests</p>
+                    </div>
+                  )}
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Payments Tab */}
+        <TabsContent value="payments" className="space-y-6">
+          <div className="grid gap-6">
+            {/* Payment Overview */}
+            <Card className="glass gradient-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  Payment Overview
+                </CardTitle>
+                <CardDescription>Track donations and revenue</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center p-6 rounded-lg glass">
+                    <div className="text-4xl font-bold gradient-text">$0.00</div>
+                    <div className="text-sm text-gray-400 mt-2">Today's Revenue</div>
+                  </div>
+                  <div className="text-center p-6 rounded-lg glass">
+                    <div className="text-4xl font-bold text-cyan-400">$0.00</div>
+                    <div className="text-sm text-gray-400 mt-2">This Week</div>
+                  </div>
+                  <div className="text-center p-6 rounded-lg glass">
+                    <div className="text-4xl font-bold text-purple-400">$0.00</div>
+                    <div className="text-sm text-gray-400 mt-2">This Month</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Payment Integration Setup */}
+            <Card className="glass">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                  Payment Integration
+                </CardTitle>
+                <CardDescription>Set up payment processing for donations and song requests</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+                  <p className="text-sm text-yellow-400 mb-2">⚠️ Payment integration not configured</p>
+                  <p className="text-xs text-gray-400">
+                    To enable paid song requests and accept donations, you'll need to integrate a payment provider like Stripe or PayPal.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="p-4 rounded-lg glass border border-purple-400/30">
+                    <h3 className="font-semibold mb-2 flex items-center gap-2">
+                      <span className="text-purple-400">💳</span> Stripe Integration
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-3">Accept payments with Stripe for professional payment processing</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                      disabled
+                    >
+                      Configure Stripe (Coming Soon)
+                    </Button>
+                  </div>
+
+                  <div className="p-4 rounded-lg glass border border-blue-400/30">
+                    <h3 className="font-semibold mb-2 flex items-center gap-2">
+                      <span className="text-blue-400">💰</span> PayPal Integration
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-3">Accept payments via PayPal for easy donations</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                      disabled
+                    >
+                      Configure PayPal (Coming Soon)
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Transactions */}
+            <Card className="glass">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-cyan-400" />
+                  Recent Transactions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12 text-gray-400">
+                  <TrendingUp className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                  <p>No transactions yet</p>
+                  <p className="text-xs mt-2">Transactions will appear here once payment integration is set up</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+
         {/* Chat & Alerts Tab */}
         <TabsContent value="chat" className="space-y-6">
           <div className="grid lg:grid-cols-2 gap-6">
