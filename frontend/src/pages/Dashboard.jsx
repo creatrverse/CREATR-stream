@@ -1219,15 +1219,18 @@ const Dashboard = () => {
   };
 
   // Toggle Emote-Only Mode
-  const toggleEmoteOnly = async (enabled) => {
+  const toggleEmoteOnly = async () => {
     if (!isAuthenticated) {
       toast.error("Please login with Twitch first!");
       return;
     }
     
+    const newState = !emoteOnlyEnabled;
+    
     try {
-      const response = await axios.post(`${API}/twitch/chat/emote-only`, { enabled });
+      const response = await axios.post(`${API}/twitch/chat/emote-only`, { enabled: newState });
       if (response.data.success) {
+        setEmoteOnlyEnabled(newState);
         toast.success(response.data.message + " 😀");
       } else {
         toast.error(response.data.error || "Failed to toggle emote-only mode");
