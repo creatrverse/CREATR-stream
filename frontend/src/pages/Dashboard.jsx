@@ -1011,65 +1011,6 @@ const Dashboard = () => {
   };
 
   // Create Poll
-  const createPoll = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login with Twitch first!");
-      return;
-    }
-    
-    // Simple poll with default options
-    const pollData = {
-      title: "What should we do next?",
-      choices: [{ title: "Yes" }, { title: "No" }],
-      duration: 60
-    };
-    
-    try {
-      const response = await axios.post(`${API}/twitch/poll`, pollData);
-      if (response.data.success) {
-        toast.success("Poll created! 📊");
-      } else {
-        toast.error(response.data.error || "Failed to create poll");
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Please login to create polls");
-      } else {
-        toast.error("Failed to create poll");
-      }
-    }
-  };
-
-  // Create Prediction
-  const createPrediction = async () => {
-    if (!isAuthenticated) {
-      toast.error("Please login with Twitch first!");
-      return;
-    }
-    
-    // Simple prediction with default options
-    const predictionData = {
-      title: "Will we win?",
-      outcomes: [{ title: "Yes" }, { title: "No" }],
-      duration: 120
-    };
-    
-    try {
-      const response = await axios.post(`${API}/twitch/prediction`, predictionData);
-      if (response.data.success) {
-        toast.success("Prediction created! 🔮");
-      } else {
-        toast.error(response.data.error || "Failed to create prediction");
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        toast.error("Please login to create predictions");
-      } else {
-        toast.error("Failed to create prediction");
-      }
-    }
-  };
-
   // Shoutout Streamer
   const shoutoutStreamer = async () => {
     if (!isAuthenticated) {
