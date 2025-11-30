@@ -137,3 +137,93 @@ agent_communication:
     -message: "Starting test of Stream Info category editing feature. Will test category selector display, preset category buttons, and category update functionality."
     -agent: "testing"
     -message: "✅ TESTING COMPLETE: Stream Info category editing feature is working correctly. All core functionality verified: category selector displays properly with all 5 preset buttons, custom input field available, category updates successfully. Only minor issue: toast notification not detected but category change confirmed working. Feature ready for use."
+#====================================================================================================
+# New Features Implementation - Session 2
+#====================================================================================================
+
+user_problem_statement: "Implement 4 new features for the streaming dashboard: 1) Fix moderation toggle buttons, 2) Add pin/unpin functionality for chat messages, 3) Create poll creation form, 4) Create prediction creation form"
+
+frontend:
+  - task: "Moderation Toggle Buttons Fix"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Fixed moderation toggle buttons to properly toggle ON/OFF states. Added state tracking for slowModeEnabled, followerOnlyEnabled, subscriberOnlyEnabled, emoteOnlyEnabled. Updated button styling to show clear visual indicators (solid colors when ON, outline when OFF). Each button now shows ON/OFF text."
+  
+  - task: "Pin/Unpin Chat Messages"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented pin/unpin functionality for chat messages. Added Pin and PinOff icons from lucide-react. Created togglePinMessage function. Pinned messages display at top with yellow border and Pin icon. Regular messages have hover-activated pin button. Unpinning removes message from pinned section."
+  
+  - task: "Poll Creation Form Modal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created PollModal component with form fields for poll question (60 char max), 2-5 choices (25 char each), duration (15-1800 seconds), and optional channel points per vote. Added validation and dynamic choice management (add/remove). Modal opens from Quick Actions poll button. Formats data correctly for backend API."
+  
+  - task: "Prediction Creation Form Modal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Created PredictionModal component with form fields for prediction title (45 char max), 2-10 outcomes (25 char each), and prediction window (30-1800 seconds). Added validation and dynamic outcome management. Modal opens from Quick Actions prediction button. Formats data correctly for backend API."
+
+backend:
+  - task: "Poll/Prediction API Endpoints"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Updated existing poll and prediction endpoints at /api/twitch/poll and /api/twitch/prediction. Fixed prediction endpoint to use correct field name 'prediction_window' instead of 'duration'. Both endpoints properly format data for Twitch Helix API."
+
+metadata:
+  created_by: "main_agent"
+  version: "2.0"
+  test_sequence: 2
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Moderation Toggle Buttons Fix"
+    - "Pin/Unpin Chat Messages"
+    - "Poll Creation Form Modal"
+    - "Prediction Creation Form Modal"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "main"
+      message: "Implemented all 4 requested features. Moderation buttons now properly toggle with visual state indicators. Pin/unpin functionality allows pinning messages to top of chat. Poll and Prediction forms open as modals with full validation. All features ready for testing."
+    - agent: "main"
+      message: "TESTING NEEDED: 1) Test moderation toggle buttons - verify they toggle ON/OFF and show correct visual state. 2) Test pin/unpin - verify messages can be pinned/unpinned and display correctly. 3) Test poll form - verify validation, add/remove choices, and form submission. 4) Test prediction form - verify validation, add/remove outcomes, and form submission. NOTE: User mentioned they have local bot.js running that will handle sending chat messages for polls/predictions, so bot messages are out of scope."
+
