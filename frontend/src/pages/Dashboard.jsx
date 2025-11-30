@@ -1172,18 +1172,21 @@ const Dashboard = () => {
   };
 
   // Toggle Follower-Only Mode
-  const toggleFollowerOnly = async (enabled) => {
+  const toggleFollowerOnly = async () => {
     if (!isAuthenticated) {
       toast.error("Please login with Twitch first!");
       return;
     }
     
+    const newState = !followerOnlyEnabled;
+    
     try {
       const response = await axios.post(`${API}/twitch/chat/follower-only`, { 
-        enabled, 
+        enabled: newState, 
         duration: 0 
       });
       if (response.data.success) {
+        setFollowerOnlyEnabled(newState);
         toast.success(response.data.message + " 👥");
       } else {
         toast.error(response.data.error || "Failed to toggle follower-only mode");
