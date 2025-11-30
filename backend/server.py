@@ -1817,9 +1817,24 @@ def load_sound_metadata():
     return {}
 
 def save_sound_metadata(metadata):
-    """Save sound metadata to JSON file with atomic write"""
+    """Save sound metadata to JSON file with atomic write and backup"""
     import tempfile
     import shutil
+    from datetime import datetime
+    
+    # Create backup of existing file
+    if SOUNDS_METADATA_FILE.exists():
+        backup_dir = SOUNDS_DIR / 'backups'
+        backup_dir.mkdir(exist_ok=True)
+        
+        # Keep only last 10 backups
+        backups = sorted(backup_dir.glob('metadata_*.json'))
+        if len(backups) >= 10:
+            backups[0].unlink()
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_file = backup_dir / f'metadata_{timestamp}.json'
+        shutil.copy2(str(SOUNDS_METADATA_FILE), str(backup_file))
     
     # Write to temporary file first
     temp_file = SOUNDS_METADATA_FILE.with_suffix('.tmp')
