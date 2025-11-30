@@ -3708,6 +3708,319 @@ const Dashboard = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Poll Creation Modal */}
+      {showPollModal && <PollModal onClose={() => setShowPollModal(false)} onSubmit={createPoll} />}
+      
+      {/* Prediction Creation Modal */}
+      {showPredictionModal && <PredictionModal onClose={() => setShowPredictionModal(false)} onSubmit={createPrediction} />}
+    </div>
+  );
+};
+
+// Poll Modal Component
+const PollModal = ({ onClose, onSubmit }) => {
+  const [question, setQuestion] = useState("");
+  const [choices, setChoices] = useState(["", ""]);
+  const [duration, setDuration] = useState(60);
+  const [pointsPerVote, setPointsPerVote] = useState(0);
+
+  const addChoice = () => {
+    if (choices.length < 5) {
+      setChoices([...choices, ""]);
+    }
+  };
+
+  const removeChoice = (index) => {
+    if (choices.length > 2) {
+      setChoices(choices.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateChoice = (index, value) => {
+    const newChoices = [...choices];
+    newChoices[index] = value;
+    setChoices(newChoices);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!question.trim()) {
+      toast.error("Please enter a poll question");
+      return;
+    }
+    
+    const validChoices = choices.filter(c => c.trim());
+    if (validChoices.length < 2) {
+      toast.error("Please provide at least 2 choices");
+      return;
+    }
+    
+    onSubmit({
+      title: question,
+      choices: validChoices,
+      duration: parseInt(duration),
+      channel_points_per_vote: parseInt(pointsPerVote)
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <Card className="glass w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-blue-400" />
+            Create Poll
+          </CardTitle>
+          <CardDescription>Create a Twitch poll for your viewers</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="poll-question">Poll Question *</Label>
+              <Input
+                id="poll-question"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="What should we play next?"
+                maxLength={60}
+                className="glass"
+              />
+              <p className="text-xs text-gray-400 mt-1">{question.length}/60 characters</p>
+            </div>
+
+            <div>
+              <Label>Poll Choices * (2-5 choices)</Label>
+              <div className="space-y-2 mt-2">
+                {choices.map((choice, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={choice}
+                      onChange={(e) => updateChoice(index, e.target.value)}
+                      placeholder={`Choice ${index + 1}`}
+                      maxLength={25}
+                      className="glass flex-1"
+                    />
+                    {choices.length > 2 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeChoice(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {choices.length < 5 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addChoice}
+                  className="mt-2 w-full border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
+                >
+                  + Add Choice
+                </Button>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="poll-duration">Duration (seconds)</Label>
+              <Input
+                id="poll-duration"
+                type="number"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                min="15"
+                max="1800"
+                className="glass"
+              />
+              <p className="text-xs text-gray-400 mt-1">15-1800 seconds (15s to 30min)</p>
+            </div>
+
+            <div>
+              <Label htmlFor="poll-points">Channel Points per Vote (optional)</Label>
+              <Input
+                id="poll-points"
+                type="number"
+                value={pointsPerVote}
+                onChange={(e) => setPointsPerVote(e.target.value)}
+                min="0"
+                className="glass"
+              />
+              <p className="text-xs text-gray-400 mt-1">0 = free voting</p>
+            </div>
+
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+              >
+                Create Poll
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// Prediction Modal Component
+const PredictionModal = ({ onClose, onSubmit }) => {
+  const [title, setTitle] = useState("");
+  const [outcomes, setOutcomes] = useState(["", ""]);
+  const [predictionWindow, setPredictionWindow] = useState(120);
+
+  const addOutcome = () => {
+    if (outcomes.length < 10) {
+      setOutcomes([...outcomes, ""]);
+    }
+  };
+
+  const removeOutcome = (index) => {
+    if (outcomes.length > 2) {
+      setOutcomes(outcomes.filter((_, i) => i !== index));
+    }
+  };
+
+  const updateOutcome = (index, value) => {
+    const newOutcomes = [...outcomes];
+    newOutcomes[index] = value;
+    setOutcomes(newOutcomes);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!title.trim()) {
+      toast.error("Please enter a prediction title");
+      return;
+    }
+    
+    const validOutcomes = outcomes.filter(o => o.trim());
+    if (validOutcomes.length < 2) {
+      toast.error("Please provide at least 2 outcomes");
+      return;
+    }
+    
+    onSubmit({
+      title: title,
+      outcomes: validOutcomes,
+      prediction_window: parseInt(predictionWindow)
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <Card className="glass w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="w-5 h-5 text-purple-400" />
+            Create Prediction
+          </CardTitle>
+          <CardDescription>Create a Twitch prediction for your viewers</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="prediction-title">Prediction Title *</Label>
+              <Input
+                id="prediction-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Will I win this match?"
+                maxLength={45}
+                className="glass"
+              />
+              <p className="text-xs text-gray-400 mt-1">{title.length}/45 characters</p>
+            </div>
+
+            <div>
+              <Label>Prediction Outcomes * (2-10 outcomes)</Label>
+              <div className="space-y-2 mt-2">
+                {outcomes.map((outcome, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      value={outcome}
+                      onChange={(e) => updateOutcome(index, e.target.value)}
+                      placeholder={`Outcome ${index + 1}`}
+                      maxLength={25}
+                      className="glass flex-1"
+                    />
+                    {outcomes.length > 2 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeOutcome(index)}
+                        className="text-red-400 hover:text-red-300"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {outcomes.length < 10 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addOutcome}
+                  className="mt-2 w-full border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
+                >
+                  + Add Outcome
+                </Button>
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="prediction-window">Prediction Window (seconds)</Label>
+              <Input
+                id="prediction-window"
+                type="number"
+                value={predictionWindow}
+                onChange={(e) => setPredictionWindow(e.target.value)}
+                min="30"
+                max="1800"
+                className="glass"
+              />
+              <p className="text-xs text-gray-400 mt-1">30-1800 seconds (30s to 30min)</p>
+            </div>
+
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="submit"
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+              >
+                Create Prediction
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
