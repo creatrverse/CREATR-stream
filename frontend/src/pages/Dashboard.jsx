@@ -2049,11 +2049,13 @@ const Dashboard = () => {
                     "h-[400px]"
                   }`}>
                     <div className="space-y-2">
-                      {chatMessages.map((msg) => (
-                        <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
+                      {/* Pinned Messages */}
+                      {pinnedMessages.map((msg) => (
+                        <div key={`pinned-${msg.id}`} className="slide-in p-2 rounded glass text-xs border-2 border-yellow-500/50 bg-yellow-500/10" data-testid={`pinned-chat-${msg.id}`}>
                           <div className="flex items-start gap-1">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1 mb-0.5 flex-wrap">
+                                <Pin className="w-3 h-3 text-yellow-400" />
                                 <span className="font-semibold truncate text-[10px]" style={{ color: msg.color }}>
                                   {msg.username}
                                 </span>
@@ -2071,10 +2073,58 @@ const Dashboard = () => {
                                 {renderMessageWithEmotes(msg.message, msg.emotes)}
                               </div>
                             </div>
+                            <Button
+                              onClick={() => togglePinMessage(msg.id)}
+                              variant="ghost"
+                              size="sm"
+                              className="h-5 w-5 p-0 hover:bg-yellow-500/20"
+                            >
+                              <PinOff className="w-3 h-3 text-yellow-400" />
+                            </Button>
                           </div>
                         </div>
                       ))}
-                      {chatMessages.length === 0 && (
+                      
+                      {/* Regular Messages */}
+                      {chatMessages.map((msg) => {
+                        const isPinned = pinnedMessages.some(pinned => pinned.id === msg.id);
+                        if (isPinned) return null; // Don't show pinned messages twice
+                        
+                        return (
+                          <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
+                            <div className="flex items-start gap-1">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1 mb-0.5 flex-wrap">
+                                  <span className="font-semibold truncate text-[10px]" style={{ color: msg.color }}>
+                                    {msg.username}
+                                  </span>
+                                  {/* Sub Tier Badge */}
+                                  <span className={`text-[7px] px-1.5 py-0.5 rounded border ${getSubTierBadgeClass(getSubTier(msg.badge_info))} font-bold`}>
+                                    {getSubTier(msg.badge_info)}
+                                  </span>
+                                  {msg.badges && msg.badges.map((badge, i) => (
+                                    <span key={i} className={`badge badge-${badge} text-[7px]`}>
+                                      {getBadgeName(badge)}
+                                    </span>
+                                  ))}
+                                </div>
+                                <div className="text-[10px] text-gray-200 break-words leading-tight">
+                                  {renderMessageWithEmotes(msg.message, msg.emotes)}
+                                </div>
+                              </div>
+                              <Button
+                                onClick={() => togglePinMessage(msg.id)}
+                                variant="ghost"
+                                size="sm"
+                                className="h-5 w-5 p-0 hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <Pin className="w-3 h-3 text-gray-400 hover:text-yellow-400" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {chatMessages.length === 0 && pinnedMessages.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
                           <MessageCircle className="w-6 h-6 mx-auto mb-2 opacity-50" />
                           <p className="text-[10px]">No messages yet</p>
