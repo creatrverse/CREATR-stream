@@ -423,6 +423,33 @@ const Dashboard = () => {
     }
   };
 
+  // Update submission status
+  const updateSubmissionStatus = async (submissionId, played) => {
+    try {
+      await axios.patch(`${API}/queue/submissions/${submissionId}`, { played });
+      fetchSubmissions(); // Refresh the list
+      fetchQueueStats(); // Update stats
+      toast.success(played ? "Marked as played ✅" : "Marked as not played ⏸️");
+    } catch (error) {
+      console.error("Error updating submission:", error);
+      toast.error("Failed to update submission status");
+    }
+  };
+
+  // Update skip status
+  const updateSkipStatus = async (skipId, played) => {
+    try {
+      await axios.patch(`${API}/queue/skips/${skipId}`, { played });
+      fetchSkipQueue(); // Refresh the list
+      fetchQueueStats(); // Update stats
+      toast.success(played ? "Marked as played ✅" : "Marked as not played ⏸️");
+    } catch (error) {
+      console.error("Error updating skip:", error);
+      toast.error("Failed to update skip status");
+    }
+  };
+
+
   // Fetch music queue
   const fetchMusicQueue = async () => {
     try {
