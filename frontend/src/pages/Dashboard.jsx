@@ -3919,7 +3919,7 @@ const PredictionModal = ({ onClose, onSubmit }) => {
     
     onSubmit({
       title: title,
-      outcomes: validOutcomes,
+      outcomes: validOutcomes.map(outcome => ({ title: outcome })),
       prediction_window: parseInt(predictionWindow)
     });
   };
