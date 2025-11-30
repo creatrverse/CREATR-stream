@@ -64,7 +64,7 @@ You don't need to change anything in the Twitch Developer Console. The scopes ar
 1. Go to **Twitch Developer Console**: https://dev.twitch.tv/console/apps
 2. Click on your application
 3. Under **OAuth Redirect URLs**, ensure you have:
-   - `https://stream-dashboard-6.preview.emergentagent.com/auth/callback`
+   - `https://livestream-control.preview.emergentagent.com/auth/callback`
    - `http://localhost:3000/auth/callback` (for local testing)
 
 **Note**: You don't need to configure scopes in the Developer Console - they are requested dynamically during the OAuth flow.

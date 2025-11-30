@@ -31,7 +31,7 @@ You'll see a form with these fields:
 - Click **"Add"** or the **"+"** button
 - Enter EXACTLY: `http://localhost:3000`
 - Click **"Add"** again
-- Enter EXACTLY: `https://stream-dashboard-6.preview.emergentagent.com/auth/callback`
+- Enter EXACTLY: `https://livestream-control.preview.emergentagent.com/auth/callback`
 - These URLs tell Twitch where to send authentication data
 
 **Category:**
