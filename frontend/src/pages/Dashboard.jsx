@@ -2091,7 +2091,7 @@ const Dashboard = () => {
                         if (isPinned) return null; // Don't show pinned messages twice
                         
                         return (
-                          <div key={msg.id} className="slide-in p-2 rounded glass text-xs" data-testid={`mini-chat-${msg.id}`}>
+                          <div key={msg.id} className="slide-in p-2 rounded glass text-xs group" data-testid={`mini-chat-${msg.id}`}>
                             <div className="flex items-start gap-1">
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1 mb-0.5 flex-wrap">
