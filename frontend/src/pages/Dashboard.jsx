@@ -1330,6 +1330,47 @@ const Dashboard = () => {
     }
   };
 
+  // Create Poll
+  const createPoll = async (pollData) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/polls`, pollData);
+      if (response.data.success) {
+        toast.success("Poll created successfully! 🗳️");
+        setShowPollModal(false);
+      } else {
+        toast.error(response.data.error || "Failed to create poll");
+      }
+    } catch (error) {
+      toast.error("Failed to create poll: " + (error.response?.data?.error || error.message));
+    }
+  };
+
+  // Create Prediction
+  const createPrediction = async (predictionData) => {
+    if (!isAuthenticated) {
+      toast.error("Please login with Twitch first!");
+      return;
+    }
+    
+    try {
+      const response = await axios.post(`${API}/twitch/predictions`, predictionData);
+      if (response.data.success) {
+        toast.success("Prediction created successfully! 🔮");
+        setShowPredictionModal(false);
+      } else {
+        toast.error(response.data.error || "Failed to create prediction");
+      }
+    } catch (error) {
+      toast.error("Failed to create prediction: " + (error.response?.data?.error || error.message));
+    }
+  };
+
+
   // Submit music
   const submitMusic = async (e) => {
     e.preventDefault();
