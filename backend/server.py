@@ -782,7 +782,7 @@ async def create_prediction(prediction_data: dict, session: Session = Depends(ge
                     "broadcaster_id": token_data.user_id,
                     "title": prediction_data.get('title', 'New Prediction'),
                     "outcomes": prediction_data.get('outcomes', [{"title": "Yes"}, {"title": "No"}]),
-                    "prediction_window": prediction_data.get('duration', 120)
+                    "prediction_window": prediction_data.get('prediction_window', 120)
                 }
             )
         
