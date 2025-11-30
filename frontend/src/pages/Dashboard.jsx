@@ -1655,6 +1655,8 @@ const Dashboard = () => {
           <TabsTrigger value="control" data-testid="tab-control">🎥 Control</TabsTrigger>
           <TabsTrigger value="soundboard" data-testid="tab-soundboard">🔊 Sound Board</TabsTrigger>
           <TabsTrigger value="music" data-testid="tab-music">🎵 Music Queue</TabsTrigger>
+          <TabsTrigger value="feedbackqueue" data-testid="tab-feedbackqueue">🎶 Feedback Queue</TabsTrigger>
+          <TabsTrigger value="payments" data-testid="tab-payments">💰 Payments</TabsTrigger>
           <TabsTrigger value="chat" data-testid="tab-chat">💬 Chat & Alerts</TabsTrigger>
           <TabsTrigger value="analytics" data-testid="tab-analytics">📊 Analytics</TabsTrigger>
         </TabsList>
