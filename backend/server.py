@@ -1817,9 +1817,24 @@ def load_sound_metadata():
     return {}
 
 def save_sound_metadata(metadata):
-    """Save sound metadata to JSON file"""
-    with open(SOUNDS_METADATA_FILE, 'w') as f:
-        json.dump(metadata, f, indent=2)
+    """Save sound metadata to JSON file with atomic write"""
+    import tempfile
+    import shutil
+    
+    # Write to temporary file first
+    temp_file = SOUNDS_METADATA_FILE.with_suffix('.tmp')
+    try:
+        with open(temp_file, 'w') as f:
+            json.dump(metadata, f, indent=2)
+        
+        # Atomic rename - this ensures data isn't lost if process crashes during write
+        shutil.move(str(temp_file), str(SOUNDS_METADATA_FILE))
+        logger.info(f"Sound metadata saved successfully to {SOUNDS_METADATA_FILE}")
+    except Exception as e:
+        logger.error(f"Failed to save sound metadata: {e}")
+        if temp_file.exists():
+            temp_file.unlink()
+        raise
 
 @api_router.get("/sounds")
 async def get_sounds():
