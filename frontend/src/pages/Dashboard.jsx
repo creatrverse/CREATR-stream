@@ -1197,15 +1197,18 @@ const Dashboard = () => {
   };
 
   // Toggle Subscriber-Only Mode
-  const toggleSubscriberOnly = async (enabled) => {
+  const toggleSubscriberOnly = async () => {
     if (!isAuthenticated) {
       toast.error("Please login with Twitch first!");
       return;
     }
     
+    const newState = !subscriberOnlyEnabled;
+    
     try {
-      const response = await axios.post(`${API}/twitch/chat/subscriber-only`, { enabled });
+      const response = await axios.post(`${API}/twitch/chat/subscriber-only`, { enabled: newState });
       if (response.data.success) {
+        setSubscriberOnlyEnabled(newState);
         toast.success(response.data.message + " 👑");
       } else {
         toast.error(response.data.error || "Failed to toggle subscriber-only mode");
