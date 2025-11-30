@@ -50,7 +50,9 @@ import {
   ChevronUp,
   ChevronDown,
   Check,
-  X
+  X,
+  Pin,
+  PinOff
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
