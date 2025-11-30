@@ -1147,18 +1147,21 @@ const Dashboard = () => {
   };
 
   // Toggle Slow Mode
-  const toggleSlowMode = async (enabled) => {
+  const toggleSlowMode = async () => {
     if (!isAuthenticated) {
       toast.error("Please login with Twitch first!");
       return;
     }
     
+    const newState = !slowModeEnabled;
+    
     try {
       const response = await axios.post(`${API}/twitch/chat/slow-mode`, { 
-        enabled, 
-        wait_time: enabled ? 30 : 0 
+        enabled: newState, 
+        wait_time: newState ? 30 : 0 
       });
       if (response.data.success) {
+        setSlowModeEnabled(newState);
         toast.success(response.data.message + " ⏱️");
       } else {
         toast.error(response.data.error || "Failed to toggle slow mode");
