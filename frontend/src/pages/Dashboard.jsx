@@ -2170,7 +2170,7 @@ const Dashboard = () => {
 
                         <div className="relative group w-full">
                           <Button
-                            onClick={createPoll}
+                            onClick={() => setShowPollModal(true)}
                             variant="outline"
                             size="sm"
                             className="w-full h-7 text-[9px] border-blue-400/50 text-blue-400 hover:bg-blue-400/20"
@@ -2186,7 +2186,7 @@ const Dashboard = () => {
 
                         <div className="relative group w-full">
                           <Button
-                            onClick={createPrediction}
+                            onClick={() => setShowPredictionModal(true)}
                             variant="outline"
                             size="sm"
                             className="w-full h-7 text-[9px] border-purple-400/50 text-purple-400 hover:bg-purple-400/20"
