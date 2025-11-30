@@ -1340,7 +1340,7 @@ const Dashboard = () => {
     }
     
     try {
-      const response = await axios.post(`${API}/twitch/polls`, pollData);
+      const response = await axios.post(`${API}/twitch/poll`, pollData);
       if (response.data.success) {
         toast.success("Poll created successfully! 🗳️");
         setShowPollModal(false);
@@ -1360,7 +1360,7 @@ const Dashboard = () => {
     }
     
     try {
-      const response = await axios.post(`${API}/twitch/predictions`, predictionData);
+      const response = await axios.post(`${API}/twitch/prediction`, predictionData);
       if (response.data.success) {
         toast.success("Prediction created successfully! 🔮");
         setShowPredictionModal(false);
